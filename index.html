@@ -225,7 +225,7 @@
                                 <section class="section-artifact">
                                     <div class="section-tag">VISUAL ARTIFACT / 視覺造物</div>
                                     <div class="artifact-frame">
-                                        <img id="cardImage" src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800&auto=format&fit=crop" alt="Visual Artifact">
+                                        <div id="cardImage" class="gazette-image-div" role="img" aria-label="Visual Artifact"></div>
                                         <div class="image-error-placeholder" id="cardImageError" style="display: none;">
                                             <div class="placeholder-icon">📡</div>
                                             <div class="placeholder-text">影像暫停連線 / NO SIGNAL</div>
@@ -332,23 +332,15 @@
                                 </div>
                                 <div class="share-card-content">
                                     <div class="share-card-img-frame">
-                                        <img id="shareCardImage" src="" alt="Main Visual">
+                                        <div id="shareCardImage" class="share-card-image-div" role="img" aria-label="Main Visual"></div>
                                     </div>
                                     <h4 class="share-card-title" id="shareCardTitle">主標題</h4>
                                     <p class="share-card-intro" id="shareCardIntro">簡介</p>
                                 </div>
                                 <div class="share-card-footer">
-                                    <div class="qr-code-placeholder">
-                                        <div class="simulated-qr">
-                                            <span></span><span></span><span></span><span></span>
-                                            <span></span><span></span><span></span><span></span>
-                                            <span></span><span></span><span></span><span></span>
-                                            <span></span><span></span><span></span><span></span>
-                                        </div>
-                                    </div>
-                                    <div class="share-card-footer-text">
-                                        <span class="scan-to-read">掃碼或點擊連結閱讀</span>
-                                        <span class="secure-trans">FOUNDATION-ARCHIVE-SECURE</span>
+                                    <div class="share-card-news">
+                                        <div class="share-news-item" id="shareCardNews1"></div>
+                                        <div class="share-news-item" id="shareCardNews2"></div>
                                     </div>
                                 </div>
                             </div>

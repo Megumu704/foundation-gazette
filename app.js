@@ -73,8 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Set up cover image checking
-    setupImageCheck(cardImage, cardImageError);
+    // Set up cover image checking (handled inside updateImage since cardImage is a div)
 
     // --- Layout Scheme Selector System ---
     let currentLayoutScheme = 'classic-split';
@@ -138,15 +137,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateImage = () => {
         const url = inputImageUrl.value.trim();
         if (url) {
+            const tempImg = new Image();
             const isExternal = url.startsWith('http://') || url.startsWith('https://');
             if (isExternal) {
-                cardImage.setAttribute('crossorigin', 'anonymous');
-            } else {
-                cardImage.removeAttribute('crossorigin');
+                tempImg.setAttribute('crossorigin', 'anonymous');
             }
-            cardImage.src = url;
+            tempImg.onload = () => {
+                cardImage.style.backgroundImage = `url("${url}")`;
+                cardImage.style.display = 'block';
+                cardImageError.style.display = 'none';
+            };
+            tempImg.onerror = () => {
+                cardImage.style.backgroundImage = 'none';
+                cardImage.style.display = 'none';
+                cardImageError.style.display = 'flex';
+            };
+            tempImg.src = url;
         } else {
-            cardImage.src = '';
+            cardImage.style.backgroundImage = 'none';
             cardImage.style.display = 'none';
             cardImageError.style.display = 'flex';
         }
@@ -853,7 +861,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         if (shareCardImage) {
-            shareCardImage.src = inputImageUrl.value.trim() || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800&auto=format&fit=crop';
+            const imgUrl = inputImageUrl.value.trim() || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800&auto=format&fit=crop';
+            shareCardImage.style.backgroundImage = `url("${imgUrl}")`;
+        }
+
+        // Get the first two news headlines for the sharing card footer
+        const shareCardNews1 = document.getElementById('shareCardNews1');
+        const shareCardNews2 = document.getElementById('shareCardNews2');
+        const newsItems = [];
+        newsInputsContainer.querySelectorAll('.news-item-input').forEach(row => {
+            const headline = row.querySelector('.input-news-headline').value.trim();
+            if (headline) newsItems.push(headline);
+        });
+
+        if (shareCardNews1) {
+            shareCardNews1.textContent = newsItems[0] ? `◆ ${newsItems[0]}` : '';
+            shareCardNews1.style.display = newsItems[0] ? 'block' : 'none';
+        }
+        if (shareCardNews2) {
+            shareCardNews2.textContent = newsItems[1] ? `◆ ${newsItems[1]}` : '';
+            shareCardNews2.style.display = newsItems[1] ? 'block' : 'none';
         }
     }
 

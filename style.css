@@ -478,11 +478,12 @@ textarea {
     margin-bottom: 10px;
 }
 
-.artifact-frame img {
+.artifact-frame .gazette-image-div {
     width: 100%;
     height: 240px;
-    object-fit: cover;
-    object-position: top;
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
     display: block;
 }
 
@@ -957,7 +958,7 @@ textarea {
 .layout-feature-image .body-col-main {
     width: 100%;
 }
-.layout-feature-image .artifact-frame img,
+.layout-feature-image .artifact-frame .gazette-image-div,
 .layout-feature-image .image-error-placeholder {
     height: 380px; /* Big poster image height */
 }
@@ -1239,7 +1240,7 @@ textarea {
         line-height: 1.8 !important;
     }
 
-    .artifact-frame img {
+    .artifact-frame .gazette-image-div {
         height: 200px !important;
     }
 
@@ -1477,10 +1478,12 @@ textarea {
     width: 100%;
 }
 
-.share-card-img-frame img {
+.share-card-image-div {
     width: 100%;
     height: 90px;
-    object-fit: cover;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     display: block;
 }
 
@@ -1508,63 +1511,25 @@ textarea {
 .share-card-footer {
     border-top: 1px solid var(--paper-border);
     padding-top: 6px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    display: block;
 }
 
-.qr-code-placeholder {
-    width: 32px;
-    height: 32px;
-    border: 1px solid var(--paper-border);
-    background-color: #fff;
-    padding: 2px;
-    flex-shrink: 0;
-}
-
-.simulated-qr {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-    gap: 1px;
-    background-color: #fff;
-}
-
-.simulated-qr span {
-    background-color: #000;
-}
-
-.simulated-qr span:nth-child(2),
-.simulated-qr span:nth-child(3),
-.simulated-qr span:nth-child(5),
-.simulated-qr span:nth-child(8),
-.simulated-qr span:nth-child(9),
-.simulated-qr span:nth-child(12),
-.simulated-qr span:nth-child(14),
-.simulated-qr span:nth-child(15) {
-    background-color: transparent;
-}
-
-.share-card-footer-text {
+.share-card-news {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    width: 100%;
 }
 
-.scan-to-read {
+.share-news-item {
     font-family: 'Noto Serif TC', serif;
-    font-size: 0.48rem;
-    font-weight: 700;
-    color: var(--paper-text);
-}
-
-.secure-trans {
-    font-size: 0.38rem;
-    font-weight: 700;
-    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.55rem;
+    line-height: 1.35;
     color: var(--paper-text-light);
-    letter-spacing: 0.05em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    text-align: left;
 }
 
