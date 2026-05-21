@@ -1602,7 +1602,7 @@ textarea {
     color: var(--paper-accent);
     border: 1.2px solid var(--paper-accent);
     background-color: rgba(166, 38, 27, 0.04);
-    padding: 1px 4px;
+    padding: 2.5px 4px 0.5px 4px;
     border-radius: 1px;
     text-transform: uppercase;
     letter-spacing: 0.03em;
