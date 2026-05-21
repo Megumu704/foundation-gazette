@@ -845,7 +845,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (shareCardTitle) shareCardTitle.textContent = inputSparkTitle.value.trim();
         
         if (shareCardIntro) {
-            shareCardIntro.textContent = inputSparkIntro.value.trim();
+            const rawIntro = inputSparkIntro.value.trim();
+            const maxLength = 45;
+            shareCardIntro.textContent = rawIntro.length > maxLength 
+                ? rawIntro.substring(0, maxLength) + '...' 
+                : rawIntro;
         }
         
         if (shareCardImage) {
