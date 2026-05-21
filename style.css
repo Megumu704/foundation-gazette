@@ -1419,19 +1419,24 @@ textarea {
 }
 
 .share-card {
-    width: 260px;
-    height: 260px;
-    background-color: var(--paper-bg);
-    background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.015"/></svg>');
+    width: 288px;
+    height: 512px;
+    background: radial-gradient(circle, #fdfbf7 0%, #f6f3e6 100%);
     color: var(--paper-text);
-    padding: 15px;
+    padding: 8px;
     border-radius: 4px;
     border: 1px solid var(--paper-border-light);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    box-shadow: 0 12px 36px rgba(0,0,0,0.4);
+    box-sizing: border-box;
+}
+
+.share-card-border-wrap {
+    border: 3px double var(--paper-border);
+    padding: 14px 12px;
+    height: 100%;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 }
 
 .share-card-paper {
@@ -1439,11 +1444,12 @@ textarea {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    gap: 12px;
 }
 
 .share-card-header {
     border-bottom: 2px double var(--paper-border);
-    padding-bottom: 4px;
+    padding-bottom: 6px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1451,24 +1457,32 @@ textarea {
 
 .share-card-era {
     font-family: 'Playfair Display', serif;
-    font-size: 0.55rem;
+    font-size: 0.58rem;
     font-weight: 900;
+    letter-spacing: 0.05em;
+}
+
+.share-card-vol {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.54rem;
+    font-weight: 900;
+    color: var(--paper-accent);
     letter-spacing: 0.05em;
 }
 
 .share-card-date {
     font-family: 'Playfair Display', serif;
-    font-size: 0.55rem;
+    font-size: 0.58rem;
     font-weight: 700;
 }
 
 .share-card-content {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    margin: 8px 0;
+    gap: 8px;
+    margin: 4px 0;
     flex: 1;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .share-card-img-frame {
@@ -1476,33 +1490,63 @@ textarea {
     padding: 2px;
     background-color: var(--paper-bg);
     width: 100%;
+    box-sizing: border-box;
 }
 
 .share-card-image-div {
     width: 100%;
-    height: 90px;
+    height: 160px;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     display: block;
 }
 
+.share-content-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    width: 100%;
+}
+
+.share-spark-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.45rem;
+    font-weight: 700;
+    color: var(--paper-text-light);
+    letter-spacing: 0.05em;
+}
+
 .share-card-title {
     font-family: 'Noto Serif TC', serif;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     font-weight: 700;
-    line-height: 1.25;
-    margin-top: 4px;
+    line-height: 1.35;
+    margin-top: 2px;
     color: var(--paper-text);
+    text-align: center;
+}
+
+.share-divider-line {
+    width: 30%;
+    height: 1px;
+    background-color: var(--paper-border-light);
+    margin: 4px 0;
 }
 
 .share-card-intro {
     font-family: 'Noto Serif TC', serif;
-    font-size: 0.6rem;
-    line-height: 1.4;
+    font-size: 0.68rem;
+    line-height: 1.5;
     color: var(--paper-text-light);
+    text-align: justify;
+    text-justify: inter-character;
+    text-align-last: center;
+    margin-top: 2px;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1510,26 +1554,133 @@ textarea {
 
 .share-card-footer {
     border-top: 1px solid var(--paper-border);
-    padding-top: 6px;
-    display: block;
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .share-card-news {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 8px;
     width: 100%;
 }
 
 .share-news-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+}
+
+.share-news-tag-wrapper {
+    width: 58px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.share-news-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.5rem;
+    font-weight: 700;
+    color: var(--paper-accent);
+    border: 1px solid var(--paper-accent);
+    background-color: rgba(166, 38, 27, 0.03);
+    padding: 1px 4px;
+    border-radius: 1px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    display: inline-block;
+    transform: rotate(-1deg);
+}
+
+.share-news-item:nth-child(2) .share-news-tag {
+    transform: rotate(0.8deg);
+}
+
+.share-news-title {
     font-family: 'Noto Serif TC', serif;
-    font-size: 0.55rem;
-    line-height: 1.35;
-    color: var(--paper-text-light);
-    white-space: nowrap;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--paper-text);
+    line-height: 1.4;
+    text-align: left;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.share-footer-bottom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-top: 1px dashed var(--paper-border-light);
+    padding-top: 8px;
+    margin-top: 4px;
+}
+
+.qr-code-placeholder {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--paper-border);
+    background-color: #fff;
+    padding: 2px;
+    flex-shrink: 0;
+}
+
+.simulated-qr {
     width: 100%;
-    text-align: left;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 1px;
+    background-color: #fff;
+}
+
+.simulated-qr span {
+    background-color: #000;
+}
+
+.simulated-qr span:nth-child(2),
+.simulated-qr span:nth-child(3),
+.simulated-qr span:nth-child(5),
+.simulated-qr span:nth-child(8),
+.simulated-qr span:nth-child(9),
+.simulated-qr span:nth-child(12),
+.simulated-qr span:nth-child(14),
+.simulated-qr span:nth-child(15) {
+    background-color: transparent;
+}
+
+.share-card-footer-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+}
+
+.scan-to-read {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 0.44rem;
+    font-weight: 700;
+    color: var(--paper-text);
+    line-height: 1.2;
+}
+
+.secure-trans {
+    font-size: 0.36rem;
+    font-weight: 700;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--paper-text-light);
+    letter-spacing: 0.02em;
+    line-height: 1.2;
 }
 

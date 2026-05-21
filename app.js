@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputQuoteAuthor = document.getElementById('inputQuoteAuthor');
     const inputImageUrl = document.getElementById('inputImageUrl');
     const inputImageCaption = document.getElementById('inputImageCaption');
+    const inputShareCardText = document.getElementById('inputShareCardText');
     
     // Preview card elements
     const gazetteCard = document.getElementById('gazetteCard');
@@ -467,6 +468,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 if (data.aestheticSpark.intro !== undefined) inputSparkIntro.value = data.aestheticSpark.intro;
                 if (data.aestheticSpark.content !== undefined) inputSparkContent.value = data.aestheticSpark.content;
+                if (data.aestheticSpark.shareCardText !== undefined) {
+                    inputShareCardText.value = data.aestheticSpark.shareCardText;
+                } else {
+                    inputShareCardText.value = data.aestheticSpark.intro ? data.aestheticSpark.intro.substring(0, 45) : '';
+                }
             }
             
             if (data.guardiansQuote) {
@@ -494,6 +500,7 @@ document.addEventListener('DOMContentLoaded', () => {
             inputQuoteAuthor.dispatchEvent(new Event('input'));
             inputImageUrl.dispatchEvent(new Event('input'));
             inputImageCaption.dispatchEvent(new Event('input'));
+            inputShareCardText.dispatchEvent(new Event('input'));
 
             // Re-render articles
             updateArticlesArea();
@@ -526,7 +533,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: inputSparkTitle.value.trim(),
                 fullTitle: inputSparkFullTitle.value.trim(),
                 intro: inputSparkIntro.value.trim(),
-                content: inputSparkContent.value.trim()
+                content: inputSparkContent.value.trim(),
+                shareCardText: inputShareCardText.value.trim()
             },
             guardiansQuote: {
                 quote: inputQuoteText.value.trim(),
@@ -678,7 +686,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: inputSparkTitle.value.trim(),
                 fullTitle: inputSparkFullTitle.value.trim(),
                 intro: inputSparkIntro.value.trim(),
-                content: inputSparkContent.value.trim()
+                content: inputSparkContent.value.trim(),
+                shareCardText: inputShareCardText.value.trim()
             },
             guardiansQuote: {
                 quote: inputQuoteText.value.trim(),
@@ -699,7 +708,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputsToWatch = [
         inputGalaxyEra, inputDate, inputCoordinates,
         inputSparkTitle, inputSparkFullTitle, inputSparkIntro, inputSparkContent,
-        inputQuoteText, inputQuoteAuthor, inputImageUrl, inputImageCaption
+        inputQuoteText, inputQuoteAuthor, inputImageUrl, inputImageCaption,
+        inputShareCardText
     ];
     inputsToWatch.forEach(inputEl => {
         if (inputEl) {
@@ -853,11 +863,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (shareCardTitle) shareCardTitle.textContent = inputSparkTitle.value.trim();
         
         if (shareCardIntro) {
-            const rawIntro = inputSparkIntro.value.trim();
-            const maxLength = 45;
-            shareCardIntro.textContent = rawIntro.length > maxLength 
-                ? rawIntro.substring(0, maxLength) + '...' 
-                : rawIntro;
+            shareCardIntro.textContent = inputShareCardText.value.trim();
         }
         
         if (shareCardImage) {
@@ -870,17 +876,34 @@ document.addEventListener('DOMContentLoaded', () => {
         const shareCardNews2 = document.getElementById('shareCardNews2');
         const newsItems = [];
         newsInputsContainer.querySelectorAll('.news-item-input').forEach(row => {
+            const category = row.querySelector('.input-news-cat').value.trim();
             const headline = row.querySelector('.input-news-headline').value.trim();
-            if (headline) newsItems.push(headline);
+            if (headline) {
+                newsItems.push({ category: category || 'NEWS', headline });
+            }
         });
 
         if (shareCardNews1) {
-            shareCardNews1.textContent = newsItems[0] ? `◆ ${newsItems[0]}` : '';
-            shareCardNews1.style.display = newsItems[0] ? 'block' : 'none';
+            if (newsItems[0]) {
+                const tagEl = shareCardNews1.querySelector('.share-news-tag');
+                const titleEl = shareCardNews1.querySelector('.share-news-title');
+                if (tagEl) tagEl.textContent = newsItems[0].category;
+                if (titleEl) titleEl.textContent = newsItems[0].headline;
+                shareCardNews1.style.display = 'flex';
+            } else {
+                shareCardNews1.style.display = 'none';
+            }
         }
         if (shareCardNews2) {
-            shareCardNews2.textContent = newsItems[1] ? `◆ ${newsItems[1]}` : '';
-            shareCardNews2.style.display = newsItems[1] ? 'block' : 'none';
+            if (newsItems[1]) {
+                const tagEl = shareCardNews2.querySelector('.share-news-tag');
+                const titleEl = shareCardNews2.querySelector('.share-news-title');
+                if (tagEl) tagEl.textContent = newsItems[1].category;
+                if (titleEl) titleEl.textContent = newsItems[1].headline;
+                shareCardNews2.style.display = 'flex';
+            } else {
+                shareCardNews2.style.display = 'none';
+            }
         }
     }
 
@@ -963,12 +986,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     a.download = filename;
                     a.click();
 
-                    btnDownloadShareCard.textContent = '🖼️ 下載正方形分享卡 (PNG)';
+                    btnDownloadShareCard.textContent = '🖼️ 下載直向分享卡 (PNG)';
                     btnDownloadShareCard.disabled = false;
                 }).catch(err => {
                     console.error(err);
                     alert('導出分享卡失敗，可能由於圖片 CORS 限制。\n\n💡 提示：若使用本地圖片，請利用「上傳」按鈕重新載入，或使用本地伺服器瀏覽網頁。');
-                    btnDownloadShareCard.textContent = '🖼️ 下載正方形分享卡 (PNG)';
+                    btnDownloadShareCard.textContent = '🖼️ 下載直向分享卡 (PNG)';
                     btnDownloadShareCard.disabled = false;
                 });
             }, 100);
@@ -1035,6 +1058,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log('Successfully loaded default draft from memory fallback.');
                 }
             });
+    }
+
+    // Auto-open share modal if openShare=true query parameter is present (useful for headless testing)
+    const paramOpenShare = urlParams.get('openShare');
+    if (paramOpenShare === 'true') {
+        setTimeout(() => {
+            if (shareTeaserText) {
+                shareTeaserText.value = generateTeaserText();
+            }
+            updateShareCardPreview();
+            if (shareModalOverlay) {
+                shareModalOverlay.style.display = 'flex';
+            }
+        }, 500);
     }
     } catch (e) {
         alert("⚠️ 捕獲到 app.js 執行期錯誤：\n\n錯誤描述: " + e.message + "\n\n詳細堆疊資訊:\n" + e.stack);

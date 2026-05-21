@@ -95,6 +95,10 @@
                         <textarea id="inputSparkIntro" rows="3">在廢墟與重建的交界，我們看見秩序的誕生。通過極簡的幾何構成，藝術不再傾訴，而是重建宇宙法則的起點...</textarea>
                     </div>
                     <div class="input-group">
+                        <label for="inputShareCardText">分享卡專用內文 / Share Card Intro (亞歷斯專用，直向卡專用不破壞排版)</label>
+                        <textarea id="inputShareCardText" rows="2" placeholder="由亞歷斯精心撰寫的分享卡專用文字，建議 45 字以內..."></textarea>
+                    </div>
+                    <div class="input-group">
                         <label for="inputSparkContent">專文內容 / Full Article (使用 #### 標記小標，> 標記金句)</label>
                         <textarea id="inputSparkContent" rows="8">新造型主義（Neo-Plasticism）的精髓在於尋求本質與純粹的平衡。在混亂的銀河洪流中，我們藉由水平與垂直的交錯，繪製出安頓心靈的座標。
 
@@ -323,30 +327,61 @@
                 <div class="modal-col-right">
                     <label class="modal-label">🖼️ 社群分享卡預覽 (可用於手機群組分享)：</label>
                     <div class="share-card-container">
-                        <!-- Square share card styled with ivory paper theme -->
+                        <!-- 9:16 vertical share card styled with ivory paper theme -->
                         <div class="share-card" id="shareCard">
-                            <div class="share-card-paper">
-                                <div class="share-card-header">
-                                    <span class="share-card-era">FOUNDATION GAZETTE</span>
-                                    <span class="share-card-date" id="shareCardDate">2026.05.21</span>
-                                </div>
-                                <div class="share-card-content">
-                                    <div class="share-card-img-frame">
-                                        <div id="shareCardImage" class="share-card-image-div" role="img" aria-label="Main Visual"></div>
+                            <div class="share-card-border-wrap">
+                                <div class="share-card-paper">
+                                    <div class="share-card-header">
+                                        <span class="share-card-era">FOUNDATION GAZETTE</span>
+                                        <span class="share-card-vol">VOL. 02</span>
+                                        <span class="share-card-date" id="shareCardDate">2026.05.21</span>
                                     </div>
-                                    <h4 class="share-card-title" id="shareCardTitle">主標題</h4>
-                                    <p class="share-card-intro" id="shareCardIntro">簡介</p>
-                                </div>
-                                <div class="share-card-footer">
-                                    <div class="share-card-news">
-                                        <div class="share-news-item" id="shareCardNews1"></div>
-                                        <div class="share-news-item" id="shareCardNews2"></div>
+                                    <div class="share-card-content">
+                                        <div class="share-card-img-frame">
+                                            <div id="shareCardImage" class="share-card-image-div" role="img" aria-label="Main Visual"></div>
+                                        </div>
+                                        <div class="share-content-box">
+                                            <span class="share-spark-badge">— AESTHETIC SPARK —</span>
+                                            <h4 class="share-card-title" id="shareCardTitle">主標題</h4>
+                                            <div class="share-divider-line"></div>
+                                            <p class="share-card-intro" id="shareCardIntro">簡介</p>
+                                        </div>
+                                    </div>
+                                    <div class="share-card-footer">
+                                        <div class="share-card-news">
+                                            <div class="share-news-item" id="shareCardNews1">
+                                                <div class="share-news-tag-wrapper">
+                                                    <span class="share-news-tag" id="shareCardNewsTag1">ANIMATION</span>
+                                                </div>
+                                                <span class="share-news-title" id="shareCardNewsTitle1">新聞標題</span>
+                                            </div>
+                                            <div class="share-news-item" id="shareCardNews2">
+                                                <div class="share-news-tag-wrapper">
+                                                    <span class="share-news-tag" id="shareCardNewsTag2">GAME</span>
+                                                </div>
+                                                <span class="share-news-title" id="shareCardNewsTitle2">新聞標題</span>
+                                            </div>
+                                        </div>
+                                        <div class="share-footer-bottom">
+                                            <div class="qr-code-placeholder">
+                                                <div class="simulated-qr">
+                                                    <span></span><span></span><span></span><span></span>
+                                                    <span></span><span></span><span></span><span></span>
+                                                    <span></span><span></span><span></span><span></span>
+                                                    <span></span><span></span><span></span><span></span>
+                                                </div>
+                                            </div>
+                                            <div class="share-card-footer-text">
+                                                <span class="scan-to-read">SCAN QR TO READ DIGITAL GAZETTE // 掃碼閱讀數位日報</span>
+                                                <span class="secure-trans">FOUNDATION SECURED TRANSMISSION PROTOCOL // ARCHIVE VOL.02</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-primary" id="btnDownloadShareCard" style="margin-top: 12px; width: 100%;">🖼️ 下載正方形分享卡 (PNG)</button>
+                    <button class="btn btn-primary" id="btnDownloadShareCard" style="margin-top: 12px; width: 100%;">🖼️ 下載直向分享卡 (PNG)</button>
                 </div>
             </div>
         </div>
