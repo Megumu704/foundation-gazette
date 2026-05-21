@@ -985,12 +985,54 @@ document.addEventListener('DOMContentLoaded', () => {
                     const clonedCard = clonedDoc.getElementById('shareCard');
                     clonedCard.style.boxShadow = 'none';
                     clonedCard.style.border = 'none';
+
+                    // html2canvas text scale bug workaround:
+                    // html2canvas fails to correctly scale the text inside stamps when transform: scale(...) is combined with high options.scale.
+                    // Overriding transform to remove the scale component, leaving only the rotation.
+                    // We also slightly adjust font-size and padding inside the clone to ensure the text remains beautifully centered and legible.
+                    const tags = clonedDoc.querySelectorAll('.share-news-tag');
+                    tags.forEach((tag, idx) => {
+                        tag.style.fontSize = '0.58rem';
+                        tag.style.padding = '2.5px 4px 1.5px 4px';
+                        if (idx === 1) {
+                            tag.style.transform = 'rotate(0.8deg)';
+                        } else {
+                            tag.style.transform = 'rotate(-1deg)';
+                        }
+                    });
                 }
             };
 
             setTimeout(() => {
                 html2canvas(card, options).then(canvas => {
                     const imgData = canvas.toDataURL('image/png');
+                    
+                    // Automation/Testing: If downloadShare=true parameter is set, render the image to the body and POST to server
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (urlParams.get('downloadShare') === 'true') {
+                        document.body.innerHTML = '';
+                        const img = document.createElement('img');
+                        img.src = imgData;
+                        img.style.width = '100vw';
+                        img.style.height = 'auto';
+                        img.style.display = 'block';
+                        document.body.appendChild(img);
+                        document.body.style.margin = '0';
+                        document.body.style.padding = '0';
+                        document.body.style.overflow = 'visible';
+                        document.title = 'TEST_RENDER_COMPLETE';
+
+                        fetch('/save-test-image', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'text/plain' },
+                            body: imgData
+                        }).then(r => r.text())
+                          .then(msg => console.log('POST success:', msg))
+                          .catch(e => console.error('POST error:', e));
+
+                        return;
+                    }
+
                     const filename = `gazette_share_card_${inputDate.value.trim().replace(/\./g, '_')}.png`;
                     const a = document.createElement('a');
                     a.href = imgData;
@@ -1073,6 +1115,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Auto-open share modal if openShare=true query parameter is present (useful for headless testing)
     const paramOpenShare = urlParams.get('openShare');
+    const paramDownloadShare = urlParams.get('downloadShare');
     if (paramOpenShare === 'true') {
         setTimeout(() => {
             if (shareTeaserText) {
@@ -1081,6 +1124,11 @@ document.addEventListener('DOMContentLoaded', () => {
             updateShareCardPreview();
             if (shareModalOverlay) {
                 shareModalOverlay.style.display = 'flex';
+            }
+            if (paramDownloadShare === 'true' && btnDownloadShareCard) {
+                setTimeout(() => {
+                    btnDownloadShareCard.click();
+                }, 300);
             }
         }, 500);
     }

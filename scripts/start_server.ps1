@@ -19,6 +19,47 @@ try {
         
         # Get requested relative path
         $url = $request.Url.LocalPath
+        
+        if ($request.HttpMethod -eq "POST" -and $url -eq "/save-test-image") {
+            try {
+                $reader = New-Object System.IO.StreamReader($request.InputStream)
+                $body = $reader.ReadToEnd()
+                $reader.Close()
+                
+                if ($body.StartsWith("data:image/png;base64,")) {
+                    $base64Data = $body.Substring("data:image/png;base64,".Length)
+                    $bytes = [System.Convert]::FromBase64String($base64Data)
+                    
+                    $projectRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot ".."))
+                    $outputPath = Join-Path $projectRoot "test_output_share_card.png"
+                    [System.IO.File]::WriteAllBytes($outputPath, $bytes)
+                    
+                    $response.StatusCode = 200
+                    $response.Headers.Add("Access-Control-Allow-Origin", "*")
+                    $resBytes = [System.Text.Encoding]::UTF8.GetBytes("Image saved successfully to $outputPath")
+                    $response.ContentLength64 = $resBytes.Length
+                    $response.OutputStream.Write($resBytes, 0, $resBytes.Length)
+                    Write-Host "[200] Saved test image: $outputPath"
+                } else {
+                    $response.StatusCode = 400
+                    $response.Headers.Add("Access-Control-Allow-Origin", "*")
+                    $resBytes = [System.Text.Encoding]::UTF8.GetBytes("Invalid data URL format")
+                    $response.ContentLength64 = $resBytes.Length
+                    $response.OutputStream.Write($resBytes, 0, $resBytes.Length)
+                    Write-Host "[400] Invalid POST format"
+                }
+            } catch {
+                $response.StatusCode = 500
+                $response.Headers.Add("Access-Control-Allow-Origin", "*")
+                $resBytes = [System.Text.Encoding]::UTF8.GetBytes("Error saving image: $_")
+                $response.ContentLength64 = $resBytes.Length
+                $response.OutputStream.Write($resBytes, 0, $resBytes.Length)
+                Write-Host "[500] Error: $_"
+            }
+            $response.Close()
+            continue
+        }
+        
         if ($url -eq "/") { $url = "/index.html" }
         
         # Clean up path to prevent traversal and decode URL encoding
