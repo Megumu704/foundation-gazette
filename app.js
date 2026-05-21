@@ -871,6 +871,17 @@ document.addEventListener('DOMContentLoaded', () => {
             shareCardImage.style.backgroundImage = `url("${imgUrl}")`;
         }
 
+        // Dynamically update the issue volume number (e.g., FOUNDATION ERA 01 -> N° 01)
+        const shareCardVol = document.querySelector('.share-card-vol');
+        const secureTrans = document.querySelector('.secure-trans');
+        if (shareCardVol || secureTrans) {
+            const eraText = inputGalaxyEra ? inputGalaxyEra.value.trim() : '';
+            const match = eraText.match(/\d+/);
+            const issueNum = match ? match[0].padStart(2, '0') : '02';
+            if (shareCardVol) shareCardVol.textContent = `N° ${issueNum}`;
+            if (secureTrans) secureTrans.textContent = `FOUNDATION SECURED TRANSMISSION PROTOCOL // ARCHIVE N° ${issueNum}`;
+        }
+
         // Get the first two news headlines for the sharing card footer
         const shareCardNews1 = document.getElementById('shareCardNews1');
         const shareCardNews2 = document.getElementById('shareCardNews2');

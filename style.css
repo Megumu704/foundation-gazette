@@ -1421,7 +1421,8 @@ textarea {
 .share-card {
     width: 288px;
     height: 512px;
-    background: radial-gradient(circle, #fdfbf7 0%, #f6f3e6 100%);
+    background: url('data/images/paper_texture.png') no-repeat center;
+    background-size: cover;
     color: var(--paper-text);
     padding: 8px;
     border-radius: 4px;
@@ -1497,7 +1498,7 @@ textarea {
     width: 100%;
     height: 160px;
     background-size: cover;
-    background-position: center;
+    background-position: center top;
     background-repeat: no-repeat;
     display: block;
 }
@@ -1587,7 +1588,7 @@ textarea {
     font-size: 0.5rem;
     font-weight: 700;
     color: var(--paper-accent);
-    border: 1px solid var(--paper-accent);
+    border: 1.2px solid var(--paper-accent);
     background-color: rgba(166, 38, 27, 0.03);
     padding: 1px 4px;
     border-radius: 1px;
@@ -1595,11 +1596,13 @@ textarea {
     letter-spacing: 0.03em;
     line-height: 1;
     display: inline-block;
-    transform: rotate(-1deg);
+    transform: scale(0.9, 1.35) rotate(-1deg);
+    text-shadow: 0.3px 0.3px 0.5px rgba(166, 38, 27, 0.4);
+    box-shadow: 0 0 0.5px rgba(166, 38, 27, 0.3), inset 0 0 0.5px rgba(166, 38, 27, 0.3);
 }
 
 .share-news-item:nth-child(2) .share-news-tag {
-    transform: rotate(0.8deg);
+    transform: scale(0.9, 1.35) rotate(0.8deg);
 }
 
 .share-news-title {
