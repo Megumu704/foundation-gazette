@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基地日報編輯台 / Foundation Gazette Generator</title>
+    <!-- Google Fonts for retro/sci-fi styling -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Lora:ital,wght@0,400..700;1,400..700&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@400;500;700;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        window.onerror = function(message, source, lineno, colno, error) {
+            var div = document.createElement('div');
+            div.id = 'debug-error-out';
+            div.style.color = 'red';
+            div.style.background = 'white';
+            div.style.padding = '20px';
+            div.style.fontSize = '20px';
+            div.style.position = 'fixed';
+            div.style.top = '0';
+            div.style.left = '0';
+            div.style.zIndex = '10000';
+            div.innerHTML = "<h3>⚠️ JS Error:</h3>" +
+                            "<p><b>Message:</b> " + message + "</p>" +
+                            "<p><b>Source:</b> " + source + "</p>" +
+                            "<p><b>Line:</b> " + lineno + ", <b>Col:</b> " + colno + "</p>" +
+                            "<pre><b>Stack:</b> " + (error ? error.stack : 'No stack trace') + "</pre>";
+            document.body.appendChild(div);
+            alert("⚠️ 發現 JavaScript 執行錯誤！\n\n錯誤訊息: " + message + "\n來源: " + source + "\n行號: " + lineno + "，列號: " + colno + "\n\n詳細堆疊資訊:\n" + (error ? error.stack : '無堆疊資訊'));
+            return false;
+        };
+    </script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Left Panel: Controls -->
+        <aside class="control-panel">
+            <header class="panel-header">
+                <h2>基地日報編輯台</h2>
+                <span class="sub-logo">FOUNDATION GAZETTE CONTROL PANEL</span>
+            </header>
+            
+            <div class="panel-scroll-area">
+                <!-- File Drop Zone -->
+                <div class="drop-zone" id="dropZone">
+                    <p>拖曳 <code>draft.json</code> 至此或點擊上傳</p>
+                    <input type="file" id="fileInput" accept=".json" style="display: none;">
+                </div>
+                
+                <!-- Section: Metadata -->
+                <section class="panel-section">
+                    <h3>一、 表頭資訊 / Metadata</h3>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="inputGalaxyEra">銀河紀元 / GALAXY ERA</label>
+                            <input type="text" id="inputGalaxyEra" value="FOUNDATION ERA 01">
+                        </div>
+                        <div class="input-group">
+                            <label for="inputDate">日期 / DATE</label>
+                            <input type="text" id="inputDate" value="2026.05.20">
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="inputCoordinates">星區座標 / SPACE COORDINATES</label>
+                            <input type="text" id="inputCoordinates" value="SECTOR 2824 / TERMINUS">
+                        </div>
+                        <div class="input-group">
+                            <label>版面配置 / LAYOUT TEMPLATE</label>
+                            <div class="readonly-badge" id="labelLayoutScheme">經典分欄 (Classic Split)</div>
+                        </div>
+                    </div>
+                    <div class="input-row" style="margin-top: 6px;">
+                        <div class="input-group" style="flex-direction: row; align-items: center; gap: 8px;">
+                            <input type="checkbox" id="toggleInkFilter" style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--ui-accent); margin: 0;">
+                            <label for="toggleInkFilter" style="cursor: pointer; user-select: none; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ui-text-muted);">啟用復古油墨濾鏡 / Vintage Ink Filter</label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Aesthetic Spark -->
+                <section class="panel-section">
+                    <h3>二、 美學星火 / Aesthetic Spark</h3>
+                    <div class="input-group">
+                        <label for="inputSparkTitle">主標題 / Article Title</label>
+                        <input type="text" id="inputSparkTitle" value="新造型主義與美學主張">
+                    </div>
+                    <div class="input-group">
+                        <label for="inputSparkFullTitle">專題深讀標題 / Full Article Title (留空則與主標題相同)</label>
+                        <input type="text" id="inputSparkFullTitle" value="">
+                    </div>
+                    <div class="input-group">
+                        <label for="inputSparkIntro">封面簡介 / Cover Intro (顯示於第一頁)</label>
+                        <textarea id="inputSparkIntro" rows="3">在廢墟與重建的交界，我們看見秩序的誕生。通過極簡的幾何構成，藝術不再傾訴，而是重建宇宙法則的起點...</textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="inputSparkContent">專文內容 / Full Article (使用 #### 標記小標，> 標記金句)</label>
+                        <textarea id="inputSparkContent" rows="8">新造型主義（Neo-Plasticism）的精髓在於尋求本質與純粹的平衡。在混亂的銀河洪流中，我們藉由水平與垂直的交錯，繪製出安頓心靈的座標。
+
+#### 秩序的重建與回歸
+我們拋棄了具象的描繪，回歸到原色與直角。因為在這個動盪的宇宙裡，只有最純粹的數學秩序才能帶來恆久的平靜。
+
+> 藝術不是描繪可見之物，而是把不可見之物創造為可見。</textarea>
+                    </div>
+                </section>
+
+                <!-- Section: Quote -->
+                <section class="panel-section">
+                    <h3>三、 守護者格言 / Guardian's Quote</h3>
+                    <div class="input-group">
+                        <label for="inputQuoteText">格言內容 / Quote</label>
+                        <textarea id="inputQuoteText" rows="3">藝術不是描繪可見之物，而是把不可見之物創造為可見。</textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="inputQuoteAuthor">發表者 / Author</label>
+                        <input type="text" id="inputQuoteAuthor" value="保羅·克利 (Paul Klee)">
+                    </div>
+                </section>
+
+                <!-- Section: News -->
+                <section class="panel-section">
+                    <h3>四、 時事新聞 / Dynamic News</h3>
+                    <div id="newsInputsContainer">
+                        <!-- Dynamic inputs will be rendered here by JS -->
+                    </div>
+                </section>
+
+                <!-- Section: Visual Artifact -->
+                <section class="panel-section">
+                    <h3>五、 視覺造物 / Visual Artifact</h3>
+                    <div class="input-group">
+                        <label for="inputImageUrl">影像網址 / Image URL</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="inputImageUrl" value="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800&auto=format&fit=crop" style="flex: 1;">
+                            <input type="file" id="inputImageFile" accept="image/*" style="display: none;">
+                            <button type="button" class="btn btn-secondary" id="btnUploadImageFile" style="padding: 0 12px; font-size: 0.8rem; white-space: nowrap; margin-top: 0; min-height: 38px; flex: none;">上傳</button>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="inputImageCaption">圖說 / Caption</label>
+                        <input type="text" id="inputImageCaption" value="色彩與線條的抽象交織">
+                    </div>
+                </section>
+            </div>
+
+            <!-- Panel Bottom Buttons -->
+            <div class="panel-actions" style="display: flex; flex-direction: column; gap: 8px; padding: 20px 24px 0 24px; border-top: 1px solid var(--ui-border);">
+                <div style="display: flex; gap: 12px; width: 100%;">
+                    <button class="btn btn-secondary" id="btnDownloadJson" style="flex: 1;">儲存編輯草稿 JSON</button>
+                    <button class="btn btn-primary" id="btnExportPng" style="flex: 1;">輸出日報網頁(PNG)</button>
+                </div>
+                <button class="btn btn-secondary" id="btnClearDraft" style="font-size: 0.8rem; padding: 8px; border-color: #442222; color: #ff9999; background: #221111; width: 100%;">⚠️ 重設為預設草稿 (清除瀏覽器存檔)</button>
+            </div>
+
+            <footer class="control-panel-footer">
+                <p>基地日報編輯台系統 v1.1 | 專屬視覺總監版</p>
+            </footer>
+        </aside>
+
+        <!-- Right Panel: Gazette Preview Area -->
+        <main class="preview-area">
+            <div class="preview-wrapper">
+                <!-- Physical Gazette Card -->
+                <article class="gazette-card" id="gazetteCard">
+                    <!-- Paper texture overlay -->
+                    <div class="paper-texture"></div>
+                    
+                    <!-- 1. COVER PAGE SECTION -->
+                    <div class="gazette-page cover-page">
+                        <!-- Gazette Header -->
+                        <header class="gazette-header">
+                            <div class="header-top-meta">
+                                <span id="cardGalaxyEra">FOUNDATION ERA 01</span>
+                                <span class="header-divider">◆</span>
+                                <span id="cardCoordinates">SECTOR 2824 / TERMINUS</span>
+                                <span class="header-divider">◆</span>
+                                <span id="cardEdition">NO. 001</span>
+                            </div>
+                            
+                            <div class="header-title-block">
+                                <h1 class="eng-title">FOUNDATION GAZETTE</h1>
+                                <h2 class="chi-title">基地日報</h2>
+                            </div>
+                            
+                            <div class="header-bottom-meta">
+                                <span class="meta-left">KEEPERS OF CULTURE IN THE DARK AGE</span>
+                                <span id="cardDate" class="meta-right">2026.05.20</span>
+                            </div>
+                        </header>
+
+                        <!-- Gazette Body Grid -->
+                        <div class="gazette-body">
+                            <!-- Left Main Column (Aesthetic Spark & Image) -->
+                            <div class="body-col-main">
+                                <!-- Aesthetic Spark Section -->
+                                <section class="section-spark">
+                                    <div class="section-tag">AESTHETIC SPARK / 美學星火</div>
+                                    <h3 id="cardSparkTitle" class="spark-title">新造型主義與美學主張</h3>
+                                    <div id="cardSparkIntro" class="spark-content">
+                                        <p>在廢墟與重建的交界，我們看見秩序的誕生。通過極簡的幾何構成，藝術不再傾訴，而是重建宇宙法則的起點...</p>
+                                    </div>
+                                </section>
+
+                                <!-- Visual Artifact Section -->
+                                <section class="section-artifact">
+                                    <div class="section-tag">VISUAL ARTIFACT / 視覺造物</div>
+                                    <div class="artifact-frame">
+                                        <img id="cardImage" src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800&auto=format&fit=crop" alt="Visual Artifact">
+                                        <div class="image-error-placeholder" id="cardImageError" style="display: none;">
+                                            <div class="placeholder-icon">📡</div>
+                                            <div class="placeholder-text">影像暫停連線 / NO SIGNAL</div>
+                                            <div class="placeholder-subtext">請確認圖片連結是否有效</div>
+                                        </div>
+                                    </div>
+                                    <p id="cardImageCaption" class="artifact-caption">色彩與線條的抽象交織</p>
+                                </section>
+                            </div>
+
+                            <!-- Right Sidebar (News & Quote) -->
+                            <div class="body-col-sidebar">
+                                <!-- Dynamic News Section -->
+                                <section class="section-news">
+                                    <div class="section-tag">DYNAMIC NEWS / 時事動態</div>
+                                    <ul class="news-list" id="cardNewsList">
+                                        <li>
+                                            <span class="news-cat">GAME</span>
+                                            <span class="news-headline">《空洞騎士：絲之歌》發布全新預告，揭示絲線美學</span>
+                                        </li>
+                                        <li>
+                                            <span class="news-cat">ART</span>
+                                            <span class="news-headline">數位美術館開放「構成主義」線上特展</span>
+                                        </li>
+                                    </ul>
+                                </section>
+
+                                <!-- Guardian's Quote Section -->
+                                <section class="section-quote">
+                                    <div class="section-tag">GUARDIAN'S QUOTE / 守護者格言</div>
+                                    <blockquote class="quote-block">
+                                        <span class="quote-mark">“</span>
+                                        <p id="cardQuoteText">藝術不是描繪可見之物，而是把不可見之物創造為可見。</p>
+                                        <cite id="cardQuoteAuthor">— 保羅·克利 (Paul Klee)</cite>
+                                    </blockquote>
+                                </section>
+                                
+                                <!-- Printer's Ornament -->
+                                <div class="sidebar-ornament">❦ ❦ ❦</div>
+                                
+                                <!-- Sci-fi Barcode / Cosmic Code -->
+                                <div class="cosmic-signature">
+                                    <div class="barcode">
+                                        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                                    </div>
+                                    <span class="signature-text">FOUNDATION-ENCRYPTED-TRANSMISSION</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cover Page Footer -->
+                        <footer class="gazette-footer">
+                            <span>PUBLISHED BY THE FOUNDATION ACADEMY</span>
+                            <span>KEEPERS OF CULTURE IN THE DARK AGE</span>
+                        </footer>
+                    </div>
+
+                    <!-- 2. ARTICLE SECTION (DOWNWARD EXTENSION) -->
+                    <div class="gazette-page articles-page">
+                        <!-- Double line divider separating cover from articles -->
+                        <div class="cover-divider"></div>
+
+                        <!-- Gazette Articles Section (Downward extension) -->
+                        <div class="gazette-articles" id="cardArticlesArea">
+                            <!-- Articles will be rendered here dynamically -->
+                        </div>
+
+                        <!-- Outer/Final Page Footer -->
+                        <footer class="gazette-footer">
+                            <span>END OF TRANSMISSION</span>
+                            <span>FOUNDATION GAZETTE - SECURED ARCHIVE</span>
+                        </footer>
+                    </div>
+                </article>
+            </div>
+        </main>
+    </div>
+
+    <!-- html2canvas Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
