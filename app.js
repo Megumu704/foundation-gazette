@@ -161,6 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             tempImg.onload = () => {
                 cardImage.style.backgroundImage = `url("${url}")`;
+                cardImage.style.backgroundPosition = 'center 55%';
                 cardImage.style.display = 'block';
                 cardImageError.style.display = 'none';
             };
@@ -885,6 +886,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (shareCardImage) {
             const imgUrl = inputImageUrl.value.trim() || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800&auto=format&fit=crop';
             shareCardImage.style.backgroundImage = `url("${imgUrl}")`;
+            shareCardImage.style.backgroundPosition = 'center 55%';
         }
 
         // Dynamically update the issue volume number (e.g., FOUNDATION ERA 01 -> N° 01)
