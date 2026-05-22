@@ -34,6 +34,12 @@ body {
     overflow: hidden;
 }
 
+
+.text-nowrap {
+    white-space: nowrap;
+    display: inline-block;
+}
+
 /* App Container */
 .app-container {
     display: flex;

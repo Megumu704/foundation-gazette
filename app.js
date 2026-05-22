@@ -98,6 +98,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     updateLayoutScheme('classic-split'); // Init
 
+    // --- Helper functions for formatting names ---
+    function escapeHtml(text) {
+        if (text === null || text === undefined) return '';
+        return String(text)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function wrapForeignNames(text) {
+        if (!text) return '';
+        // Matches foreign names like 諾曼·麥克萊倫, R·丹尼爾·奧立瓦, etc.
+        // It allows Chinese/English characters connected by middle dots (· or ・)
+        return text.replace(/([\u4e00-\u9fa5a-zA-Z]+(?:[·・][\u4e00-\u9fa5a-zA-Z]+)+)/g, '<span class="text-nowrap">$1</span>');
+    }
+
     // --- Data Binding Functions ---
     
     function syncText(input, cardElement, isParagraph = false) {
@@ -108,10 +126,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isParagraph) {
                 // Split paragraphs by newline and wrap each in <p>
                 cardElement.innerHTML = val.split('\n')
-                    .map(p => p.trim() ? `<p>${p}</p>` : '')
+                    .map(p => p.trim() ? `<p>${wrapForeignNames(escapeHtml(p))}</p>` : '')
                     .join('');
             } else {
-                cardElement.textContent = val;
+                cardElement.innerHTML = wrapForeignNames(escapeHtml(val));
             }
         };
         
@@ -145,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Bind quote author (prepending em-dash)
     const updateAuthor = () => {
         const author = inputQuoteAuthor.value.trim();
-        cardQuoteAuthor.textContent = author ? `— ${author}` : '';
+        cardQuoteAuthor.innerHTML = author ? `— ${wrapForeignNames(escapeHtml(author))}` : '';
     };
     inputQuoteAuthor.addEventListener('input', updateAuthor);
     updateAuthor();
@@ -199,12 +217,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const trimmed = line.trim();
                 if (!trimmed) return '';
                 if (trimmed.startsWith('#### ')) {
-                    return `<h4 class="article-subtitle">${trimmed.substring(5)}</h4>`;
+                    return `<h4 class="article-subtitle">${wrapForeignNames(escapeHtml(trimmed.substring(5)))}</h4>`;
                 }
                 if (trimmed.startsWith('> ')) {
-                    return `<div class="article-slogan">${trimmed.substring(2)}</div>`;
+                    return `<div class="article-slogan">${wrapForeignNames(escapeHtml(trimmed.substring(2)))}</div>`;
                 }
-                return `<p class="article-paragraph">${trimmed}</p>`;
+                return `<p class="article-paragraph">${wrapForeignNames(escapeHtml(trimmed))}</p>`;
             })
             .filter(Boolean)
             .join('');
@@ -237,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             articleDiv.innerHTML = `
                 <div class="section-tag">READING / 專題深讀</div>
-                <h3 class="spark-title">${sparkFullTitle}</h3>
+                <h3 class="spark-title">${wrapForeignNames(escapeHtml(sparkFullTitle))}</h3>
                 <div class="spark-content-full">
                     ${parseArticleMarkdown(sparkContent)}
                 </div>
@@ -276,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 articleDiv.innerHTML = `
                     <div class="section-tag">${cat ? cat.toUpperCase() + ' REPORT' : 'NEWS REPORT'} / 時事深讀</div>
-                    <h3 class="spark-title">${headline}</h3>
+                    <h3 class="spark-title">${wrapForeignNames(escapeHtml(headline))}</h3>
                     ${imageHtml}
                     <div class="spark-content-full" style="margin-top: 15px;">
                         ${parseArticleMarkdown(summary)}
@@ -319,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 const headlineSpan = document.createElement('span');
                 headlineSpan.className = 'news-headline';
-                headlineSpan.textContent = headline || '';
+                headlineSpan.innerHTML = wrapForeignNames(escapeHtml(headline || ''));
                 
                 li.appendChild(catSpan);
                 li.appendChild(headlineSpan);
@@ -877,10 +895,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateShareCardPreview() {
         if (shareCardDate) shareCardDate.textContent = inputDate.value.trim();
-        if (shareCardTitle) shareCardTitle.textContent = inputSparkTitle.value.trim();
+        if (shareCardTitle) shareCardTitle.innerHTML = wrapForeignNames(escapeHtml(inputSparkTitle.value.trim()));
         
         if (shareCardIntro) {
-            shareCardIntro.textContent = inputShareCardText.value.trim();
+            shareCardIntro.innerHTML = wrapForeignNames(escapeHtml(inputShareCardText.value.trim()));
         }
         
         if (shareCardImage) {
@@ -917,7 +935,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const tagEl = shareCardNews1.querySelector('.share-news-tag');
                 const titleEl = shareCardNews1.querySelector('.share-news-title');
                 if (tagEl) tagEl.textContent = newsItems[0].category;
-                if (titleEl) titleEl.textContent = newsItems[0].headline;
+                if (titleEl) titleEl.innerHTML = wrapForeignNames(escapeHtml(newsItems[0].headline));
                 shareCardNews1.style.display = 'flex';
             } else {
                 shareCardNews1.style.display = 'none';
@@ -928,7 +946,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const tagEl = shareCardNews2.querySelector('.share-news-tag');
                 const titleEl = shareCardNews2.querySelector('.share-news-title');
                 if (tagEl) tagEl.textContent = newsItems[1].category;
-                if (titleEl) titleEl.textContent = newsItems[1].headline;
+                if (titleEl) titleEl.innerHTML = wrapForeignNames(escapeHtml(newsItems[1].headline));
                 shareCardNews2.style.display = 'flex';
             } else {
                 shareCardNews2.style.display = 'none';
