@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardGalaxyEra = document.getElementById('cardGalaxyEra');
     const cardCoordinates = document.getElementById('cardCoordinates');
     const cardDate = document.getElementById('cardDate');
+    const cardEdition = document.getElementById('cardEdition');
     const cardSparkTitle = document.getElementById('cardSparkTitle');
     const cardSparkIntro = document.getElementById('cardSparkIntro');
     const cardQuoteText = document.getElementById('cardQuoteText');
@@ -120,6 +121,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Bind standard text fields for Cover
     syncText(inputGalaxyEra, cardGalaxyEra);
+    
+    // Bind dynamic edition number based on inputGalaxyEra
+    const updateEdition = () => {
+        const eraText = inputGalaxyEra.value.trim();
+        const match = eraText.match(/\d+/);
+        if (match) {
+            const issueNum = match[0].padStart(3, '0');
+            cardEdition.textContent = `NO. ${issueNum}`;
+        } else {
+            cardEdition.textContent = 'NO. 001';
+        }
+    };
+    inputGalaxyEra.addEventListener('input', updateEdition);
+    updateEdition();
+
     syncText(inputCoordinates, cardCoordinates);
     syncText(inputDate, cardDate);
     syncText(inputSparkTitle, cardSparkTitle);
