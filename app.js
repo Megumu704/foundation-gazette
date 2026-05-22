@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 articleDiv.innerHTML = `
                     <div class="section-tag">${cat ? cat.toUpperCase() + ' REPORT' : 'NEWS REPORT'} / 時事深讀</div>
-                    <h3 class="spark-title" style="font-size: 1.45rem; line-height: 1.3;">${headline}</h3>
+                    <h3 class="spark-title">${headline}</h3>
                     ${imageHtml}
                     <div class="spark-content-full" style="margin-top: 15px;">
                         ${parseArticleMarkdown(summary)}

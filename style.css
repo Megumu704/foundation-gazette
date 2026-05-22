@@ -438,12 +438,13 @@ textarea {
 
 .spark-title {
     font-family: 'Noto Serif TC', serif;
-    font-size: 1.6rem;
+    font-size: 1.4rem; /* Adjusted to guarantee 17-18 character titles fit on a single line on the cover */
     font-weight: 700;
     color: var(--paper-text);
     line-height: 1.3;
     margin-bottom: 15px;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.005em;
+    text-wrap: balance; /* Balance lines to prevent orphaned characters */
 }
 
 .spark-content {
@@ -582,9 +583,10 @@ textarea {
     font-weight: 700;
     line-height: 1.45;
     color: var(--paper-text);
-    word-break: keep-all;
+    word-break: normal; /* Allow normal break for mixed CJK and English */
     overflow-wrap: break-word;
     text-align: justify;
+    text-wrap: balance; /* Keep text balanced and clean */
 }
 
 .news-summary {
@@ -801,8 +803,16 @@ textarea {
     margin-bottom: 15px;
 }
 
-.article-item .spark-title {
+.article-item.spark-full .spark-title {
     font-size: 1.8rem;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--paper-border);
+    padding-bottom: 10px;
+}
+
+.article-item.news-full .spark-title {
+    font-size: 1.25rem; /* Reduced size to fit mixed CJK/English titles gracefully on one line */
+    line-height: 1.35;
     margin-bottom: 20px;
     border-bottom: 1px solid var(--paper-border);
     padding-bottom: 10px;
@@ -1531,13 +1541,14 @@ textarea {
 
 .share-card-title {
     font-family: 'Noto Serif TC', serif;
-    font-size: 0.95rem;
+    font-size: 0.8rem; /* Reduced to guarantee 17-18 character titles fit on a single line */
     font-weight: 700;
     line-height: 1.35;
     margin-top: 2px;
     color: #1a1a1a;
     text-align: center;
     text-shadow: 0.2px 0.2px 0.5px rgba(26, 26, 26, 0.25); /* Micro ink-bleed */
+    text-wrap: balance; /* Balance lines to prevent single-character orphans */
 }
 
 .share-divider-line {
