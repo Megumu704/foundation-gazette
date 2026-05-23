@@ -1,4 +1,4 @@
-window.FOUNDATION_ARCHIVES = {
+﻿window.FOUNDATION_ARCHIVES = {
   "draft": {
   "galaxyEra": "FOUNDATION ERA 04",
   "dateString": "2026.05.23",
