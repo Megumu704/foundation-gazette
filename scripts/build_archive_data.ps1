@@ -4,10 +4,12 @@ $a2021 = [System.IO.File]::ReadAllText("C:\Users\Hubert\.gemini\antigravity\scra
 $a2022 = [System.IO.File]::ReadAllText("C:\Users\Hubert\.gemini\antigravity\scratch\foundation-gazette\data\archive\2026_05_22.json", [System.Text.Encoding]::UTF8)
 $a2023 = [System.IO.File]::ReadAllText("C:\Users\Hubert\.gemini\antigravity\scratch\foundation-gazette\data\archive\2026_05_23.json", [System.Text.Encoding]::UTF8)
 $a2024 = [System.IO.File]::ReadAllText("C:\Users\Hubert\.gemini\antigravity\scratch\foundation-gazette\data\archive\2026_05_24.json", [System.Text.Encoding]::UTF8)
+$a2025 = [System.IO.File]::ReadAllText("C:\Users\Hubert\.gemini\antigravity\scratch\foundation-gazette\data\archive\2026_05_25.json", [System.Text.Encoding]::UTF8)
 
 $jsContent = @"
 window.FOUNDATION_ARCHIVES = {
   "draft": $draft,
+  "2026.05.25": $a2025,
   "2026.05.24": $a2024,
   "2026.05.23": $a2023,
   "2026.05.22": $a2022,
