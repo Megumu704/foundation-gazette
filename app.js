@@ -220,13 +220,31 @@ document.addEventListener('DOMContentLoaded', () => {
             .map(line => {
                 const trimmed = line.trim();
                 if (!trimmed) return '';
+                
+                let htmlContent;
+                let isSubtitle = false;
+                let isSlogan = false;
+                
                 if (trimmed.startsWith('#### ')) {
-                    return `<h4 class="article-subtitle">${wrapForeignNames(escapeHtml(trimmed.substring(5)))}</h4>`;
+                    htmlContent = wrapForeignNames(escapeHtml(trimmed.substring(5)));
+                    isSubtitle = true;
+                } else if (trimmed.startsWith('> ')) {
+                    htmlContent = wrapForeignNames(escapeHtml(trimmed.substring(2)));
+                    isSlogan = true;
+                } else {
+                    htmlContent = wrapForeignNames(escapeHtml(trimmed));
                 }
-                if (trimmed.startsWith('> ')) {
-                    return `<div class="article-slogan">${wrapForeignNames(escapeHtml(trimmed.substring(2)))}</div>`;
+                
+                // Parse markdown bold **text** to <strong>text</strong>
+                htmlContent = htmlContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                
+                if (isSubtitle) {
+                    return `<h4 class="article-subtitle">${htmlContent}</h4>`;
                 }
-                return `<p class="article-paragraph">${wrapForeignNames(escapeHtml(trimmed))}</p>`;
+                if (isSlogan) {
+                    return `<div class="article-slogan">${htmlContent}</div>`;
+                }
+                return `<p class="article-paragraph">${htmlContent}</p>`;
             })
             .filter(Boolean)
             .join('');

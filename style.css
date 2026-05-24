@@ -37,7 +37,6 @@ body {
 
 .text-nowrap {
     white-space: nowrap !important;
-    display: inline-block !important;
 }
 
 /* App Container */
