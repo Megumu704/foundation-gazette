@@ -112,9 +112,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function wrapForeignNames(text) {
         if (!text) return '';
         // Matches foreign names like 諾曼·麥克萊倫, R·丹尼爾·奧立瓦, etc.
-        // It allows Chinese/English characters connected by middle dots (· or ・)
-        return text.replace(/([\u4e00-\u9fa5a-zA-Z]+(?:[·・][\u4e00-\u9fa5a-zA-Z]+)+)/g, '<span class="text-nowrap">$1</span>');
+        // It allows Chinese/English characters connected by middle dots (\u00b7 or \u30fb)
+        let result = text.replace(/([\u4e00-\u9fa5a-zA-Z]+(?:[\u00b7\u30fb][\u4e00-\u9fa5a-zA-Z]+)+)/g, '<span class="text-nowrap">$1</span>');
+        // Matches CJK book/movie titles wrapped in double angle brackets \u300a...\u300b to prevent wrapping inside them
+        result = result.replace(/(\u300a[^\u300b]+\u300b)/g, '<span class="text-nowrap">$1</span>');
+        return result;
     }
+    window.wrapForeignNames = wrapForeignNames;
 
     // --- Data Binding Functions ---
     
@@ -179,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             tempImg.onload = () => {
                 cardImage.style.backgroundImage = `url("${url}")`;
-                cardImage.style.backgroundPosition = 'center 55%';
+                cardImage.style.backgroundPosition = 'center';
                 cardImage.style.display = 'block';
                 cardImageError.style.display = 'none';
             };
@@ -253,14 +257,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const articleDiv = document.createElement('div');
             articleDiv.className = 'article-item spark-full';
             
+            var wrappedTitle = wrapForeignNames(escapeHtml(sparkFullTitle));
+            window.debugWrappedTitle = wrappedTitle;
+            
             articleDiv.innerHTML = `
                 <div class="section-tag">READING / 專題深讀</div>
-                <h3 class="spark-title">${wrapForeignNames(escapeHtml(sparkFullTitle))}</h3>
+                <h3 class="spark-title">${wrappedTitle}</h3>
                 <div class="spark-content-full">
                     ${parseArticleMarkdown(sparkContent)}
                 </div>
             `;
             cardArticlesArea.appendChild(articleDiv);
+            
+
         }
 
         // 2. Render News Articles Full Version
@@ -904,7 +913,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (shareCardImage) {
             const imgUrl = inputImageUrl.value.trim() || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800&auto=format&fit=crop';
             shareCardImage.style.backgroundImage = `url("${imgUrl}")`;
-            shareCardImage.style.backgroundPosition = 'center 55%';
+            shareCardImage.style.backgroundPosition = 'center';
         }
 
         // Dynamically update the issue volume number (e.g., FOUNDATION ERA 01 -> N° 01)
