@@ -646,6 +646,9 @@ textarea {
     color: var(--paper-text-light);
     text-align: right;
     font-weight: 600;
+    line-height: 1.5;
+    white-space: pre-line; /* Support explicit newlines from database */
+    text-wrap: balance; /* Balance lines to prevent awkward CJK wrapping */
 }
 
 .sidebar-ornament {
