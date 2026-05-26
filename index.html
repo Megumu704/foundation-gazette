@@ -394,8 +394,19 @@
 
     <!-- html2canvas Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="data/archive_data.js?v=20260526b"></script>
-    <script src="app.js?v=20260526b"></script>
+    <script>
+        (function() {
+            var s1 = document.createElement('script');
+            s1.src = 'data/archive_data.js?v=' + Date.now();
+            s1.async = false;
+            document.head.appendChild(s1);
+
+            var s2 = document.createElement('script');
+            s2.src = 'app.js?v=' + Date.now();
+            s2.async = false;
+            document.head.appendChild(s2);
+        })();
+    </script>
     
 </body>
 </html>

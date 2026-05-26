@@ -146,7 +146,7 @@ if (Test-Path $draftPath) {
             if ($mainItem.properties.$mainTitleProp.title.Count -gt 0) {
                 $latestTitle = $mainItem.properties.$mainTitleProp.title[0].plain_text
                 $draftObj.aestheticSpark.title = $latestTitle
-                $draftObj.aestheticSpark.fullTitle = "$latestTitle 深讀"
+                $draftObj.aestheticSpark.fullTitle = "$latestTitle " + [char]0x6df1 + [char]0x8b80
             }
             $latestContent = Get-NotionPageContent -pageId $mainItem.id
             if ($latestContent) {
@@ -346,20 +346,28 @@ if ($discordWebhookUrl) {
     Write-Host "Discord webhook URL is empty, skipping Discord publishing."
 }
 
-# Step 5: Archive the pages in Notion and shift priorities
-Write-Host "Archiving published items in Notion and shifting priorities..."
-
 # Helper function to archive a page
-function Archive-Page ($pageId) {
+function Archive-Page ($pageId, $isNews) {
+    $statusId = "~%5B%3DR"
+    $dateId = "Nefc"
+    $priorityId = "e%5B%40Z"
+    if ($isNews) {
+        $statusId = "rv%40Q"
+        $dateId = "%7DopY"
+        $priorityId = "%40chL"
+    }
+
     $bodyObj = @{
         properties = @{
-            $colStatus = @{
+            "$statusId" = @{
                 select = @{ name = $statusArchive }
             }
-            $colDate = @{
+            "$dateId" = @{
                 date = @{ start = $todayStr }
             }
-            $colPriority = $null
+            "$priorityId" = @{
+                number = $null
+            }
         }
     }
     $bodyJson = ConvertTo-Json $bodyObj -Depth 5
@@ -375,10 +383,14 @@ function Archive-Page ($pageId) {
 }
 
 # Helper function to update page priority
-function Update-PagePriority ($pageId, $newPriority) {
+function Update-PagePriority ($pageId, $newPriority, $isNews) {
+    $priorityId = "e%5B%40Z"
+    if ($isNews) {
+        $priorityId = "%40chL"
+    }
     $bodyObj = @{
         properties = @{
-            $colPriority = @{
+            "$priorityId" = @{
                 number = $newPriority
             }
         }
@@ -398,7 +410,7 @@ function Update-PagePriority ($pageId, $newPriority) {
 # Process Main Essay DB
 Write-Host "1. Processing Main DB..."
 foreach ($item in $mainConfirmList) {
-    Archive-Page -pageId $item.id
+    Archive-Page -pageId $item.id -isNews $false
 }
 if ($mainConfirmList.Count -gt 0) {
     Write-Host "   Shifting remaining main essay priorities..."
@@ -414,7 +426,7 @@ if ($mainConfirmList.Count -gt 0) {
                 $currentPriority = $item.properties.$colPriority.number
                 if ($currentPriority -ne $null) {
                     $newPriority = [Math]::Max(1, $currentPriority - 1)
-                    Update-PagePriority -pageId $item.id -newPriority $newPriority
+                    Update-PagePriority -pageId $item.id -newPriority $newPriority -isNews $false
                 }
             }
         }
@@ -426,7 +438,7 @@ if ($mainConfirmList.Count -gt 0) {
 # Process News DB
 Write-Host "2. Processing News DB..."
 foreach ($item in $newsConfirmList) {
-    Archive-Page -pageId $item.id
+    Archive-Page -pageId $item.id -isNews $true
 }
 $archivedCount = $newsConfirmList.Count
 if ($archivedCount -gt 0) {
@@ -443,7 +455,7 @@ if ($archivedCount -gt 0) {
                 $currentPriority = $item.properties.$colPriority.number
                 if ($currentPriority -ne $null) {
                     $newPriority = [Math]::Max(1, $currentPriority - $archivedCount)
-                    Update-PagePriority -pageId $item.id -newPriority $newPriority
+                    Update-PagePriority -pageId $item.id -newPriority $newPriority -isNews $true
                 }
             }
         }
@@ -456,7 +468,7 @@ if ($archivedCount -gt 0) {
     Write-Host "Step 6: Committing and pushing changes to GitHub..."
     try {
         $projectRoot = "C:\Users\Hubert\.gemini\antigravity\scratch\foundation-gazette"
-        & git -C $projectRoot add data/draft.json data/archive_data.js data/archive/*.json
+        & git -C $projectRoot add data/draft.json data/archive_data.js data/archive/*.json data/images/*
         $commitMsg = "Publish issue for $dateStr"
         & git -C $projectRoot commit -m $commitMsg
         & git -C $projectRoot push origin master

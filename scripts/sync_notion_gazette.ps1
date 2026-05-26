@@ -210,34 +210,70 @@ $jsonTemplate = $jsonTemplate.Replace("__MAIN_TOPIC__", $mainTopic)
 $jsonTemplate = $jsonTemplate.Replace("__NEWS1__", $news1)
 $jsonTemplate = $jsonTemplate.Replace("__NEWS2__", $news2)
 
-$fullPrompt = $promptPrefix + "`n" + $jsonFormatInst + "`n`n" + $jsonTemplate + "`n`n" +
-(Get-DecodedString "6KuL5L6d5pOa5q2k5qC85byP57WQ5qeL77yM5oqK5YWn5a655aGr5YWF5a6M5pW077yI5Li75bCI6aGMIGNvbnRlbnQg6ZyA5o6i6KiO5YW25paH5YyWL+e+juWtuOWFp+a2te+8jOiHs+WwkTYwMOWtl++8jOaZguS6i+aWsOiBniBzdW1tYXJ5IOWIhuWIpeiHs+WwkTMwMOWtl+OAguW8leiogOiIh+WQjeiogOetieeahumcgOWhq+a7v++8ieOAguiri+ebtOaOpeWbnuWCsyBKU09OIOWtl+S4suOAgg==")
-
-$rawJsonResult = Call-Gemini -promptText $fullPrompt
-$rawJsonResult = $rawJsonResult.Trim()
-if ($rawJsonResult.StartsWith('```json')) {
-    $rawJsonResult = $rawJsonResult.Substring(7).Trim([char]10).Trim([char]13).Trim()
+$UseExistingDraft = $false
+if (Test-Path $draftPath) {
+    try {
+        $ExistingJsonContent = Get-Content -Path $draftPath -Raw -Encoding UTF8
+        $ExistingJson = ConvertFrom-Json $ExistingJsonContent
+        if ($ExistingJson.aestheticSpark.title -like "*$mainTopic*") {
+            $UseExistingDraft = $true
+            Write-Host "Found matching local draft for '$mainTopic'. Skipping Gemini regeneration."
+        }
+    } catch {}
 }
-if ($rawJsonResult.EndsWith('```')) {
-    $rawJsonResult = $rawJsonResult.Substring(0, $rawJsonResult.Length - 3).Trim()
-}
 
-# Verify and Save locally
-try {
+if (-not $UseExistingDraft) {
+    Write-Host "3. Generating Gazette Content with Gemini..."
+    $fullPrompt = $promptPrefix + "`n" + $jsonFormatInst + "`n`n" + $jsonTemplate + "`n`n" +
+    (Get-DecodedString "6KuL5L6d5pOa5q2k5qC85byP57WQ5qeL77yM5oqK5YWn5a655aGr5YWF5a6M5pW077yI5Li75bCI6aGMIGNvbnRlbnQg6ZyA5o6i6KiO5YW25paH5YyWL+e+juWtuOWFp+a2te+8jOiHs+WwkTYwMOWtl++8jOaZguS6i+aWsOiBniBzdW1tYXJ5IOWIhuWIpeiHs+WwkTMwMOWtl+OAguW8leiogOiIh+WQjeiogOetieeahumcgOWhq+a7v++8ieOAguiri+ebtOaOpeWbnuWCsy BKU09OIOWtl+S4suOAgg==")
+    
+    $rawJsonResult = Call-Gemini -promptText $fullPrompt
+    $rawJsonResult = $rawJsonResult.Trim()
+    if ($rawJsonResult.StartsWith('```json')) {
+        $rawJsonResult = $rawJsonResult.Substring(7).Trim([char]10).Trim([char]13).Trim()
+    }
+    if ($rawJsonResult.EndsWith('```')) {
+        $rawJsonResult = $rawJsonResult.Substring(0, $rawJsonResult.Length - 3).Trim()
+    }
+    
+    # Verify and Save locally
+    try {
+        $parsedObj = ConvertFrom-Json $rawJsonResult
+        # Save to draft.json
+        [System.IO.File]::WriteAllText($draftPath, $rawJsonResult, [System.Text.Encoding]::UTF8)
+        Write-Host "Draft saved successfully to draft.json!"
+    } catch {
+        Write-Host "JSON syntax error from Gemini! Writing raw output to debug log."
+        Write-Host $rawJsonResult
+        exit 1
+    }
+} else {
+    Write-Host "Skipped Gemini content generation. Using existing draft.json."
+    $rawJsonResult = Get-Content -Path $draftPath -Raw -Encoding UTF8
     $parsedObj = ConvertFrom-Json $rawJsonResult
-    # Save to draft.json
-    [System.IO.File]::WriteAllText($draftPath, $rawJsonResult, [System.Text.Encoding]::UTF8)
-    Write-Host "Draft saved successfully to draft.json!"
-} catch {
-    Write-Host "JSON syntax error from Gemini! Writing raw output to debug log."
-    Write-Host $rawJsonResult
-    exit 1
 }
 
 # Helper to write structured text to Notion page body
 function Write-ContentToNotionPage ($pageId, $content) {
     if (-not $pageId -or -not $content) { return }
     
+    # Clear existing children blocks first to prevent duplication
+    $apiUrlGet = "https://api.notion.com/v1/blocks/" + $pageId + "/children?page_size=100"
+    try {
+        $resGet = Invoke-RestMethod -Uri $apiUrlGet -Method Get -Headers $headersNotion
+        foreach ($block in $resGet.results) {
+            $blockId = $block.id
+            $apiUrlDel = "https://api.notion.com/v1/blocks/" + $blockId
+            try {
+                $null = Invoke-RestMethod -Uri $apiUrlDel -Method Delete -Headers $headersNotion
+            } catch {
+                Write-Host "   Failed to delete block $blockId : $_"
+            }
+        }
+    } catch {
+        Write-Host "   Failed to fetch existing blocks for clearing page $pageId : $_"
+    }
+
     $lines = $content.Split("`n")
     $childrenBlocks = @()
     

@@ -114,8 +114,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Matches foreign names like 諾曼·麥克萊倫, R·丹尼爾·奧立瓦, etc.
         // It allows Chinese/English characters connected by middle dots (\u00b7 or \u30fb)
         let result = text.replace(/([\u4e00-\u9fa5a-zA-Z]+(?:[\u00b7\u30fb][\u4e00-\u9fa5a-zA-Z]+)+)/g, '<span class="text-nowrap">$1</span>');
-        // Matches CJK book/movie titles wrapped in double angle brackets \u300a...\u300b to prevent wrapping inside them
-        result = result.replace(/(\u300a[^\u300b]+\u300b)/g, '<span class="text-nowrap">$1</span>');
+        // Matches CJK book/movie titles wrapped in double angle brackets \u300a...\u300b to prevent wrapping inside them (only for short titles under 12 chars to avoid layout overflow)
+        result = result.replace(/(\u300a[^\u300b]{1,12}\u300b)/g, '<span class="text-nowrap">$1</span>');
         return result;
     }
     window.wrapForeignNames = wrapForeignNames;

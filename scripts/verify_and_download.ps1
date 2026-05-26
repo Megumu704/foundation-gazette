@@ -62,12 +62,8 @@ function Verify-And-Download-Image {
 
     # Fetch image using .NET WebClient for maximum speed and header control
     try {
-        $WebClient = New-Object System.Net.WebClient
         $UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-        $WebClient.Headers.Add("User-Agent", $UserAgent)
-        $WebClient.Headers.Add("Accept", "image/webp,image/apng,image/*,*/*;q=0.8")
-        
-        $WebClient.DownloadFile($Url, $Filepath)
+        Invoke-WebRequest -Uri $Url -OutFile $Filepath -UserAgent $UserAgent -TimeoutSec 15
         
         # Verify it downloaded a valid file (non-empty)
         $File = Get-Item $Filepath
