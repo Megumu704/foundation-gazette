@@ -8,3 +8,5 @@ desktop.ini
 *.bak
 *~
 test_output_share_card.png
+.env
+

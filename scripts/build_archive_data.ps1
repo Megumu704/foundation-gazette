@@ -1,22 +1,29 @@
-$draft = [System.IO.File]::ReadAllText("C:\Users\Hubert\.gemini\antigravity\scratch\foundation-gazette\data\draft.json", [System.Text.Encoding]::UTF8)
-$a2020 = [System.IO.File]::ReadAllText("C:\Users\Hubert\.gemini\antigravity\scratch\foundation-gazette\data\archive\2026_05_20.json", [System.Text.Encoding]::UTF8)
-$a2021 = [System.IO.File]::ReadAllText("C:\Users\Hubert\.gemini\antigravity\scratch\foundation-gazette\data\archive\2026_05_21.json", [System.Text.Encoding]::UTF8)
-$a2022 = [System.IO.File]::ReadAllText("C:\Users\Hubert\.gemini\antigravity\scratch\foundation-gazette\data\archive\2026_05_22.json", [System.Text.Encoding]::UTF8)
-$a2023 = [System.IO.File]::ReadAllText("C:\Users\Hubert\.gemini\antigravity\scratch\foundation-gazette\data\archive\2026_05_23.json", [System.Text.Encoding]::UTF8)
-$a2024 = [System.IO.File]::ReadAllText("C:\Users\Hubert\.gemini\antigravity\scratch\foundation-gazette\data\archive\2026_05_24.json", [System.Text.Encoding]::UTF8)
-$a2025 = [System.IO.File]::ReadAllText("C:\Users\Hubert\.gemini\antigravity\scratch\foundation-gazette\data\archive\2026_05_25.json", [System.Text.Encoding]::UTF8)
+$projectRoot = "C:\Users\Hubert\.gemini\antigravity\scratch\foundation-gazette"
+$archiveDir = Join-Path $projectRoot "data\archive"
+$draftPath = Join-Path $projectRoot "data\draft.json"
+$outputPath = Join-Path $projectRoot "data\archive_data.js"
 
-$jsContent = @"
-window.FOUNDATION_ARCHIVES = {
-  "draft": $draft,
-  "2026.05.25": $a2025,
-  "2026.05.24": $a2024,
-  "2026.05.23": $a2023,
-  "2026.05.22": $a2022,
-  "2026.05.21": $a2021,
-  "2026.05.20": $a2020
-};
-"@
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-[System.IO.File]::WriteAllText("C:\Users\Hubert\.gemini\antigravity\scratch\foundation-gazette\data\archive_data.js", $jsContent, [System.Text.Encoding]::UTF8)
-Write-Output "Successfully rebuilt archive_data.js"
+$entries = @()
+
+# Load draft.json
+if (Test-Path $draftPath) {
+    $draftJson = [System.IO.File]::ReadAllText($draftPath, [System.Text.Encoding]::UTF8)
+    $entries += '  "draft": ' + $draftJson
+}
+
+# Load all archive files
+if (Test-Path $archiveDir) {
+    $jsonFiles = Get-ChildItem -Path $archiveDir -Filter "*.json" | Sort-Object Name -Descending
+    foreach ($file in $jsonFiles) {
+        # Extract date key from filename, e.g. "2026_05_20.json" -> "2026.05.20"
+        $dateKey = $file.BaseName -replace "_", "."
+        $fileJson = [System.IO.File]::ReadAllText($file.FullName, [System.Text.Encoding]::UTF8)
+        $entries += '  "' + $dateKey + '": ' + $fileJson
+    }
+}
+
+$jsContent = "window.FOUNDATION_ARCHIVES = {`n" + ($entries -join ",`n") + "`n};"
+[System.IO.File]::WriteAllText($outputPath, $jsContent, [System.Text.Encoding]::UTF8)
+Write-Output "Successfully rebuilt archive_data.js with dynamic scanner!"
