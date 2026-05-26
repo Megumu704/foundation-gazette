@@ -32,8 +32,8 @@
                         }
                     ],
     "visualArtifact":  {
-                           "imageUrl":  "data/images/yoshitaka_amano_style.png",
-                           "caption":  "以天野喜孝獨特的『幻想寫實』風格為靈感繪製的插畫。畫面中細膩飄逸的墨線、淡雅的水彩暈染以及帶有神秘宗教感的光暈，完美呈現了他將日本浮世繪與西方新藝術運動（Art Nouveau）融合的美學理念。"
+                           "imageUrl":  "data/images/yoshitaka_amano_style.jpg",
+                           "caption":  "天野喜孝為《最終幻想VI》（Final Fantasy VI）創作的經典魔導裝甲與 Tina 主視覺原畫。細膩飄逸的線條與淡雅水彩完美融合，展現了他標誌性的幻想寫實美學。"
                        }
 },
   "2026.05.27": {
@@ -69,8 +69,8 @@
                         }
                     ],
     "visualArtifact":  {
-                           "imageUrl":  "data/images/yoshitaka_amano_style.png",
-                           "caption":  "以天野喜孝獨特的『幻想寫實』風格為靈感繪製的插畫。畫面中細膩飄逸的墨線、淡雅的水彩暈染以及帶有神秘宗教感的光暈，完美呈現了他將日本浮世繪與西方新藝術運動（Art Nouveau）融合的美學理念。"
+                           "imageUrl":  "data/images/yoshitaka_amano_style.jpg",
+                           "caption":  "天野喜孝為《最終幻想VI》（Final Fantasy VI）創作的經典魔導裝甲與 Tina 主視覺原畫。細膩飄逸的線條與淡雅水彩完美融合，展現了他標誌性的幻想寫實美學。"
                        }
 },
   "2026.05.26": {
