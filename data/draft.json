@@ -19,20 +19,20 @@
     {
       "category": "GAME",
       "headline": "虛幻引擎 6 降臨：編織跨銀河的虛擬實境網絡",
-      "imageUrl": "data/images/ue6_demo.jpg",
+      "imageUrl": "data/images/ue6_demo.jpg?v=20260526b",
       "imageCaption": "虛幻引擎 6（Unreal Engine 6）概念示意圖，展示高精細度的分子級渲染與動態光影。",
       "summary": "#### 跨越伺服器的統一宇宙：虛幻引擎 6 架構解密\nEpic Games 近日正式揭露了「虛幻引擎 6」（Unreal Engine 6）的革命性架構，這對我們基地學會的數位保存計畫具有劃時代的意義。UE6 的核心願景在於打破單一遊戲與虛擬世界的壁壘，建立一個能容納數百萬人同時在線、具備完全互操作性（Interoperability）的「Metaverse 操作系統」。藉由全新升級的 Nanite 幾何幾何渲染技術與 Lumen光照系統，UE6 首次在消費級硬體上實現了「分子級」的實時物理模擬與神經網絡渲染。\n\n> 「我們將把全球數百萬個分散的伺服器，編織成一個沒有邊界的統一虛擬現實網絡。」\n\n#### 動態空間分區與無縫跨界協定\n更令學會震驚的是其底層的動態空間分區技術。這意味著未來的數位宇宙不再需要「加載介面」，從 Terminus 星到銀河帝國川陀的繁華街道，玩家與居民可以實現無縫的空間躍遷。Epic 執行長 Tim Sweeney 表示，UE6 將整合全新的經濟協議與去中心化身份驗證，讓虛擬世界中的資產與美學創作獲得跨維度的永久保存。這不僅僅是遊戲引擎的升級，更是人類文明邁向「第二現實」的數位築路工程，值得我們持續追蹤其美學與社會學效應。"
     },
     {
       "category": "ANIMATION",
       "headline": "A24 聯手 Kane Pixels：《後室 Backrooms》大銀幕美學解密",
-      "imageUrl": "data/images/backrooms_liminal.jpg",
+      "imageUrl": "data/images/backrooms_liminal.jpg?v=20260526b",
       "imageCaption": "《後室 Backrooms》電影美學概念照，展示無止境的黃色閾限空間與壓抑的冷光燈。",
       "summary": "#### 閾限空間美學：潛意識裡的辦公室迷宮\n黃色壁紙、刺耳的日光燈蜂鳴聲、以及無止境的黃色地毯。總編輯，那場發源於網路集體潛意識的「後室 Backrooms」恐懼風潮，如今在獨立電影巨擘 A24 與天才少年導演 Kane Pixels 的聯手下，正式邁向院線電影的精緻化創作。這部改編自 Analog Horror（類比恐怖）現象的動畫與實拍混合電影，正成為當代「閾限空間」（Liminal Space）美學的里程碑。\n\n> 「後室不僅是驚悚，更是當代人在無機的都市空間中，所面臨的集體孤獨與恐懼投影。」\n\n#### VHS 質感與低保真類比恐怖的大銀幕革命\n《後室》之所以能引發跨世代的集體共鳴，在於它精準捕捉了現代文明繁華背後的「虛無與疏離感」。 Kane Pixels 巧妙運用了 VHS 錄影帶的低解析度質感，將日常生活中最平庸的辦公室走廊，扭曲為一個無限延伸、缺乏因果律的非歐幾里得幾何迷宮。這種「低保真度」的美學（Lo-Fi Aesthetics）反而給予了觀眾大腦無限的補完空間，創造出比傳統怪獸更深沉的心理恐懼。A24 的介入無疑將為這部作品灌注更深厚的文藝與哲學思辨，探討在資訊超載的時代，當人類迷失在自己建造的現代化迷宮中時，靈魂該如何自我救贖。"
     }
   ],
   "visualArtifact": {
-    "imageUrl": "data/images/doom_engineering.jpg",
-    "caption": "約翰·卡馬克（John Carmack）肖像，這位傳奇程序員在 1993 年為《DOOM》編寫的 BSP 圖形引擎奠定了現代 3D 遊戲工業 of 根基。"
+    "imageUrl": "data/images/doom_engineering.jpg?v=20260526b",
+    "caption": "《DOOM》經典遊戲封面插圖，展現與地獄惡魔狂暴對決的像素美學與鋼鐵戰士形象。"
   }
 }
