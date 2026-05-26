@@ -1114,6 +1114,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Dynamically populate archives select options based on window.FOUNDATION_ARCHIVES keys
+    if (window.FOUNDATION_ARCHIVES && selectArchive) {
+        selectArchive.innerHTML = '';
+        
+        // Add draft option first
+        const optDraft = document.createElement('option');
+        optDraft.value = 'draft';
+        optDraft.textContent = '當前編輯草稿 (Latest)';
+        selectArchive.appendChild(optDraft);
+        
+        // Get sorted keys descending (excluding draft)
+        const archiveKeys = Object.keys(window.FOUNDATION_ARCHIVES)
+            .filter(k => k !== 'draft')
+            .sort((a, b) => b.localeCompare(a));
+            
+        archiveKeys.forEach((key, index) => {
+            const opt = document.createElement('option');
+            opt.value = key;
+            const noNum = String(archiveKeys.length - index).padStart(3, '0');
+            opt.textContent = `NO. ${noNum} - ${key}`;
+            selectArchive.appendChild(opt);
+        });
+    }
+
     // Parse URL Query Parameters
     const urlParams = new URLSearchParams(window.location.search);
     const paramMode = urlParams.get('mode');
