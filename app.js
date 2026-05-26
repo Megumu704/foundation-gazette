@@ -1,6 +1,6 @@
 // App logic for Foundation Gazette Generator (Expanded Version with Dynamic Templates & Image Checking)
 
-document.addEventListener('DOMContentLoaded', () => {
+function initializeApp() {
     try {
         let isRestoring = false;
         
@@ -1222,4 +1222,10 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {
         alert("⚠️ 捕獲到 app.js 執行期錯誤：\n\n錯誤描述: " + e.message + "\n\n詳細堆疊資訊:\n" + e.stack);
     }
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeApp);
+} else {
+    initializeApp();
+}
