@@ -19,7 +19,7 @@
                         {
                             "category":  "GAME",
                             "headline":  "墨境正式版發售並登陸家用主機",
-                            "imageUrl":  "data/images/img_fde43d0f16bdb9207705ddc579813c82.jpg",
+                            "imageUrl":  "data/images/img_555a527216879d4fa424ba572db26a4e.jpg",
                             "imageCaption":  "《墨境》1.0正式版宣傳圖，展現遊戲獨特的國風潑墨美學與流暢動作設計。",
                             "summary":  "#### 國風水墨動作冒險\n由 Leap Studio 開發的國風潑墨風格動作 Roguelite 遊戲《墨境》（Realm of Ink）於 2026 年 5 月 26 日結束 Steam 與 Epic Games Store 的搶先體驗，正式推出 1.0 完整版本，並同步登陸 PlayStation 5、Xbox Series X/S 及 Nintendo Switch 等家用主機平台。本作將傳統中國水墨畫風與現代動態視覺相結合，開創了獨特的東方奇幻世界觀。\n#### 1.0版本全新內容與聯動\n在 1.0 正式版中，玩家將繼續扮演墨家女俠「雙兒」，在墨汁冒險世界中斬妖除魔，尋求突破命運的救贖。此版本帶來了更豐富的關卡、多樣的Boss 戰以及完整的劇情結局。此外，遊戲宣布與知名動作 Roguelike 遊戲《蒼翼：混沌效應》（BlazBlue Entropy Effect）展開跨界聯動。玩家可在遊戲中解鎖並化身為聯動角色「奧瑞德」，體驗獨特的招式與水墨風格化戰鬥，為國風動作遊戲開闢了嶄新的藝術維度。"
                         },
@@ -32,7 +32,7 @@
                         }
                     ],
     "visualArtifact":  {
-                           "imageUrl":  "data/images/img_1f827c28bf99ce2d382495561cfd71f7.jpg",
+                           "imageUrl":  "data/images/img_52a7927436e1bdf2188f3bde04005739.jpg",
                            "caption":  "由插畫家新川洋司為《潛龍諜影》創作的經典 Solid Snake 水墨風格宣傳原畫。新川洋司以狂放的毛筆線條與留白美學，勾勒出特工在煙硝與迷霧中的冷冽孤獨，與本期「美學火花」專欄探討的小島秀夫後現代解構與反戰思想形成完美的視覺呼應。"
                        }
 },
@@ -56,7 +56,7 @@
                         {
                             "category":  "GAME",
                             "headline":  "墨境正式版發售並登陸家用主機",
-                            "imageUrl":  "data/images/img_fde43d0f16bdb9207705ddc579813c82.jpg",
+                            "imageUrl":  "data/images/img_555a527216879d4fa424ba572db26a4e.jpg",
                             "imageCaption":  "《墨境》1.0正式版宣傳圖，展現遊戲獨特的國風潑墨美學與流暢動作設計。",
                             "summary":  "#### 國風水墨動作冒險\n由 Leap Studio 開發的國風潑墨風格動作 Roguelite 遊戲《墨境》（Realm of Ink）於 2026 年 5 月 26 日結束 Steam 與 Epic Games Store 的搶先體驗，正式推出 1.0 完整版本，並同步登陸 PlayStation 5、Xbox Series X/S 及 Nintendo Switch 等家用主機平台。本作將傳統中國水墨畫風與現代動態視覺相結合，開創了獨特的東方奇幻世界觀。\n#### 1.0版本全新內容與聯動\n在 1.0 正式版中，玩家將繼續扮演墨家女俠「雙兒」，在墨汁冒險世界中斬妖除魔，尋求突破命運的救贖。此版本帶來了更豐富的關卡、多樣的Boss 戰以及完整的劇情結局。此外，遊戲宣布與知名動作 Roguelike 遊戲《蒼翼：混沌效應》（BlazBlue Entropy Effect）展開跨界聯動。玩家可在遊戲中解鎖並化身為聯動角色「奧瑞德」，體驗獨特的招式與水墨風格化戰鬥，為國風動作遊戲開闢了嶄新的藝術維度。"
                         },
@@ -69,7 +69,7 @@
                         }
                     ],
     "visualArtifact":  {
-                           "imageUrl":  "data/images/img_1f827c28bf99ce2d382495561cfd71f7.jpg",
+                           "imageUrl":  "data/images/img_52a7927436e1bdf2188f3bde04005739.jpg",
                            "caption":  "由插畫家新川洋司為《潛龍諜影》創作的經典 Solid Snake 水墨風格宣傳原畫。新川洋司以狂放的毛筆線條與留白美學，勾勒出特工在煙硝與迷霧中的冷冽孤獨，與本期「美學火花」專欄探討的小島秀夫後現代解構與反戰思想形成完美的視覺呼應。"
                        }
 },
