@@ -144,18 +144,31 @@ function initializeApp() {
     // Bind standard text fields for Cover
     syncText(inputGalaxyEra, cardGalaxyEra);
     
-    // Bind dynamic edition number based on inputGalaxyEra
+    // Bind dynamic edition number based on inputDate
     const updateEdition = () => {
-        const eraText = inputGalaxyEra.value.trim();
-        const match = eraText.match(/\d+/);
-        if (match) {
-            const issueNum = match[0].padStart(3, '0');
-            cardEdition.textContent = `NO. ${issueNum}`;
-        } else {
-            cardEdition.textContent = 'NO. 001';
+        const dateStr = inputDate.value.trim();
+        let issueNum = '001';
+        
+        let dates = [];
+        if (window.FOUNDATION_ARCHIVES) {
+            dates = Object.keys(window.FOUNDATION_ARCHIVES).filter(k => k !== 'draft');
         }
+        
+        if (dateStr && !dates.includes(dateStr)) {
+            dates.push(dateStr);
+        }
+        
+        // Sort dates chronologically (ascending)
+        dates.sort((a, b) => a.localeCompare(b));
+        
+        const index = dates.indexOf(dateStr);
+        if (index !== -1) {
+            issueNum = String(index + 1).padStart(3, '0');
+        }
+        
+        cardEdition.textContent = `NO. ${issueNum}`;
     };
-    inputGalaxyEra.addEventListener('input', updateEdition);
+    inputDate.addEventListener('input', updateEdition);
     updateEdition();
 
     syncText(inputCoordinates, cardCoordinates);
