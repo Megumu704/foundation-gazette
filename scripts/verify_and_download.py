@@ -23,7 +23,8 @@ def verify_and_download_image(url, output_dir):
     # If the URL is already a local path, skip download and verify it exists
     if not (url.startswith('http://') or url.startswith('https://')):
         # Check if local file exists relative to the gazette project root
-        local_path = os.path.join(os.path.dirname(output_dir), url)
+        project_root = os.path.dirname(os.path.dirname(output_dir))
+        local_path = os.path.join(project_root, url)
         if os.path.exists(local_path):
             print(f"[VERIFIED] Local image exists: {url}")
             return url
