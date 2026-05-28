@@ -200,7 +200,21 @@ if (-not $portInUse) {
     $serverErr = "C:\Users\Hubert\.gemini\antigravity\scratch\server_err.log"
     $serverProcess = Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File C:\Users\Hubert\.gemini\antigravity\scratch\foundation-gazette\scripts\start_server.ps1" -PassThru -WindowStyle Hidden -RedirectStandardOutput $serverLog -RedirectStandardError $serverErr
     $serverStartedByUs = $true
-    Start-Sleep -Seconds 5
+    
+    # Poll until server is listening on port 8080 (up to 5 seconds)
+    $serverTimeout = 5
+    $serverElapsed = 0
+    while ($serverElapsed -lt $serverTimeout) {
+        $connection = $null
+        try {
+            $connection = Get-NetTCPConnection -LocalPort 8080 -State Listen -ErrorAction SilentlyContinue
+        } catch {}
+        if ($connection) {
+            break
+        }
+        Start-Sleep -Milliseconds 250
+        $serverElapsed += 0.25
+    }
 } else {
     Write-Host "Local HTTP server is already running."
 }
@@ -224,7 +238,29 @@ $captureUrl = "http://127.0.0.1:8080/?openShare=true&downloadShare=true"
 
 Write-Host "Launching Headless Edge to generate share card..."
 $edgeProcess = Start-Process -FilePath $edgePath -ArgumentList "--headless", "--disable-gpu", "--no-sandbox", "--user-data-dir=$profilePath", $captureUrl -PassThru
-Start-Sleep -Seconds 12
+
+# Wait for card generation with 15s timeout
+$timeoutSeconds = 15
+$intervalMs = 250
+$elapsedMs = 0
+$fileGenerated = $false
+
+while ($elapsedMs -lt ($timeoutSeconds * 1000)) {
+    if (Test-Path $outCardPath) {
+        $fileGenerated = $true
+        # Wait an extra 200ms to ensure the file write stream is completely closed/flushed
+        Start-Sleep -Milliseconds 200
+        break
+    }
+    Start-Sleep -Milliseconds $intervalMs
+    $elapsedMs += $intervalMs
+}
+
+if (-not $fileGenerated) {
+    Write-Host "Warning: Card generation timed out after $timeoutSeconds seconds."
+} else {
+    Write-Host "Card generated dynamically in $($elapsedMs / 1000) seconds!"
+}
 
 # Kill Edge process
 try {
