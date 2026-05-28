@@ -21,7 +21,7 @@ def main():
     # Read draft.json
     if os.path.exists(draft_path):
         try:
-            with open(draft_path, 'r', encoding='utf-8') as f:
+            with open(draft_path, 'r', encoding='utf-8-sig') as f:
                 data = json.load(f)
                 if 'aestheticSpark' in data and 'title' in data['aestheticSpark']:
                     t = clean_topic(data['aestheticSpark']['title'])
@@ -39,7 +39,7 @@ def main():
         json_files = glob.glob(os.path.join(archive_dir, '*.json'))
         for filepath in json_files:
             try:
-                with open(filepath, 'r', encoding='utf-8') as f:
+                with open(filepath, 'r', encoding='utf-8-sig') as f:
                     data = json.load(f)
                     if 'aestheticSpark' in data and 'title' in data['aestheticSpark']:
                         t = clean_topic(data['aestheticSpark']['title'])

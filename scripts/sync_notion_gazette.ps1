@@ -151,14 +151,50 @@ if (-not $mainTopic) {
 }
 
 while ($newsList.Count -lt 2) {
-    Write-Host "News Topics are less than 2! Running fallback prompt..."
-    $fallbackNewsPrompt = Get-DecodedString "6KuL5o6o6Jam5YWp5YCL5pyA6L+R5LiA6YCx5YWn54ax6ZaA55qE6YGK5oiy5oiW5YuV55Wr5pmC5LqL5paw6IGe77yM55So5pac57eaICcvJyDliIbpmpTvvIjkvovlpoLvvJrlnLDlubPnt5o255m86KGoIC8g5a6J6Yyr5b2x5bGV5LiW55WM6aaW5pig77yJ44CC5Y+q6KaB5Zue5YKz5Li76aGM77yM5LiN6KaB6aGN5aSW5paH5a2X44CC"
-    $newsRaw = Call-Gemini -promptText $fallbackNewsPrompt
-    $newsSplits = $newsRaw.Split("/")
-    foreach ($n in $newsSplits) {
-        $cleanN = $n.Trim("`n").Trim("`r").Trim().Trim('"')
-        if ($cleanN -and $newsList.Count -lt 2) {
-            $newsList += $cleanN
+    Write-Host "News Topics are less than 2! Pulling fresh industry news via RSS feeds..."
+    
+    # Try Game RSS (Gematsu)
+    $gameNewsTitle = ""
+    try {
+        $gameItems = Invoke-RestMethod -Uri "https://www.gematsu.com/feed" -TimeoutSec 10
+        if ($gameItems -and $gameItems.Count -gt 0) {
+            $gameNewsTitle = "GAME: " + $gameItems[0].title
+            Write-Host "Successfully pulled Game RSS: $gameNewsTitle"
+        }
+    } catch {
+        Write-Host "Warning: Failed to fetch Game RSS: $_"
+    }
+    
+    # Try Anime RSS (Anime News Network)
+    $animeNewsTitle = ""
+    try {
+        $animeItems = Invoke-RestMethod -Uri "https://www.animenewsnetwork.com/all/rss.xml?ann-edition=us" -TimeoutSec 10
+        if ($animeItems -and $animeItems.Count -gt 0) {
+            $animeNewsTitle = "ANIMATION: " + $animeItems[0].title
+            Write-Host "Successfully pulled Anime RSS: $animeNewsTitle"
+        }
+    } catch {
+        Write-Host "Warning: Failed to fetch Anime RSS: $_"
+    }
+    
+    # Fallback to Gemini if RSS feeds fail
+    if (-not $gameNewsTitle -and -not $animeNewsTitle) {
+        Write-Host "Both RSS feeds failed. Falling back to Gemini memory..."
+        $fallbackNewsPrompt = Get-DecodedString "6KuL5o6o6Jam5YWp5YCL5pyA6L+R5LiA6YCx5YWn54ax6ZaA55qE6YGK5oiy5oiW5YuV55Wr5pmC5LqL5paw6IGe77yM55So5pac57eaICcvJyDliIbpmpTvvIjkvovlpoLvvJrlnLDlubPnt5o255m86KGoIC8g5a6J6Yyr5b2x5bGV5LiW55WM6aaW5pig77yJ44CC5Y+q6KaB5Zue5YKz5Li76aGM77yM5LiN6KaB6aGN5aSW5paH5a2X44CC"
+        $newsRaw = Call-Gemini -promptText $fallbackNewsPrompt
+        $newsSplits = $newsRaw.Split("/")
+        foreach ($n in $newsSplits) {
+            $cleanN = $n.Trim("`n").Trim("`r").Trim().Trim('"')
+            if ($cleanN -and $newsList.Count -lt 2) {
+                $newsList += $cleanN
+            }
+        }
+    } else {
+        if ($gameNewsTitle -and $newsList.Count -lt 2) {
+            $newsList += $gameNewsTitle
+        }
+        if ($animeNewsTitle -and $newsList.Count -lt 2) {
+            $newsList += $animeNewsTitle
         }
     }
 }
@@ -225,7 +261,8 @@ if (Test-Path $draftPath) {
 if (-not $UseExistingDraft) {
     Write-Host "3. Generating Gazette Content with Gemini..."
     $fullPrompt = $promptPrefix + "`n" + $jsonFormatInst + "`n`n" + $jsonTemplate + "`n`n" +
-    (Get-DecodedString "6KuL5L6d5pOa5q2k5qC85byP57WQ5qeL77yM5oqK5YWn5a655aGr5YWF5a6M5pW077yI5Li75bCI6aGMIGNvbnRlbnQg6ZyA5o6i6KiO5YW25paH5YyWL+e+juWtuOWFp+a2te+8jOiHs+WwkTYwMOWtl++8jOaZguS6i+aWsOiBniBzdW1tYXJ5IOWIhuWIpeiHs+WwkTMwMOWtl+OAguW8leiogOiIh+WQjeiogOetieeahumcgOWhq+a7v++8ieOAguiri+ebtOaOpeWbnuWCsy BKU09OIOWtl+S4suOAgg==")
+    (Get-DecodedString "6KuL5L6d5pOa5q2k5qC85byP57WQ5qeL77yM5oqK5YWn5a655aGr5YWF5a6M5pW077yI5Li75bCI6aGMIGNvbnRlbnQg6ZyA5o6i6KiO5YW25paH5YyWL+e+juWtuOWFp+a2te+8jOiHs+WwkTYwMOWtl++8jOaZguS6i+aWsOiBniBzdW1tYXJ5IOWIhuWIpeiHs+WwkTMwMOWtl+OAguW8leiogOiIh+WQjeiogOetieeahumcgOWhq+a7v++8ieOAguiri+ebtOaOpeWbnuWCsy BKU09OIOWtl+S4suOAgg==") +
+    (Get-DecodedString "CgrnibnliKXmjIfnpLrvvJoKMS4g5bCI5qyE5paH56ug6IiH5pmC5LqL5paw6IGe6KuL5a+r57mB6auU5Lit5paH44CC6KuL56K65L+d5paH56ug5YWn5a6556ym5ZCI5LiA6Iis5paw6IGe6IiH576O5a245bCI5qyE5a+r5L2c6KaP56+E77yM5LiN6KaB5Zyo5aCx5bCO5YWn5a655Lit5YyF5ZCr5Lu75L2V44CM56uv6bue5pif44CN44CB44CM6YqA5rKz57O76YKK5aKD44CN562J56eR5bm75LiW55WM6KeA5omu5ryU55qE6Kme5b2Z44CCCjIuIOWwjeaWvOaZguS6i+aWsOiBnu+8jOWmguaenOe1puWumueahOaomemhjOeCuuiLseaWh++8iOaIluW4tuaciSBHQU1FOiAvIEFOSU1BVElPTjog5YmN57a077yJ77yM6KuL5bCH5YW25YmN57a05Y676Zmk77yM5Lim5bCH6Kmy6Iux5paH5qiZ6aGM57+76K2vL+aUueWvq+eCuueyvueFieeahue5gemrlOS4reaWh+aomemhjO+8jOaomemhjOWtl+aVuOW/hemgiOWcqCAxOCDlgIvlrZfku6XlhafvvIjlhajlvaLlrZfvvInvvIzkuJTntZXlsI3kuI3lj6/ljIXlkKvkuK3mi6zomZ/vvIjkvovlpoLjgJDjgJHmiJZbXe+8ieOAggozLiDoq4vngrrmmYLkuovmlrDogZ7mkJzlsIvmiJblj4PogIPmnIDmlrDnmoTnnJ/lr6bos4foqIrvvIzmkrDlr6vntIQgMzAwIOWtl+eahOecn+WvpuWgseWwju+8jOS4puWhq+Wvq+WQiOmBqeeahCBzdW1tYXJ544CBaW1hZ2VVcmwg6IiHIGltYWdlQ2FwdGlvbu+8iOWmguWcluiqqu+8ieOAgg==")
     
     $rawJsonResult = Call-Gemini -promptText $fullPrompt
     $rawJsonResult = $rawJsonResult.Trim()

@@ -456,6 +456,7 @@ textarea {
     font-family: 'Noto Serif TC', serif;
     font-size: 0.94rem;
     line-height: 1.85;
+    letter-spacing: 0.02em;
     color: #2c2c2c; /* Muted charcoal for soft serif display */
     text-align: justify;
     text-justify: inter-word;
@@ -631,6 +632,7 @@ textarea {
     font-family: 'Noto Serif TC', serif;
     font-size: 0.95rem;
     line-height: 1.6;
+    letter-spacing: 0.02em;
     font-style: italic;
     color: var(--paper-text);
     margin-bottom: 10px;
@@ -832,6 +834,7 @@ textarea {
     font-family: 'Noto Serif TC', serif;
     font-size: 0.94rem;
     line-height: 1.95; /* Generous breathing room to soften serif corners */
+    letter-spacing: 0.02em;
     color: #2c2c2c; /* Muted ink charcoal to prevent harshness on screen */
     text-align: justify;
     text-justify: inter-character;
@@ -1139,6 +1142,14 @@ textarea {
     justify-content: flex-start;
 }
 
+.mode-reader .article-item.spark-full .spark-content-full {
+    max-width: 720px;
+    column-count: 2;
+    column-gap: 36px;
+    column-rule: 1px double var(--paper-border-light);
+    text-align: justify;
+}
+
 /* ==========================================================================
    PHASE 4: MOBILE RESPONSIVE WEB DESIGN (RWD)
    ========================================================================== */
@@ -1291,6 +1302,11 @@ textarea {
     }
 
     .article-item.spark-full .spark-content-full {
+        max-width: 100% !important;
+    }
+
+    .mode-reader .article-item.spark-full .spark-content-full {
+        column-count: 1 !important;
         max-width: 100% !important;
     }
 
