@@ -112,8 +112,8 @@ function initializeApp() {
     function wrapForeignNames(text) {
         if (!text) return '';
         // Matches foreign names like 諾曼·麥克萊倫, R·丹尼爾·奧立瓦, etc.
-        // Prevents over-matching sentences by excluding common grammatical particles and punctuation, limiting component length to 1-5 chars.
-        let result = text.replace(/([^\s，。：、；「」《》（）()“”"\'的與和是了在及但而也或與以其為將從被向\u00b7\u30fb]{1,5}(?:[\u00b7\u30fb][^\s，。：、；「」《》（）()“”"\'的與和是了在及但而也或與以其為將從被向\u00b7\u30fb]{1,5})+)/g, '<span class="text-nowrap">$1</span>');
+        // Prevents over-matching sentences by excluding common grammatical particles, punctuation, and verbs/adjectives, limiting component length to 1-5 chars.
+        let result = text.replace(/([^\s，。：、；「」《》（）()“”"\'的與和是了在及但而也或與以其為將從被向\u00b7\u30fb經典發表創作引進說導演製指出示透露認下新舊古代世界年月日時]{1,5}(?:[\u00b7\u30fb][^\s，。：、；「」《》（）()“”"\'的與和是了在及但而也或與以其為將從被向\u00b7\u30fb經典發表創作引進說導演製指出示透露認下新舊古代世界年月日時]{1,5})+)/g, '<span class="text-nowrap">$1</span>');
         // Matches CJK book/movie titles wrapped in double angle brackets \u300a...\u300b to prevent wrapping inside them (only for short titles under 12 chars to avoid layout overflow)
         result = result.replace(/(\u300a[^\u300b]{1,12}\u300b)/g, '<span class="text-nowrap">$1</span>');
         return result;
