@@ -730,6 +730,7 @@ textarea {
     display: flex;
     flex-direction: column;
     width: 100%;
+    flex-shrink: 0;
 }
 
 .cover-page {
@@ -785,7 +786,8 @@ textarea {
 
 /* Make news image size fit the narrower grid column beautifully and align perfectly */
 .gazette-articles.has-two-news .article-item.news-full .article-image-block img,
-.gazette-articles.has-two-news .article-item.news-full .article-image-block .cloned-bg-image {
+.gazette-articles.has-two-news .article-item.news-full .article-image-block .cloned-bg-image,
+.gazette-articles.has-two-news .article-item.news-full .article-image-block .news-img-error-placeholder {
     height: 150px;
     object-fit: cover;
 }
