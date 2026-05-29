@@ -651,6 +651,10 @@ function initializeApp() {
             allowTaint: false,
             backgroundColor: '#fdfcf9',
             logging: false,
+            scrollX: 0,
+            scrollY: 0,
+            height: card.scrollHeight,
+            windowHeight: card.scrollHeight + 200,
             onclone: (clonedDoc) => {
                 // Remove all script tags to prevent JS from re-running in the html2canvas iframe
                 const scripts = clonedDoc.querySelectorAll('script');
