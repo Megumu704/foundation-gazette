@@ -1151,13 +1151,6 @@ textarea {
     justify-content: flex-start;
 }
 
-.mode-reader .article-item.spark-full .spark-content-full {
-    max-width: 720px;
-    column-count: 2;
-    column-gap: 36px;
-    column-rule: 1px double var(--paper-border-light);
-    text-align: justify;
-}
 
 /* ==========================================================================
    PHASE 4: MOBILE RESPONSIVE WEB DESIGN (RWD)
@@ -1314,10 +1307,6 @@ textarea {
         max-width: 100% !important;
     }
 
-    .mode-reader .article-item.spark-full .spark-content-full {
-        column-count: 1 !important;
-        max-width: 100% !important;
-    }
 
     .article-paragraph {
         font-size: 0.96rem !important;
