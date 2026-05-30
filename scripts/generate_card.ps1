@@ -17,7 +17,7 @@ if (-not (Test-Path $edgePath)) {
 }
 
 $profilePath = Join-Path $projectRoot "edge_profile_temp"
-$captureUrl = "http://127.0.0.1:8080/?openShare=true&downloadShare=true&v=20260529_v3"
+$captureUrl = "http://127.0.0.1:8080/?openShare=true&downloadShare=true&v=20260531"
 
 Write-Output "Launching Headless Edge to generate share card..."
 $edgeProcess = Start-Process -FilePath $edgePath -ArgumentList "--headless", "--disable-gpu", "--no-sandbox", "--user-data-dir=$profilePath", $captureUrl -PassThru

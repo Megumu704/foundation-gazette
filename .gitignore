@@ -10,3 +10,10 @@ desktop.ini
 test_output_share_card.png
 .env
 
+# Edge temp profiles
+edge_profile_temp/
+# Agent scratch files
+scratch/
+# Local backups from image pruning
+backups/
+
