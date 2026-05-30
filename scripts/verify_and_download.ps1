@@ -62,7 +62,7 @@ function Verify-And-Download-Image {
 
     # Fetch image using .NET WebClient for maximum speed and header control
     try {
-        $UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        $UserAgent = "FoundationGazetteBot/1.0 (https://github.com/foundation-gazette/gazette; contact: admin@foundationgazette.org) Powershell/5.1"
         Invoke-WebRequest -Uri $Url -OutFile $Filepath -UserAgent $UserAgent -TimeoutSec 15
         
         # Verify it downloaded a valid file (non-empty)
