@@ -199,6 +199,8 @@ function initializeApp() {
                 if (card) {
                     card.style.setProperty('--paper-bg', `hsl(${h}, ${paperBgS}%, ${paperBgL}%)`);
                     card.style.setProperty('--paper-accent', `hsl(${h}, ${paperAccentS}%, ${paperAccentL}%)`);
+                    card.style.setProperty('--paper-accent-alpha-04', `hsla(${h}, ${paperAccentS}%, ${paperAccentL}%, 0.04)`);
+                    card.style.setProperty('--paper-accent-alpha-45', `hsla(${h}, ${paperAccentS}%, ${paperAccentL}%, 0.45)`);
                     card.style.setProperty('--paper-border-light', `hsl(${h}, ${paperBorderLightS}%, ${paperBorderLightL}%)`);
                 }
             });
@@ -216,6 +218,8 @@ function initializeApp() {
             if (card) {
                 card.style.removeProperty('--paper-bg');
                 card.style.removeProperty('--paper-accent');
+                card.style.removeProperty('--paper-accent-alpha-04');
+                card.style.removeProperty('--paper-accent-alpha-45');
                 card.style.removeProperty('--paper-border-light');
             }
         });

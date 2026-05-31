@@ -18,6 +18,8 @@
     --paper-text: #080808; /* Deep ink black */
     --paper-text-light: #3a3a3a; /* Charcoal grey text */
     --paper-accent: #a6261b; /* Classic stamp jujube red */
+    --paper-accent-alpha-04: rgba(166, 38, 27, 0.04);
+    --paper-accent-alpha-45: rgba(166, 38, 27, 0.45);
 }
 
 * {
@@ -1636,7 +1638,7 @@ textarea {
     font-weight: 700;
     color: var(--paper-accent);
     border: 1.2px solid var(--paper-accent);
-    background-color: rgba(166, 38, 27, 0.04);
+    background-color: var(--paper-accent-alpha-04);
     padding: 2.5px 4px 0.5px 4px;
     border-radius: 1px;
     text-transform: uppercase;
@@ -1645,7 +1647,7 @@ textarea {
     display: inline-block;
     transform: scale(0.9, 1.35) rotate(-1deg);
     /* Soften edges to simulate stamped ink bleed */
-    filter: drop-shadow(0.3px 0.3px 0.3px rgba(166, 38, 27, 0.45));
+    filter: drop-shadow(0.3px 0.3px 0.3px var(--paper-accent-alpha-45));
     opacity: 0.96;
 }
 
