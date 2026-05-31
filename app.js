@@ -109,6 +109,17 @@ function initializeApp() {
             .replace(/'/g, "&#039;");
     }
 
+    function panguSpace(text) {
+        if (!text) return '';
+        const cjk = '[\u2e80-\u2fd5\u3190-\u319f\u3400-\u4dbf\u4e00-\u9fcc\u3040-\u30ff\u3100-\u312f]';
+        const latin = '[a-zA-Z0-9]';
+        let result = text;
+        result = result.replace(new RegExp(`(${cjk})(${latin})`, 'g'), '$1 $2');
+        result = result.replace(new RegExp(`(${latin})(${cjk})`, 'g'), '$1 $2');
+        return result;
+    }
+    window.panguSpace = panguSpace;
+
     function wrapForeignNames(text) {
         if (!text) return '';
         // Matches foreign names like 諾曼·麥克萊倫, R·丹尼爾·奧立瓦, etc.
@@ -120,13 +131,131 @@ function initializeApp() {
     }
     window.wrapForeignNames = wrapForeignNames;
 
+    // --- Dynamic Immersive Color Extraction (Theming & Contrast Assurance) ---
+    function extractThemeColor(img) {
+        try {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Scale down the image to 40x40px to process quickly and average details
+            canvas.width = 40;
+            canvas.height = 40;
+            
+            ctx.drawImage(img, 0, 0, 40, 40);
+            
+            const imgData = ctx.getImageData(0, 0, 40, 40);
+            const data = imgData.data;
+            
+            let rSum = 0, gSum = 0, bSum = 0, count = 0;
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i];
+                const g = data[i+1];
+                const b = data[i+2];
+                const a = data[i+3];
+                
+                if (a < 200) continue; // Ignore transparent pixels
+                
+                // Exclude pure white/black to avoid washing out the color hue
+                const brightness = (r + g + b) / 3;
+                if (brightness > 242 || brightness < 12) continue;
+                
+                rSum += r;
+                gSum += g;
+                bSum += b;
+                count++;
+            }
+            
+            if (count === 0) {
+                for (let i = 0; i < data.length; i += 4) {
+                    rSum += data[i];
+                    gSum += data[i+1];
+                    bSum += data[i+2];
+                    count++;
+                }
+            }
+            
+            const avgR = Math.round(rSum / count);
+            const avgG = Math.round(gSum / count);
+            const avgB = Math.round(bSum / count);
+            
+            const [h, s, l] = rgbToHsl(avgR, avgG, avgB);
+            
+            // Design System Token Mapping with Accessibility contrast guarantees:
+            // 1. Paper Background: extremely light, soft tinted paper (saturation <= 12%, lightness locked at 98%)
+            const paperBgS = Math.min(s, 12);
+            const paperBgL = 98;
+            
+            // 2. Paper Accent: readable contrast ink color (saturation >= 55%, lightness locked at 18% - 26%)
+            const paperAccentS = Math.max(s, 55);
+            const paperAccentL = Math.max(18, Math.min(l * 0.45, 26)); // Lower lightness to guarantee > 7.5:1 contrast
+            
+            // 3. Border/Lines color: soft beige/gray border tint
+            const paperBorderLightS = Math.min(s, 14);
+            const paperBorderLightL = 83;
+            
+            const gazetteCard = document.getElementById('gazetteCard');
+            const shareCard = document.getElementById('shareCard');
+            [gazetteCard, shareCard].forEach(card => {
+                if (card) {
+                    card.style.setProperty('--paper-bg', `hsl(${h}, ${paperBgS}%, ${paperBgL}%)`);
+                    card.style.setProperty('--paper-accent', `hsl(${h}, ${paperAccentS}%, ${paperAccentL}%)`);
+                    card.style.setProperty('--paper-border-light', `hsl(${h}, ${paperBorderLightS}%, ${paperBorderLightL}%)`);
+                }
+            });
+            console.log(`[Theme Extracted] HSL(${h}, ${s}%, ${l}%) -> Accent: hsl(${h}, ${paperAccentS}%, ${paperAccentL}%)`);
+        } catch (e) {
+            console.warn('Theme color extraction failed (probably CORS block):', e);
+            resetThemeColors();
+        }
+    }
+
+    function resetThemeColors() {
+        const gazetteCard = document.getElementById('gazetteCard');
+        const shareCard = document.getElementById('shareCard');
+        [gazetteCard, shareCard].forEach(card => {
+            if (card) {
+                card.style.removeProperty('--paper-bg');
+                card.style.removeProperty('--paper-accent');
+                card.style.removeProperty('--paper-border-light');
+            }
+        });
+        console.log('[Theme Reset] Reverted to default ivory and jujube red theme.');
+    }
+
+    function rgbToHsl(r, g, b) {
+        r /= 255;
+        g /= 255;
+        b /= 255;
+        const max = Math.max(r, g, b), min = Math.min(r, g, b);
+        let h, s, l = (max + min) / 2;
+
+        if (max === min) {
+            h = s = 0;
+        } else {
+            const d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            switch (max) {
+                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                case g: h = (b - r) / d + 2; break;
+                case b: h = (r - g) / d + 4; break;
+            }
+            h /= 6;
+        }
+
+        return [
+            Math.round(h * 360),
+            Math.round(s * 100),
+            Math.round(l * 100)
+        ];
+    }
+
     // --- Data Binding Functions ---
     
     function syncText(input, cardElement, isParagraph = false) {
         if (!input || !cardElement) return;
         
         const update = () => {
-            const val = input.value.trim();
+            const val = panguSpace(input.value.trim());
             if (isParagraph) {
                 // Split paragraphs by newline and wrap each in <p>
                 cardElement.innerHTML = val.split('\n')
@@ -199,17 +328,20 @@ function initializeApp() {
                 cardImage.style.backgroundPosition = 'center';
                 cardImage.style.display = 'block';
                 cardImageError.style.display = 'none';
+                extractThemeColor(tempImg);
             };
             tempImg.onerror = () => {
                 cardImage.style.backgroundImage = 'none';
                 cardImage.style.display = 'none';
                 cardImageError.style.display = 'flex';
+                resetThemeColors();
             };
             tempImg.src = url;
         } else {
             cardImage.style.backgroundImage = 'none';
             cardImage.style.display = 'none';
             cardImageError.style.display = 'flex';
+            resetThemeColors();
         }
     };
     inputImageUrl.addEventListener('input', updateImage);
@@ -229,7 +361,8 @@ function initializeApp() {
 
     function parseArticleMarkdown(text) {
         if (!text) return '';
-        return text.split('\n')
+        const spacedText = panguSpace(text);
+        return spacedText.split('\n')
             .map(line => {
                 const trimmed = line.trim();
                 if (!trimmed) return '';
@@ -377,7 +510,7 @@ function initializeApp() {
                 
                 const headlineSpan = document.createElement('span');
                 headlineSpan.className = 'news-headline';
-                headlineSpan.innerHTML = wrapForeignNames(escapeHtml(headline || ''));
+                headlineSpan.innerHTML = wrapForeignNames(escapeHtml(panguSpace(headline || '')));
                 
                 li.appendChild(catSpan);
                 li.appendChild(headlineSpan);
@@ -939,10 +1072,10 @@ function initializeApp() {
 
     function updateShareCardPreview() {
         if (shareCardDate) shareCardDate.textContent = inputDate.value.trim();
-        if (shareCardTitle) shareCardTitle.innerHTML = wrapForeignNames(escapeHtml(inputSparkTitle.value.trim()));
+        if (shareCardTitle) shareCardTitle.innerHTML = wrapForeignNames(escapeHtml(panguSpace(inputSparkTitle.value.trim())));
         
         if (shareCardIntro) {
-            shareCardIntro.innerHTML = wrapForeignNames(escapeHtml(inputShareCardText.value.trim()));
+            shareCardIntro.innerHTML = wrapForeignNames(escapeHtml(panguSpace(inputShareCardText.value.trim())));
         }
         
         if (shareCardImage) {
@@ -979,7 +1112,7 @@ function initializeApp() {
                 const tagEl = shareCardNews1.querySelector('.share-news-tag');
                 const titleEl = shareCardNews1.querySelector('.share-news-title');
                 if (tagEl) tagEl.textContent = newsItems[0].category;
-                if (titleEl) titleEl.innerHTML = wrapForeignNames(escapeHtml(newsItems[0].headline));
+                if (titleEl) titleEl.innerHTML = wrapForeignNames(escapeHtml(panguSpace(newsItems[0].headline)));
                 shareCardNews1.style.display = 'flex';
             } else {
                 shareCardNews1.style.display = 'none';
@@ -990,7 +1123,7 @@ function initializeApp() {
                 const tagEl = shareCardNews2.querySelector('.share-news-tag');
                 const titleEl = shareCardNews2.querySelector('.share-news-title');
                 if (tagEl) tagEl.textContent = newsItems[1].category;
-                if (titleEl) titleEl.innerHTML = wrapForeignNames(escapeHtml(newsItems[1].headline));
+                if (titleEl) titleEl.innerHTML = wrapForeignNames(escapeHtml(panguSpace(newsItems[1].headline)));
                 shareCardNews2.style.display = 'flex';
             } else {
                 shareCardNews2.style.display = 'none';
