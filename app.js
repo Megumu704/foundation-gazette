@@ -1354,25 +1354,81 @@ function initializeApp() {
             });
     }
 
-    // Auto-open share modal if openShare=true query parameter is present (useful for headless testing)
-    const paramOpenShare = urlParams.get('openShare');
-    const paramDownloadShare = urlParams.get('downloadShare');
-    if (paramOpenShare === 'true') {
-        setTimeout(() => {
-            if (shareTeaserText) {
-                shareTeaserText.value = generateTeaserText();
+        // Auto-open share modal if openShare=true query parameter is present (useful for headless testing)
+        const paramOpenShare = urlParams.get('openShare');
+        const paramDownloadShare = urlParams.get('downloadShare');
+        if (paramOpenShare === 'true') {
+            setTimeout(() => {
+                if (shareTeaserText) {
+                    shareTeaserText.value = generateTeaserText();
+                }
+                updateShareCardPreview();
+                if (shareModalOverlay) {
+                    shareModalOverlay.style.display = 'flex';
+                }
+                if (paramDownloadShare === 'true' && btnDownloadShareCard) {
+                    setTimeout(() => {
+                        btnDownloadShareCard.click();
+                    }, 300);
+                }
+            }, 500);
+        }
+
+        // --- Telegram Revision Feedback Polling System ---
+        (function setupFeedbackPolling() {
+            const feedbackBanner = document.getElementById('feedback-banner');
+            const feedbackText = document.getElementById('feedback-text');
+            const feedbackTime = document.getElementById('feedback-time');
+            const btnDismissFeedback = document.getElementById('btnDismissFeedback');
+            
+            if (!feedbackBanner || !feedbackText || !feedbackTime || !btnDismissFeedback) return;
+            
+            let lastTimestamp = '';
+            let dismissedTimestamps = new Set();
+            
+            btnDismissFeedback.addEventListener('click', () => {
+                feedbackBanner.classList.add('feedback-banner-hidden');
+                if (lastTimestamp) {
+                    dismissedTimestamps.add(lastTimestamp);
+                }
+            });
+            
+            function pollFeedback() {
+                fetch(`data/feedback.json?t=${Date.now()}`)
+                    .then(response => {
+                        if (response.ok) return response.json();
+                        throw new Error('No feedback or not found');
+                    })
+                    .then(data => {
+                        if (data && data.content && data.timestamp) {
+                            const content = data.content.trim();
+                            const timestamp = data.timestamp.trim();
+                            
+                            if (content) {
+                                feedbackText.textContent = content;
+                                feedbackTime.textContent = timestamp;
+                                
+                                lastTimestamp = timestamp;
+                                
+                                // Only show if not dismissed in this session
+                                if (!dismissedTimestamps.has(timestamp)) {
+                                    feedbackBanner.classList.remove('feedback-banner-hidden');
+                                }
+                            } else {
+                                feedbackBanner.classList.add('feedback-banner-hidden');
+                            }
+                        } else {
+                            feedbackBanner.classList.add('feedback-banner-hidden');
+                        }
+                    })
+                    .catch(err => {
+                        feedbackBanner.classList.add('feedback-banner-hidden');
+                    });
             }
-            updateShareCardPreview();
-            if (shareModalOverlay) {
-                shareModalOverlay.style.display = 'flex';
-            }
-            if (paramDownloadShare === 'true' && btnDownloadShareCard) {
-                setTimeout(() => {
-                    btnDownloadShareCard.click();
-                }, 300);
-            }
-        }, 500);
-    }
+            
+            pollFeedback();
+            setInterval(pollFeedback, 3000);
+        })();
     } catch (e) {
         alert("⚠️ 捕獲到 app.js 執行期錯誤：\n\n錯誤描述: " + e.message + "\n\n詳細堆疊資訊:\n" + e.stack);
     }

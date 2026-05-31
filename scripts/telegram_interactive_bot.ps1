@@ -102,6 +102,13 @@ $txt_btn_stop_srv = Get-DecodedString "5YGc5q2i5Ly65pyN5Zmo"
 $txt_btn_start_srv = Get-DecodedString "5ZWf5YuV5Ly65pyN5Zmo"
 $txt_btn_menu = Get-DecodedString "6L+U5Zue5Li76YG45Zau"
 
+# Feedback feature extensions
+$e_broom = [char]::ConvertFromUtf32(0x1F9F9)
+$txt_btn_clear_fb = Get-DecodedString "5riF6Zmk5L+u5pS55Y+N6aWL"
+$txt_feedback_cleared = Get-DecodedString "5L+u5pS55Y+N6aWL5bey5riF6Zmk44CC"
+$txt_feedback_saved = Get-DecodedString "57i957eo6Lyv55qE5L+u5pS55Y+N6aWL5bey5oiQ5Yqf6KiY6YyE77yB"
+$txt_feedback_notify = Get-DecodedString "5oiR5bey5bCH5oKo55qE5L+u5pS55oSP6KaL5Y2z5pmC5ZCM5q2l6Iez5pys5qmf57eo6Lyv5Y+w6aCQ6Ka96aCB6Z2i44CC"
+
 # Helper to send a text message
 function Send-TelegramMessage ($chatId, $text, $replyMarkupJson = $null) {
     $body = @{
@@ -169,20 +176,29 @@ function Send-TelegramPhoto ($chatId, $filePath, $caption = "") {
 
 # Build Menu Markup
 function Get-MainMenuMarkup {
-    $markup = @{
-        inline_keyboard = @(
-            @(
-                @{ text = "$e_status $txt_btn_status"; callback_data = "status" },
-                @{ text = "$e_preview $txt_btn_preview"; callback_data = "preview" }
-            ),
-            @(
-                @{ text = "$e_sync $txt_btn_sync"; callback_data = "sync" },
-                @{ text = "$e_publish $txt_btn_publish"; callback_data = "publish" }
-            ),
-            @(
-                @{ text = "$e_server $txt_btn_status $txt_server_status"; callback_data = "server" }
-            )
+    $buttons = @(
+        @(
+            @{ text = "$e_status $txt_btn_status"; callback_data = "status" },
+            @{ text = "$e_preview $txt_btn_preview"; callback_data = "preview" }
+        ),
+        @(
+            @{ text = "$e_sync $txt_btn_sync"; callback_data = "sync" },
+            @{ text = "$e_publish $txt_btn_publish"; callback_data = "publish" }
+        ),
+        @(
+            @{ text = "$e_server $txt_btn_status $txt_server_status"; callback_data = "server" }
         )
+    )
+    
+    $fbPath = Join-Path $projectRoot "data\feedback.json"
+    if (Test-Path $fbPath) {
+        $buttons += ,@(
+            @{ text = "$e_broom $txt_btn_clear_fb"; callback_data = "clear_feedback" }
+        )
+    }
+    
+    $markup = @{
+        inline_keyboard = $buttons
     }
     return ConvertTo-Json $markup -Depth 5
 }
@@ -375,8 +391,16 @@ function Handle-TelegramCommand ($chatId, $command, $callbackQueryId = $null) {
             Handle-TelegramCommand -chatId $chatId -command "server"
         }
         
+        "clear_feedback" {
+            $fbPath = Join-Path $projectRoot "data\feedback.json"
+            if (Test-Path $fbPath) {
+                Remove-Item -Path $fbPath -Force | Out-Null
+            }
+            Send-TelegramMessage -chatId $chatId -text "$e_check *$txt_feedback_cleared*" -replyMarkupJson (Get-MainMenuMarkup)
+        }
+
         "menu" {
-            Send-TelegramMessage -chatId $chatId -text "$e_hello *$txt_welcome*\n\n$txt_choose" -replyMarkupJson (Get-MainMenuMarkup)
+            Send-TelegramMessage -chatId $chatId -text "$e_hello *$txt_welcome*`n`n$txt_choose" -replyMarkupJson (Get-MainMenuMarkup)
         }
 
         default {
@@ -395,12 +419,22 @@ function Handle-TelegramCommand ($chatId, $command, $callbackQueryId = $null) {
                     Handle-TelegramCommand -chatId $chatId -command "publish"
                 } elseif ($cmdName -eq "server") {
                     Handle-TelegramCommand -chatId $chatId -command "server"
+                } elseif ($cmdName -eq "clear") {
+                    Handle-TelegramCommand -chatId $chatId -command "clear_feedback"
                 } else {
                     Send-TelegramMessage -chatId $chatId -text "$e_question $($txt_unknown): $command" -replyMarkupJson (Get-MainMenuMarkup)
                 }
             } else {
-                # Fallback for plain text: send menu!
-                Send-TelegramMessage -chatId $chatId -text "$e_hello *$txt_received*：``$command```n`n$txt_prompt_menu" -replyMarkupJson (Get-MainMenuMarkup)
+                # Text input is treated as new feedback!
+                $feedbackObj = @{
+                    content = $command
+                    timestamp = (Get-Date -Format "yyyy-MM-dd HH:mm:ss")
+                }
+                $feedbackJson = ConvertTo-Json $feedbackObj -Depth 5
+                $feedbackPath = Join-Path $projectRoot "data\feedback.json"
+                [System.IO.File]::WriteAllText($feedbackPath, $feedbackJson, [System.Text.Encoding]::UTF8)
+
+                Send-TelegramMessage -chatId $chatId -text "📝 *$txt_feedback_saved*`n`n``$command```n`n$txt_feedback_notify" -replyMarkupJson (Get-MainMenuMarkup)
             }
         }
     }

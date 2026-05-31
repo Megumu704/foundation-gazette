@@ -33,6 +33,19 @@
     </script>
 </head>
 <body>
+    <!-- Floating Feedback Notification Box -->
+    <div id="feedback-banner" class="feedback-banner-hidden">
+        <div class="feedback-banner-header">
+            <span class="feedback-banner-icon">📝</span>
+            <span class="feedback-banner-title">總編輯修改意見 / Feedback</span>
+            <button class="feedback-banner-close" id="btnDismissFeedback" title="隱藏">&times;</button>
+        </div>
+        <div class="feedback-banner-body">
+            <p id="feedback-text">無未處理的反饋</p>
+            <span id="feedback-time" class="feedback-banner-time">00:00:00</span>
+        </div>
+    </div>
+
     <div class="app-container">
         <!-- Left Panel: Controls -->
         <aside class="control-panel">
