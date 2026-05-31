@@ -324,6 +324,9 @@ function Handle-TelegramCommand ($chatId, $command, $callbackQueryId = $null) {
                 } else {
                     Send-TelegramMessage -chatId $chatId -text "Unknown command: $command" -replyMarkupJson (Get-MainMenuMarkup)
                 }
+            } else {
+                # Fallback for plain text: send menu!
+                Send-TelegramMessage -chatId $chatId -text "Received message: `$command``n`nPlease use the menu buttons below to interact with the desktop:" -replyMarkupJson (Get-MainMenuMarkup)
             }
         }
     }
