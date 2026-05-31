@@ -15,7 +15,7 @@ $issueSuffix = $issueSuffix.PadLeft(3, '0')
 $draftPath = Join-Path $projectRoot "data\draft.json"
 $dateParam = (Get-Date).ToString("yyyyMMdd")
 if (Test-Path $draftPath) {
-    $draft = Get-Content $draftPath -Raw | ConvertFrom-Json
+    $draft = Get-Content $draftPath -Encoding UTF8 -Raw | ConvertFrom-Json
     if ($draft.dateString) {
         $dateParam = $draft.dateString.Replace(".", "")
     }

@@ -222,7 +222,7 @@ function Handle-TelegramCommand ($chatId, $command, $callbackQueryId = $null) {
             Send-ChatAction -chatId $chatId
             $draftPath = Join-Path $projectRoot "data\draft.json"
             if (Test-Path $draftPath) {
-                $draft = Get-Content $draftPath -Raw | ConvertFrom-Json
+                $draft = Get-Content $draftPath -Encoding UTF8 -Raw | ConvertFrom-Json
                 $resText = "$e_clipboard *$txt_draft_status*`n`n"
                 $resText += "$e_galaxy *$txt_era*: ``$($draft.galaxyEra)```n"
                 $resText += "$e_calendar *$txt_date*: ``$($draft.dateString)```n"
@@ -309,7 +309,7 @@ function Handle-TelegramCommand ($chatId, $command, $callbackQueryId = $null) {
                 
                 # 2. Comment out sync block in publish script temporarily to protect local draft customizations
                 $pubScript = Join-Path $projectRoot "scripts\publish_and_shift.ps1"
-                $content = Get-Content $pubScript -Raw
+                $content = Get-Content $pubScript -Encoding UTF8 -Raw
                 # Comment it out if not already commented out
                 if ($content -like "*# Sync latest reviews and edits*") {
                     $commented = $content.Replace('Write-Host "Syncing latest reviews and edits back to draft.json..."', '<#`nWrite-Host "Syncing latest reviews and edits back to draft.json..."')
