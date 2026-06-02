@@ -21,7 +21,7 @@
       "headline": "麥塊發表會揭曉全新地底更新",
       "summary": "#### 麥塊夏季發表會帶來地底新驚喜\n微軟旗下開發團隊 Mojang Studios 於 2026 年 5 月底的 TwitchCon Europe 上舉辦了「Minecraft Live」特別發表會，正式向全球玩家揭曉了下一個重大遊戲 Drop ——「混沌立方」（Chaos Cubed，代號 26.2 更新），並宣佈將於 2026 年 6 月 16 日正式上線。\n\n#### 硫磺生態系與可形變全新生物\n本次更新的亮點在於全新的地底冒險。「硫磺洞穴」（Sulfur Caves）生態群系將為玩家帶來充滿黃色硫磺池、噴湧地熱噴泉與致命結晶尖刺的險惡環境。與此同時，新加入的被動生物「硫磺立方」（Sulfur Cube）具有極具隨機性的趣味機制，牠們會吞食周圍的方塊（如 Magma Block 或 TNT）以改變自身的物理性質，進而獲得彈跳、滑行甚至飛行的能力，為生存與自動化建造帶來無限可能。此外，Java版亦在此次更新中正式導入玩家期待已久的好友名單與隊伍系統，進一步深化社群互動。",
       "imageUrl": "data/images/minecraft_live.png",
-      "imageCaption": "《當個創世神》於 TwitchCon Europe 發表會上公佈全新「混沌立方」（Chaos Cubed）更新內容。"
+      "imageCaption": "《當個創世神》官方主視覺，微軟 Mojang 宣佈將於六月中旬正式上線「混沌立方」重大地底更新。"
     },
     {
       "category": "ANIMATION",
@@ -58,7 +58,7 @@
       "headline": "麥塊發表會揭曉全新地底更新",
       "summary": "#### 麥塊夏季發表會帶來地底新驚喜\n微軟旗下開發團隊 Mojang Studios 於 2026 年 5 月底的 TwitchCon Europe 上舉辦了「Minecraft Live」特別發表會，正式向全球玩家揭曉了下一個重大遊戲 Drop ——「混沌立方」（Chaos Cubed，代號 26.2 更新），並宣佈將於 2026 年 6 月 16 日正式上線。\n\n#### 硫磺生態系與可形變全新生物\n本次更新的亮點在於全新的地底冒險。「硫磺洞穴」（Sulfur Caves）生態群系將為玩家帶來充滿黃色硫磺池、噴湧地熱噴泉與致命結晶尖刺的險惡環境。與此同時，新加入的被動生物「硫磺立方」（Sulfur Cube）具有極具隨機性的趣味機制，牠們會吞食周圍的方塊（如 Magma Block 或 TNT）以改變自身的物理性質，進而獲得彈跳、滑行甚至飛行的能力，為生存與自動化建造帶來無限可能。此外，Java版亦在此次更新中正式導入玩家期待已久的好友名單與隊伍系統，進一步深化社群互動。",
       "imageUrl": "data/images/minecraft_live.png",
-      "imageCaption": "《當個創世神》於 TwitchCon Europe 發表會上公佈全新「混沌立方」（Chaos Cubed）更新內容。"
+      "imageCaption": "《當個創世神》官方主視覺，微軟 Mojang 宣佈將於六月中旬正式上線「混沌立方」重大地底更新。"
     },
     {
       "category": "ANIMATION",
