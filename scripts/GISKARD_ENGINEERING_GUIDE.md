@@ -51,3 +51,13 @@
 1.  **URL Query 參數導航**：在 `app.js` 中預留 URL 測試鉤子（如 `?openShare=true&downloadShare=true`），方便測試腳本自動導向至分享卡生成流程。
 2.  **自動化截圖對比**：
     *   在每次重大排版修改後，執行 [take_screenshots.ps1](file:///C:/Users/Hubert/.gemini/antigravity/scratch/foundation-gazette/scripts/take_screenshots.ps1)，將 Read Mode 和 Edit Mode 截圖匯出至 brain 目錄，對比有無元件重疊、邊界溢出或字體被阻斷的情況。
+ 
+---
+ 
+## 🛡️ 5. 真實圖片下載與幻像二進位驗證 (Image Downloading & Validation)
+吉斯卡在進行外鏈圖片抓取與快取時，需特別防範「偽圖像檔」帶來的排版崩潰：
+- **幻像 HTML 阻擋偵測**：部分國外動漫/新聞網站（如 Anime News Network）在遇到 Curl 等 bot 流量時會回傳 403 或 404 的 HTML 阻擋頁。若不加檢查直接存為 `.png`，會導致前端瀏覽器無法解析，觸發 onerror 轉為 `NO SIGNAL` 佔位符。
+- **驗證機制**：
+  1. 下載後必須利用 Script 驗證檔案標頭 Magic Bytes（如 `b'RIFF'` 開頭為 WebP，`b'\xff\xd8\xff'` 開頭為 JPEG，`b'\x89PNG'` 開頭為 PNG）。若為 `b'<!DOCTYPE html'` 則為無效下載。
+  2. 若遇阻擋，優先至該作品的官方網站（如 `rayearth-anime.com`）下載其 OpenGraph 圖片（如 `thums_fb.jpg`）再以 Python 轉為優化的 PNG，以兼顧真實性、排版相容性與檔案大小控制（建議寬度 800px 以內）。
+
