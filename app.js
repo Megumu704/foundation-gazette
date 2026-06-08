@@ -82,9 +82,34 @@ function initializeApp() {
         // SIDEBAR TOGGLE
         // =====================================================================
         if (sidebarToggle && sidebar && magazine) {
-            sidebarToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('expanded');
-                magazine.classList.toggle('sidebar-expanded');
+            sidebarToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.toggle('mobile-open');
+                } else {
+                    sidebar.classList.toggle('expanded');
+                    magazine.classList.toggle('sidebar-expanded');
+                }
+            });
+        }
+
+        // Close sidebar on mobile when a link is clicked or clicking outside
+        if (sidebar) {
+            const sidebarLinks = sidebar.querySelectorAll('.sidebar-link');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('mobile-open');
+                    }
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768 && sidebar.classList.contains('mobile-open')) {
+                    if (!sidebar.contains(e.target)) {
+                        sidebar.classList.remove('mobile-open');
+                    }
+                }
             });
         }
 
@@ -395,11 +420,26 @@ function initializeApp() {
                 if (isExternal) {
                     tempImg.setAttribute('crossorigin', 'anonymous');
                 }
+                
+                // Synchronously set backgrounds immediately to prevent headless screenshot race conditions
+                cardImage.style.backgroundImage = `url("${url}")`;
+                cardImage.style.backgroundPosition = 'center';
+                cardImage.style.display = 'block';
+                cardImageError.style.display = 'none';
+                
+                const heroImage = document.getElementById('heroImage');
+                if (heroImage) {
+                    heroImage.style.backgroundImage = `url("${url}")`;
+                }
+
                 tempImg.onload = () => {
                     cardImage.style.backgroundImage = `url("${url}")`;
                     cardImage.style.backgroundPosition = 'center';
                     cardImage.style.display = 'block';
                     cardImageError.style.display = 'none';
+                    if (heroImage) {
+                        heroImage.style.backgroundImage = `url("${url}")`;
+                    }
                     extractThemeColor(tempImg);
                     scheduleMagazineSync();
                 };
@@ -407,6 +447,9 @@ function initializeApp() {
                     cardImage.style.backgroundImage = 'none';
                     cardImage.style.display = 'none';
                     cardImageError.style.display = 'flex';
+                    if (heroImage) {
+                        heroImage.style.backgroundImage = 'none';
+                    }
                     resetThemeColors();
                     scheduleMagazineSync();
                 };
@@ -415,6 +458,10 @@ function initializeApp() {
                 cardImage.style.backgroundImage = 'none';
                 cardImage.style.display = 'none';
                 cardImageError.style.display = 'flex';
+                const heroImage = document.getElementById('heroImage');
+                if (heroImage) {
+                    heroImage.style.backgroundImage = 'none';
+                }
                 resetThemeColors();
                 scheduleMagazineSync();
             }
@@ -1071,6 +1118,26 @@ function initializeApp() {
                 }
             }
 
+            // check in-memory fallback first (synchronous!)
+            if (window.FOUNDATION_ARCHIVES) {
+                if (window.FOUNDATION_ARCHIVES[editionValue]) {
+                    loadData(window.FOUNDATION_ARCHIVES[editionValue]);
+                    console.log(`Successfully loaded edition synchronously from memory: ${editionValue}`);
+                    return;
+                }
+                const isScreenshotMode = window.navigator.webdriver || 
+                                         window.location.search.includes('screenshot=true') || 
+                                         window.location.search.includes('headless=true');
+                if (isScreenshotMode) {
+                    const draftData = window.FOUNDATION_ARCHIVES['draft'];
+                    if (draftData && draftData.dateString === editionValue) {
+                        loadData(draftData);
+                        console.log(`Successfully loaded current draft synchronously as ${editionValue} from memory (screenshot mode)`);
+                        return;
+                    }
+                }
+            }
+
             let fetchUrl = 'data/draft.json';
             if (editionValue !== 'draft') {
                 // Convert e.g., "2026.05.20" to "2026_05_20.json"
@@ -1080,7 +1147,7 @@ function initializeApp() {
 
             fetch(fetchUrl)
                 .then(res => {
-                    if (!res.ok) throw new Error(`無法載入該期數檔案 (${fetchUrl})`);
+                    if (!res.ok) throw new Error(`無法載入期數檔案 (${fetchUrl})`);
                     return res.json();
                 })
                 .then(data => {
@@ -1088,14 +1155,9 @@ function initializeApp() {
                     console.log(`Loaded edition: ${editionValue}`);
                 })
                 .catch(err => {
-                    console.warn(`Fetch failed for ${editionValue}, attempting memory fallback:`, err);
-                    if (window.FOUNDATION_ARCHIVES && window.FOUNDATION_ARCHIVES[editionValue]) {
-                        loadData(window.FOUNDATION_ARCHIVES[editionValue]);
-                        console.log(`Successfully loaded edition from memory fallback: ${editionValue}`);
-                    } else {
-                        alert(`載入錯誤: ${err.message}\n\n💡 提示：若您是在本機以雙擊 index.html 開啟網頁，請使用專案目錄下的「啟動本地伺服器.bat」或確保 data/archive_data.js 已正確引入且包含此期數資料。`);
-                        if (selectArchive) selectArchive.value = 'draft';
-                    }
+                    console.warn(`Fetch failed for ${editionValue}:`, err);
+                    alert(`載入錯誤: ${err.message}\n\n💡 提示：請確保該期數的 JSON 檔案存在於 data/archive 目錄下。`);
+                    if (selectArchive) selectArchive.value = 'draft';
                 });
         }
 
@@ -1416,23 +1478,36 @@ function initializeApp() {
         }
 
         if (!restoredFromLocal) {
-            // Attempt Auto-loading local draft.json
-            fetch('data/draft.json')
-                .then(response => {
-                    if (response.ok) return response.json();
-                    throw new Error('Not ok');
-                })
-                .then(data => {
-                    loadData(data);
-                    console.log('Automatically loaded data/draft.json');
-                })
-                .catch(err => {
-                    console.log('Auto-load of data/draft.json failed or skipped (common for local file:// protocol). Trying memory fallback.');
-                    if (window.FOUNDATION_ARCHIVES && window.FOUNDATION_ARCHIVES['draft']) {
-                        loadData(window.FOUNDATION_ARCHIVES['draft']);
-                        console.log('Successfully loaded default draft from memory fallback.');
-                    }
-                });
+            const isScreenshotMode = window.navigator.webdriver || 
+                                     window.location.search.includes('screenshot=true') || 
+                                     window.location.search.includes('headless=true');
+            if (isScreenshotMode && window.FOUNDATION_ARCHIVES && window.FOUNDATION_ARCHIVES['draft']) {
+                loadData(window.FOUNDATION_ARCHIVES['draft']);
+                restoredFromLocal = true;
+                console.log('Successfully loaded default draft synchronously from memory (screenshot mode).');
+            } else {
+                // Attempt Auto-loading local draft.json
+                fetch('data/draft.json')
+                    .then(response => {
+                        if (response.ok) return response.json();
+                        throw new Error('Not ok');
+                    })
+                    .then(data => {
+                        loadData(data);
+                        console.log('Automatically loaded data/draft.json');
+                    })
+                    .catch(err => {
+                        console.log('Auto-load of data/draft.json failed or skipped (common for local file:// protocol). Trying memory fallback.');
+                        if (window.FOUNDATION_ARCHIVES && window.FOUNDATION_ARCHIVES['draft']) {
+                            loadData(window.FOUNDATION_ARCHIVES['draft']);
+                            console.log('Successfully loaded default draft from memory fallback.');
+                        }
+                    });
+            }
+        }
+
+        if (paramMode === 'edit') {
+            setTimeout(openEditor, 300);
         }
 
         // =====================================================================
@@ -1564,7 +1639,14 @@ function initializeApp() {
                 const summary = row.querySelector('.input-news-summary').value.trim();
                 if (headline || summary) {
                     const card = document.createElement('article');
-                    card.className = 'news-card reveal-on-scroll';
+                    const isScreenshotMode = window.navigator.webdriver || 
+                                             window.location.search.includes('screenshot=true') || 
+                                             window.location.search.includes('headless=true');
+                    if (isScreenshotMode) {
+                        card.className = 'news-card reveal-on-scroll revealed';
+                    } else {
+                        card.className = 'news-card reveal-on-scroll';
+                    }
                     card.id = `newsCard${i}`;
 
                     let imageHtml = '';
@@ -1669,6 +1751,27 @@ function initializeApp() {
         // NEW MODULE: SCROLL REVEAL OBSERVER
         // =====================================================================
         function initScrollReveal() {
+            const isScreenshotMode = window.navigator.webdriver || 
+                                     window.location.search.includes('screenshot=true') || 
+                                     window.location.search.includes('headless=true');
+            if (isScreenshotMode) {
+                const style = document.createElement('style');
+                style.textContent = `
+                    .reveal-on-scroll {
+                        opacity: 1 !important;
+                        transform: none !important;
+                        transition: none !important;
+                        transition-delay: 0s !important;
+                    }
+                `;
+                document.head.appendChild(style);
+
+                document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+                    el.classList.add('revealed');
+                });
+                return;
+            }
+
             window._scrollObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {

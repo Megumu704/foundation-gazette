@@ -32,8 +32,16 @@ if (-not (Test-Path $edgePath)) {
 
 $profilePath = Join-Path $projectRoot "edge_profile_temp"
 
+$issueParam = "draft"
+if (Test-Path $draftPath) {
+    $draft = Get-Content $draftPath -Encoding UTF8 -Raw | ConvertFrom-Json
+    if ($draft.dateString) {
+        $issueParam = $draft.dateString
+    }
+}
+
 # 1. Take screenshot of Read Mode
-$readUrl = "http://127.0.0.1:8080/?mode=read&v=$dateParam"
+$readUrl = "http://127.0.0.1:8080/?mode=read&issue=$issueParam&v=$dateParam&screenshot=true"
 $readOut = Join-Path $brainDir "render_read_mode_$($issueSuffix).png"
 Write-Output "Capturing Read Mode screenshot at $readOut..."
 $proc1 = Start-Process -FilePath $edgePath -ArgumentList "--headless", "--disable-gpu", "--no-sandbox", "--user-data-dir=$profilePath", "--screenshot=$readOut", "--window-size=1200,1600", $readUrl -PassThru
@@ -41,7 +49,7 @@ Start-Sleep -Seconds 5
 try { Stop-Process -Id $proc1.Id -Force -ErrorAction SilentlyContinue } catch {}
 
 # 2. Take screenshot of Edit Mode
-$editUrl = "http://127.0.0.1:8080/?mode=edit&v=$dateParam"
+$editUrl = "http://127.0.0.1:8080/?mode=edit&issue=$issueParam&v=$dateParam&screenshot=true"
 $editOut = Join-Path $brainDir "render_edit_mode_$($issueSuffix).png"
 Write-Output "Capturing Edit Mode screenshot at $editOut..."
 $proc2 = Start-Process -FilePath $edgePath -ArgumentList "--headless", "--disable-gpu", "--no-sandbox", "--user-data-dir=$profilePath", "--screenshot=$editOut", "--window-size=1200,1600", $editUrl -PassThru
