@@ -86,8 +86,8 @@ try {
             # Determine content type
             $ext = [System.IO.Path]::GetExtension($filePath).ToLower()
             $contentType = "text/html; charset=utf-8"
-            if ($ext -eq ".css") { $contentType = "text/css" }
-            elseif ($ext -eq ".js") { $contentType = "application/javascript" }
+            if ($ext -eq ".css") { $contentType = "text/css; charset=utf-8" }
+            elseif ($ext -eq ".js") { $contentType = "application/javascript; charset=utf-8" }
             elseif ($ext -eq ".json") { $contentType = "application/json; charset=utf-8" }
             elseif ($ext -eq ".png") { $contentType = "image/png" }
             elseif ($ext -eq ".jpg" -or $ext -eq ".jpeg") { $contentType = "image/jpeg" }
@@ -98,10 +98,14 @@ try {
             $response.Headers.Add("Access-Control-Allow-Origin", "*")
             $response.ContentType = $contentType
             
-            $bytes = [System.IO.File]::ReadAllBytes($filePath)
-            $response.ContentLength64 = $bytes.Length
-            $response.OutputStream.Write($bytes, 0, $bytes.Length)
-            Write-Host "[200] Serving: $url"
+            try {
+                $bytes = [System.IO.File]::ReadAllBytes($filePath)
+                $response.ContentLength64 = $bytes.Length
+                $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                Write-Host "[200] Serving: $url ($($bytes.Length) bytes)"
+            } catch {
+                Write-Host "[ERR] Failed to serve $url : $_"
+            }
         } else {
             $response.StatusCode = 404
             $response.Headers.Add("Access-Control-Allow-Origin", "*")
@@ -110,7 +114,7 @@ try {
             $response.OutputStream.Write($bytes, 0, $bytes.Length)
             Write-Host "[404] Not Found: $url"
         }
-        $response.Close()
+        try { $response.Close() } catch { }
     }
 }
 catch {

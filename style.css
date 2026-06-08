@@ -1,96 +1,1357 @@
-/* CSS Design System for Foundation Gazette */
+/* ==========================================================================
+   FOUNDATION GAZETTE — Magazine Website Design System
+   Complete CSS for premium editorial magazine layout
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. CSS CUSTOM PROPERTIES
+   ========================================================================== */
 
 :root {
-    /* UI Palette (Dark Mode for Control Panel) */
+    /* Magazine Light Theme (default) */
+    --mag-bg: #fdfcf9;
+    --mag-bg-alt: #f5f3ee;
+    --mag-text: #080808;
+    --mag-text-body: #2c2c2c;
+    --mag-text-muted: #3a3a3a;
+    --mag-text-light: #6b6b6b;
+    --mag-accent: #a6261b;
+    --mag-accent-light: rgba(166, 38, 27, 0.08);
+    --mag-border: #e0ddd6;
+    --mag-border-dark: #080808;
+    --mag-shadow: rgba(0, 0, 0, 0.08);
+
+    /* UI (sidebar, editor drawer) */
     --ui-bg: #0d0d12;
-    --ui-sidebar-bg: #14141c;
-    --ui-border: #242433;
+    --ui-sidebar-bg: #111116;
+    --ui-border: #1e1e28;
     --ui-text: #e2e2ec;
-    --ui-text-muted: #8b8b9e;
+    --ui-text-muted: #6b6b7e;
     --ui-accent: #58a6ff;
     --ui-accent-hover: #79b8ff;
-    --ui-input-bg: #1d1d29;
-    
-    /* Editorial Palette (Ivory Paper Theme) */
-    --paper-bg: #fdfcf9; /* Premium elegant ivory background */
-    --paper-border: #080808; /* Deep ink black */
-    --paper-border-light: #d1cdc4; /* Elegant grey border */
-    --paper-text: #080808; /* Deep ink black */
-    --paper-text-light: #3a3a3a; /* Charcoal grey text */
-    --paper-accent: #a6261b; /* Classic stamp jujube red */
+    --ui-input-bg: #1a1a24;
+
+    /* Sidebar Dimensions */
+    --sidebar-width: 64px;
+    --sidebar-expanded: 260px;
+
+    /* Legacy paper tokens — preserved for gazette-card PNG export */
+    --paper-bg: #fdfcf9;
+    --paper-border: #080808;
+    --paper-border-light: #d1cdc4;
+    --paper-text: #080808;
+    --paper-text-light: #3a3a3a;
+    --paper-accent: #a6261b;
     --paper-accent-alpha-04: rgba(166, 38, 27, 0.04);
     --paper-accent-alpha-45: rgba(166, 38, 27, 0.45);
 }
 
-* {
+/* Dark Theme */
+[data-theme="dark"] {
+    --mag-bg: #111114;
+    --mag-bg-alt: #1a1a1e;
+    --mag-text: #e8e6e1;
+    --mag-text-body: #d0cec8;
+    --mag-text-muted: #9a9890;
+    --mag-text-light: #6b6964;
+    --mag-accent: #d4483b;
+    --mag-accent-light: rgba(212, 72, 59, 0.12);
+    --mag-border: #2a2a2e;
+    --mag-border-dark: #e8e6e1;
+    --mag-shadow: rgba(0, 0, 0, 0.3);
+}
+
+
+/* ==========================================================================
+   2. RESET & BASE STYLES
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
 body {
-    font-family: 'Inter', 'Noto Sans TC', sans-serif;
-    background-color: var(--ui-bg);
-    color: var(--ui-text);
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--mag-bg);
+    color: var(--mag-text);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--mag-border);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--mag-text-light);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: #333;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+/* ==========================================================================
+   3. READING PROGRESS BAR
+   ========================================================================== */
+
+.reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: var(--mag-accent);
+    z-index: 9999;
+    transition: width 0.15s linear;
+    pointer-events: none;
+}
+
+
+/* ==========================================================================
+   4. SIDEBAR NAVIGATION
+   ========================================================================== */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: var(--sidebar-width);
     height: 100vh;
-    overflow: hidden;
-}
-
-
-.text-nowrap {
-    white-space: nowrap !important;
-}
-
-/* App Container */
-.app-container {
-    display: flex;
-    width: 100vw;
-    height: 100vh;
-}
-
-/* Control Panel (Left Side) */
-.control-panel {
-    width: 400px;
-    background-color: var(--ui-sidebar-bg);
+    background: rgba(17, 17, 22, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-right: 1px solid var(--ui-border);
     display: flex;
     flex-direction: column;
-    height: 100%;
+    z-index: 500;
+    transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    overflow: hidden;
     flex-shrink: 0;
 }
 
-.panel-header {
-    padding: 24px;
-    border-bottom: 1px solid var(--ui-border);
+.sidebar.expanded {
+    width: var(--sidebar-expanded);
 }
 
-.logo-area {
+/* Sidebar Toggle (Hamburger) Button */
+.sidebar-toggle {
+    position: absolute;
+    top: 16px;
+    right: -36px;
+    width: 32px;
+    height: 32px;
+    background: rgba(17, 17, 22, 0.9);
+    border: 1px solid var(--ui-border);
+    border-radius: 0 6px 6px 0;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 4px;
+    justify-content: center;
+    z-index: 501;
+    padding: 0;
 }
 
-.logo-icon {
-    font-size: 1.5rem;
+.sidebar-toggle-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 16px;
 }
 
-.panel-header h2 {
-    font-size: 1.25rem;
+.sidebar-toggle-icon span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--ui-text-muted);
+    border-radius: 1px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.sidebar.expanded .sidebar-toggle-icon span:nth-child(1) {
+    transform: rotate(45deg) translate(3px, 4px);
+}
+
+.sidebar.expanded .sidebar-toggle-icon span:nth-child(2) {
+    opacity: 0;
+}
+
+.sidebar.expanded .sidebar-toggle-icon span:nth-child(3) {
+    transform: rotate(-45deg) translate(3px, -4px);
+}
+
+/* Hero Scroll Hint */
+.hero-scroll-hint {
+    position: absolute;
+    bottom: 24px;
+    right: 40px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255, 255, 255, 0.5);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    animation: scrollHintPulse 2s infinite;
+}
+
+.hero-scroll-arrow {
+    width: 12px;
+    height: 12px;
+    border-right: 1.5px solid rgba(255, 255, 255, 0.4);
+    border-bottom: 1.5px solid rgba(255, 255, 255, 0.4);
+    transform: rotate(45deg);
+}
+
+@keyframes scrollHintPulse {
+    0%, 100% { opacity: 0.5; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(4px); }
+}
+
+/* Hero masthead block wrapper */
+.hero-masthead-block {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hero-kicker {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+}
+
+/* Hero meta divider */
+.hero-meta-divider {
+    margin: 0 8px;
+    opacity: 0.5;
+    font-size: 0.5rem;
+}
+
+.hero-meta-item {
+    white-space: nowrap;
+}
+
+/* Section ornament */
+.section-ornament {
+    font-size: 0.9rem;
+    color: var(--mag-text-light);
+    margin-top: 4px;
+    opacity: 0.3;
+}
+
+/* Sidebar Brand / Logo */
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 0;
+    justify-content: center;
+    border-bottom: 1px solid var(--ui-border);
+    min-height: 60px;
+    flex-shrink: 0;
+}
+
+.sidebar-brand-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: var(--mag-accent);
+    background: rgba(166, 38, 27, 0.1);
+    border-radius: 8px;
+    flex-shrink: 0;
+    letter-spacing: -0.02em;
+}
+
+.sidebar-brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: opacity 0.2s ease 0.1s, max-width 0.3s ease;
+}
+
+.sidebar.expanded .sidebar-brand-text {
+    opacity: 1;
+    max-width: 180px;
+}
+
+.sidebar-brand-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+}
+
+.sidebar-brand-sub {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 0.6rem;
+    color: var(--ui-text-muted);
+    letter-spacing: 0.25em;
+}
+
+/* Sidebar Navigation Links */
+.sidebar-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 12px 8px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    list-style: none;
+}
+
+.sidebar-nav-item {
+    list-style: none;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+    color: var(--ui-text-muted);
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    position: relative;
+    white-space: nowrap;
+    font-size: 0.82rem;
+}
+
+.sidebar-link:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--ui-text);
+}
+
+.sidebar-link.active {
+    color: #fff;
+    background: rgba(166, 38, 27, 0.12);
+}
+
+.sidebar-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 20px;
+    background: var(--mag-accent);
+    border-radius: 0 2px 2px 0;
+}
+
+.sidebar-link.disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.sidebar-link-icon {
+    font-size: 18px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.sidebar-link-label {
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: opacity 0.2s ease 0.1s, max-width 0.3s ease;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+.sidebar.expanded .sidebar-link-label {
+    opacity: 1;
+    max-width: 160px;
+}
+
+/* Sidebar Badge (Soon, etc.) */
+.sidebar-badge {
+    font-size: 0.55rem;
     font-weight: 700;
     letter-spacing: 0.05em;
+    padding: 2px 6px;
+    border-radius: 8px;
+    background: var(--mag-accent);
+    color: #fff;
+    text-transform: uppercase;
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    transition: opacity 0.2s ease 0.15s, max-width 0.3s ease;
+    flex-shrink: 0;
+    line-height: 1.4;
+}
+
+.sidebar.expanded .sidebar-badge {
+    opacity: 1;
+    max-width: 50px;
+}
+
+/* Sidebar Tools Section (bottom actions) */
+.sidebar-tools {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 8px;
+    border-top: 1px solid var(--ui-border);
+    flex-shrink: 0;
+}
+
+.sidebar-tool-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+    color: var(--ui-text-muted);
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    font-size: 0.82rem;
+    white-space: nowrap;
+}
+
+.sidebar-tool-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--ui-text);
+}
+
+.sidebar-tool-btn .sidebar-link-icon {
+    font-size: 18px;
+}
+
+.sidebar-tool-btn .sidebar-link-label {
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: opacity 0.2s ease 0.1s, max-width 0.3s ease;
+    font-weight: 500;
+}
+
+.sidebar.expanded .sidebar-tool-btn .sidebar-link-label {
+    opacity: 1;
+    max-width: 160px;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+    padding: 10px 8px;
+    text-align: center;
+    flex-shrink: 0;
+    border-top: 1px solid var(--ui-border);
+}
+
+.sidebar-footer-text {
+    font-size: 0.55rem;
+    color: var(--ui-text-muted);
+    letter-spacing: 0.05em;
+    font-family: 'Share Tech Mono', monospace;
+    opacity: 0.5;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* Archive Select inside sidebar */
+.sidebar-archive-wrapper {
+    padding: 8px 8px;
+    border-top: 1px solid var(--ui-border);
+    flex-shrink: 0;
+}
+
+.sidebar-archive-select {
+    width: 100%;
+    background-color: var(--ui-input-bg);
+    border: 1px solid var(--ui-border);
+    border-radius: 4px;
+    padding: 6px 8px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.72rem;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.sidebar-archive-select:focus {
+    border-color: var(--ui-accent);
+}
+
+.sidebar-archive-label {
+    font-size: 0.6rem;
+    color: var(--ui-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+    font-weight: 600;
+    display: block;
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    transition: opacity 0.2s ease 0.1s, max-width 0.3s ease;
+}
+
+.sidebar.expanded .sidebar-archive-label {
+    opacity: 1;
+    max-width: 200px;
+}
+
+/* Collapsed sidebar: hide select, show icon only */
+.sidebar:not(.expanded) .sidebar-archive-select {
+    display: none;
+}
+
+
+/* ==========================================================================
+   5. MAIN MAGAZINE LAYOUT
+   ========================================================================== */
+
+.magazine {
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    transition: margin-left 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    background: var(--mag-bg);
+    position: relative;
+}
+
+.sidebar.expanded ~ .magazine,
+.magazine.sidebar-expanded {
+    margin-left: var(--sidebar-expanded);
+}
+
+
+/* ==========================================================================
+   6. HERO SECTION
+   ========================================================================== */
+
+.hero {
+    width: 100%;
+    height: 75vh;
+    min-height: 500px;
+    max-height: 800px;
+    position: relative;
+    overflow: hidden;
+    background: #1a1a1e;
+}
+
+.hero-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: transform 8s ease-out, opacity 0.6s ease;
+    transform: scale(1.02);
+}
+
+.hero:hover .hero-image {
+    transform: scale(1.05);
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        transparent 30%,
+        rgba(0, 0, 0, 0.2) 50%,
+        rgba(0, 0, 0, 0.55) 70%,
+        var(--mag-bg) 100%
+    );
+    z-index: 1;
+}
+
+[data-theme="dark"] .hero-overlay {
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        transparent 30%,
+        rgba(0, 0, 0, 0.3) 50%,
+        rgba(0, 0, 0, 0.65) 70%,
+        var(--mag-bg) 100%
+    );
+}
+
+.hero-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    padding: 0 80px 60px;
+    max-width: 900px;
+}
+
+.hero-masthead {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    color: #fff;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+    line-height: 1.05;
+}
+
+.hero-subtitle {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.6em;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 8px;
+    font-weight: 400;
+}
+
+.hero-meta {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 16px;
+}
+
+.hero-date-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Share Tech Mono', 'Noto Sans TC', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.6);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 12px;
+    margin-top: 20px;
+    gap: 16px;
+}
+
+
+/* ==========================================================================
+   7. COVER TOC SECTION (Table of Contents / Featured)
+   ========================================================================== */
+
+.cover-toc {
+    padding: 60px 80px;
+    background: var(--mag-bg);
+}
+
+.toc-container {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Main article preview */
+.toc-main {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.toc-tag {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--mag-accent);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--mag-accent);
+    padding-bottom: 4px;
+    display: inline-block;
+    align-self: flex-start;
+}
+
+.toc-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--mag-text);
+    margin: 0;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.toc-title:hover {
+    color: var(--mag-accent);
+}
+
+.toc-intro {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--mag-text-body);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.toc-read-more {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mag-accent);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    align-self: flex-start;
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+.toc-read-more:hover {
+    text-decoration: underline;
+    opacity: 0.8;
+}
+
+/* News column */
+.toc-news {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.toc-news-item {
+    display: flex;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px dashed var(--mag-border);
+    cursor: pointer;
+    transition: color 0.2s ease;
+    align-items: flex-start;
+}
+
+.toc-news-item:first-child {
+    padding-top: 0;
+}
+
+.toc-news-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.toc-news-item:hover .toc-news-title {
+    color: var(--mag-accent);
+}
+
+.toc-news-cat {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.55rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: var(--mag-text);
+    color: var(--mag-bg);
+    padding: 3px 8px 2px;
+    border-radius: 2px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+    line-height: 1.3;
+}
+
+[data-theme="dark"] .toc-news-cat {
+    background: var(--mag-text-muted);
+    color: var(--mag-bg);
+}
+
+.toc-news-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--mag-text);
+    transition: color 0.2s ease;
+}
+
+/* Quote teaser at bottom of TOC */
+.toc-quote {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--mag-border);
+    padding-top: 24px;
+    margin-top: 8px;
+}
+
+.toc-quote-mark {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    line-height: 0.5;
+    opacity: 0.12;
+    display: block;
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+/* News list inside toc-news column */
+.toc-news-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.toc-quote-text {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 0.92rem;
+    font-style: italic;
+    line-height: 1.7;
+    color: var(--mag-text-muted);
+    text-align: center;
+}
+
+.toc-quote-cite {
+    font-family: 'Playfair Display', 'Noto Serif TC', serif;
+    font-size: 0.78rem;
+    font-style: normal;
+    color: var(--mag-text-light);
+    text-align: center;
+    display: block;
+    margin-top: 8px;
+    font-weight: 600;
+}
+
+
+/* ==========================================================================
+   8. ARTICLE DEEP READING
+   ========================================================================== */
+
+.deep-reading {
+    padding: 40px 24px 80px;
+    background: var(--mag-bg);
+}
+
+.reading-container {
+    max-width: 740px;
+    margin: 0 auto;
+}
+
+.section-label {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mag-accent);
+    border-bottom: 1px solid var(--mag-accent);
+    padding-bottom: 4px;
+    margin-bottom: 24px;
+    display: inline-block;
+}
+
+.reading-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--mag-text);
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--mag-border);
+    padding-bottom: 16px;
+}
+
+/* Reading Body Typography */
+.reading-body .article-paragraph {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 0.96rem;
+    line-height: 2.0;
+    letter-spacing: 0.02em;
+    color: var(--mag-text-body);
+    text-align: justify;
+    text-justify: inter-character;
+    text-indent: 2em;
+    margin-bottom: 16px;
+    break-inside: avoid;
+}
+
+.reading-body .article-paragraph:first-of-type {
+    text-indent: 0;
+}
+
+/* Drop Cap */
+.reading-body > .article-paragraph:first-of-type::first-letter {
+    font-family: 'Playfair Display', serif;
+    float: left;
+    font-size: 4.2em;
+    line-height: 0.82;
+    margin: 0.05em 0.12em 0 0;
+    color: var(--mag-accent);
+    font-weight: 700;
+}
+
+/* Subtitles in reading body */
+.reading-body .article-subtitle {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--mag-text);
+    margin: 36px 0 16px;
+    border-left: 3px solid var(--mag-accent);
+    padding-left: 14px;
+    line-height: 1.4;
+    break-inside: avoid;
+    break-after: avoid;
+}
+
+/* Slogans / Pull Quotes in reading body */
+.reading-body .article-slogan {
+    font-family: 'Noto Serif TC', serif;
+    font-style: italic;
+    color: var(--mag-accent);
+    background: var(--mag-accent-light);
+    border-left: 3px solid var(--mag-accent);
+    padding: 16px 24px;
+    margin: 24px 0;
+    line-height: 1.7;
+    font-size: 0.98rem;
+    break-inside: avoid;
+}
+
+/* Article image blocks in reading body */
+.reading-body .article-image-block {
+    border: 1px solid var(--mag-border);
+    padding: 8px;
+    background-color: var(--mag-bg);
+    box-shadow: 0 4px 15px var(--mag-shadow);
+    margin: 28px auto;
+    max-width: 620px;
+    width: 100%;
+}
+
+.reading-body .article-image-block img {
+    width: 100%;
+    max-height: 380px;
+    object-fit: cover;
+    display: block;
+}
+
+.reading-body .article-image-caption {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 0.75rem;
+    font-style: italic;
+    color: var(--mag-text-light);
+    text-align: center;
+    margin-top: 8px;
+}
+
+
+/* ==========================================================================
+   9. NEWS GRID SECTION
+   ========================================================================== */
+
+.news-grid {
+    padding: 60px 24px 80px;
+    background: var(--mag-bg-alt);
+}
+
+.news-grid-container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.news-grid-header {
+    margin-bottom: 36px;
+}
+
+.news-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 32px;
+}
+
+.news-card {
+    background: var(--mag-bg);
+    border: 1px solid var(--mag-border);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: default;
+}
+
+.news-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px var(--mag-shadow);
+}
+
+.news-card-image {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    background-color: var(--mag-bg-alt);
+}
+
+.news-card-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(8, 8, 8, 0.82);
+    color: #fff;
+    padding: 3px 8px 2px;
+    border-radius: 2px;
+    line-height: 1.3;
+}
+
+[data-theme="dark"] .news-card-badge {
+    background: rgba(230, 230, 230, 0.85);
+    color: #111;
+}
+
+.news-card-body {
+    padding: 20px 24px 24px;
+}
+
+.news-card-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--mag-text);
+    margin-bottom: 8px;
+}
+
+.news-card-excerpt {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--mag-text-muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Expandable content inside news card */
+.news-card-content {
+    display: none;
+    padding: 0 24px 24px;
+}
+
+.news-card-expanded .news-card-content {
+    display: block;
+}
+
+.news-card-content .article-paragraph {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 0.92rem;
+    line-height: 1.9;
+    letter-spacing: 0.02em;
+    color: var(--mag-text-body);
+    text-align: justify;
+    text-indent: 2em;
+    margin-bottom: 14px;
+    break-inside: avoid;
+}
+
+.news-card-content .article-paragraph:first-of-type {
+    text-indent: 0;
+}
+
+.news-card-content .article-subtitle {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--mag-text);
+    margin: 24px 0 12px;
+    border-left: 3px solid var(--mag-accent);
+    padding-left: 12px;
+    line-height: 1.4;
+}
+
+.news-card-content .article-slogan {
+    font-family: 'Noto Serif TC', serif;
+    font-style: italic;
+    color: var(--mag-accent);
+    background: var(--mag-accent-light);
+    border-left: 3px solid var(--mag-accent);
+    padding: 12px 18px;
+    margin: 18px 0;
+    line-height: 1.65;
+    font-size: 0.92rem;
+}
+
+.news-card-content .article-image-block {
+    border: 1px solid var(--mag-border);
+    padding: 8px;
+    background-color: var(--mag-bg);
+    margin: 20px auto;
+    max-width: 100%;
+}
+
+.news-card-content .article-image-block img {
+    width: 100%;
+    max-height: 260px;
+    object-fit: cover;
+    display: block;
+}
+
+.news-card-content .article-image-caption {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 0.72rem;
+    font-style: italic;
+    color: var(--mag-text-light);
+    text-align: center;
+    margin-top: 8px;
+}
+
+
+/* ==========================================================================
+   10. QUOTE BANNER
+   ========================================================================== */
+
+.quote-banner {
+    padding: 80px 24px;
+    background: var(--mag-text);
+    color: var(--mag-bg);
+    text-align: center;
+}
+
+[data-theme="dark"] .quote-banner {
+    background: var(--mag-bg-alt);
+    color: var(--mag-text);
+}
+
+.quote-banner-container {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.quote-banner-mark {
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    opacity: 0.15;
+    line-height: 0.5;
+    user-select: none;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.quote-banner-text {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.3rem;
+    font-style: italic;
+    line-height: 1.8;
+    margin: 20px 0;
+    letter-spacing: 0.02em;
+}
+
+.quote-banner-author {
+    font-family: 'Playfair Display', 'Noto Serif TC', serif;
+    font-size: 0.85rem;
+    opacity: 0.7;
+    font-style: normal;
+    display: block;
+    margin-top: 16px;
+    white-space: pre-line;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+
+/* ==========================================================================
+   11. MAGAZINE FOOTER
+   ========================================================================== */
+
+.magazine-footer {
+    padding: 40px 80px;
+    border-top: 1px solid var(--mag-border);
+    text-align: center;
+    background: var(--mag-bg);
+}
+
+.magazine-footer-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mag-text-light);
+    opacity: 0.6;
+}
+
+.magazine-footer-barcode {
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
+    height: 16px;
+    gap: 1px;
+    opacity: 0.2;
+}
+
+.magazine-footer-barcode span {
+    display: inline-block;
+    background-color: var(--mag-text);
+}
+
+.magazine-footer-barcode span:nth-child(3n) { width: 1px; }
+.magazine-footer-barcode span:nth-child(3n+1) { width: 3px; }
+.magazine-footer-barcode span:nth-child(3n+2) { width: 2px; }
+.magazine-footer-barcode span:nth-child(5n) { width: 4px; margin-right: 2px; }
+.magazine-footer-barcode span:last-child { width: 1px; margin-right: 0; }
+
+
+/* ==========================================================================
+   12. EDITOR DRAWER (Slide-in Panel)
+   ========================================================================== */
+
+/* Overlay behind the drawer */
+.editor-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 800;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.editor-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* The Drawer itself */
+.editor-drawer {
+    position: fixed;
+    right: -440px;
+    top: 0;
+    width: 420px;
+    height: 100vh;
+    background: var(--ui-sidebar-bg);
+    border-left: 1px solid var(--ui-border);
+    z-index: 900;
+    transition: right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.editor-drawer.open {
+    right: 0;
+}
+
+.editor-drawer-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--ui-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.editor-drawer-header h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
     color: #fff;
 }
 
-.panel-subtitle {
-    font-size: 0.75rem;
+.editor-drawer-close {
+    background: none;
+    border: none;
     color: var(--ui-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    line-height: 1;
 }
 
-/* Scroll Area for Forms */
-.panel-scroll-area {
+.editor-drawer-close:hover {
+    color: #fff;
+}
+
+.editor-drawer-body {
     flex: 1;
     overflow-y: auto;
     padding: 24px;
@@ -99,20 +1360,31 @@ body {
     gap: 28px;
 }
 
-/* Scrollbar styling for panel */
-.panel-scroll-area::-webkit-scrollbar {
+/* Scrollbar for drawer */
+.editor-drawer-body::-webkit-scrollbar {
     width: 6px;
 }
-.panel-scroll-area::-webkit-scrollbar-track {
+
+.editor-drawer-body::-webkit-scrollbar-track {
     background: transparent;
 }
-.panel-scroll-area::-webkit-scrollbar-thumb {
+
+.editor-drawer-body::-webkit-scrollbar-thumb {
     background: #2d2d3f;
     border-radius: 3px;
 }
-.panel-scroll-area::-webkit-scrollbar-thumb:hover {
+
+.editor-drawer-body::-webkit-scrollbar-thumb:hover {
     background: #3e3e56;
 }
+
+.editor-drawer-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--ui-border);
+    flex-shrink: 0;
+}
+
+/* ---- Editor Form Styles (used inside .editor-drawer) ---- */
 
 .panel-section {
     display: flex;
@@ -197,7 +1469,7 @@ body {
     background-color: #242433;
 }
 
-/* Inputs & Form styling */
+/* Inputs & Form Styling */
 .input-group {
     display: flex;
     flex-direction: column;
@@ -216,7 +1488,8 @@ body {
 .flex-2 { flex: 2 !important; }
 .flex-8 { flex: 8 !important; }
 
-label {
+.editor-drawer label,
+.panel-section label {
     font-size: 0.75rem;
     font-weight: 600;
     color: var(--ui-text-muted);
@@ -224,7 +1497,8 @@ label {
     letter-spacing: 0.05em;
 }
 
-input[type="text"], textarea {
+.editor-drawer input[type="text"],
+.editor-drawer textarea {
     background-color: var(--ui-input-bg);
     border: 1px solid var(--ui-border);
     border-radius: 6px;
@@ -253,11 +1527,12 @@ input[type="text"], textarea {
     display: inline-block;
 }
 
-input[type="text"]:focus, textarea:focus {
+.editor-drawer input[type="text"]:focus,
+.editor-drawer textarea:focus {
     border-color: var(--ui-accent);
 }
 
-textarea {
+.editor-drawer textarea {
     resize: vertical;
 }
 
@@ -269,35 +1544,65 @@ textarea {
     margin-bottom: 8px;
 }
 
-.control-panel-footer {
-    padding: 16px 24px;
-    border-top: 1px solid var(--ui-border);
-    text-align: center;
-    font-size: 0.7rem;
-    color: var(--ui-text-muted);
+
+/* ==========================================================================
+   13. SCROLL ANIMATIONS
+   ========================================================================== */
+
+.reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(32px);
+    transition:
+        opacity 0.7s ease,
+        transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Preview Area (Right Side) */
-.preview-area {
-    flex: 1;
-    background-color: var(--ui-bg);
-    background-image: 
-        radial-gradient(circle at 10% 20%, rgba(20, 20, 30, 0.6) 0%, transparent 80%),
-        radial-gradient(circle at 90% 80%, rgba(10, 25, 45, 0.4) 0%, transparent 80%);
-    overflow-y: auto;
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
+.reveal-on-scroll.revealed {
+    opacity: 1;
+    transform: translateY(0);
 }
 
-.preview-wrapper {
-    width: 100%;
-    max-width: 820px;
-    margin: 0 auto;
-    perspective: 1000px;
+/* Stagger delays */
+.reveal-on-scroll:nth-child(2) {
+    transition-delay: 0.1s;
 }
+
+.reveal-on-scroll:nth-child(3) {
+    transition-delay: 0.2s;
+}
+
+.reveal-on-scroll:nth-child(4) {
+    transition-delay: 0.3s;
+}
+
+.reveal-on-scroll:nth-child(5) {
+    transition-delay: 0.4s;
+}
+
+
+/* ==========================================================================
+   14. UTILITY CLASSES
+   ========================================================================== */
+
+.text-nowrap {
+    white-space: nowrap !important;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+
+/* ==========================================================================
+   15. GAZETTE CARD (Export-Only Rendering — preserved for html2canvas)
+   ========================================================================== */
 
 /* Physical Gazette Card */
 .gazette-card {
@@ -375,7 +1680,7 @@ textarea {
     font-weight: 700;
     letter-spacing: 0.7em;
     margin-top: 8px;
-    margin-left: 0.7em; /* Compensate for letter-spacing on the right */
+    margin-left: 0.7em;
     color: var(--paper-text-light);
 }
 
@@ -401,7 +1706,7 @@ textarea {
     white-space: nowrap;
 }
 
-/* Gazette Body (Asymmetric Layout like magazine) */
+/* Gazette Body (Asymmetric Layout) */
 .gazette-body {
     display: flex;
     gap: 36px;
@@ -409,7 +1714,6 @@ textarea {
     z-index: 2;
 }
 
-/* Column Division: Main (62%) and Sidebar (38%) */
 .body-col-main {
     width: 61%;
     display: flex;
@@ -448,13 +1752,13 @@ textarea {
 
 .spark-title {
     font-family: 'Noto Serif TC', serif;
-    font-size: 1.4rem; /* Adjusted to guarantee 17-18 character titles fit on a single line on the cover */
+    font-size: 1.4rem;
     font-weight: 700;
     color: var(--paper-text);
     line-height: 1.3;
     margin-bottom: 15px;
     letter-spacing: 0.005em;
-    text-wrap: balance; /* Balance lines to prevent orphaned characters */
+    text-wrap: balance;
 }
 
 .spark-content {
@@ -462,7 +1766,7 @@ textarea {
     font-size: 0.94rem;
     line-height: 1.85;
     letter-spacing: 0.02em;
-    color: #2c2c2c; /* Muted charcoal for soft serif display */
+    color: #2c2c2c;
     text-align: justify;
     text-justify: inter-word;
 }
@@ -473,7 +1777,7 @@ textarea {
 }
 
 .spark-content p:first-of-type {
-    text-indent: 0; /* Keep the first paragraph unindented like traditional publishing */
+    text-indent: 0;
 }
 
 /* Visual Artifact */
@@ -594,10 +1898,10 @@ textarea {
     font-weight: 700;
     line-height: 1.45;
     color: var(--paper-text);
-    word-break: normal; /* Allow normal break for mixed CJK and English */
+    word-break: normal;
     overflow-wrap: break-word;
     text-align: left;
-    text-wrap: balance; /* Keep text balanced and clean */
+    text-wrap: balance;
 }
 
 .news-summary {
@@ -654,8 +1958,8 @@ textarea {
     text-align: right;
     font-weight: 600;
     line-height: 1.5;
-    white-space: pre-line; /* Support explicit newlines from database */
-    text-wrap: balance; /* Balance lines to prevent awkward CJK wrapping */
+    white-space: pre-line;
+    text-wrap: balance;
 }
 
 .sidebar-ornament {
@@ -667,13 +1971,6 @@ textarea {
     user-select: none;
     letter-spacing: 0.5em;
     font-family: 'Noto Serif TC', serif;
-}
-
-/* Vintage Ink Filter */
-.ink-filter img,
-.ink-filter .cloned-bg-image {
-    filter: grayscale(1) contrast(1.15) sepia(0.2) brightness(0.95) !important;
-    transition: filter 0.3s ease;
 }
 
 /* Sci-fi Barcode / Cosmic Code Signature */
@@ -793,7 +2090,7 @@ textarea {
     padding-left: 24px;
 }
 
-/* Make news image size fit the narrower grid column beautifully and align perfectly */
+/* Make news image size fit the narrower grid column */
 .gazette-articles.has-two-news .article-item.news-full .article-image-block img,
 .gazette-articles.has-two-news .article-item.news-full .article-image-block .cloned-bg-image,
 .gazette-articles.has-two-news .article-item.news-full .article-image-block .news-img-error-placeholder {
@@ -833,7 +2130,7 @@ textarea {
 }
 
 .article-item.news-full .spark-title {
-    font-size: 1.25rem; /* Reduced size to fit mixed CJK/English titles gracefully on one line */
+    font-size: 1.25rem;
     line-height: 1.35;
     margin-bottom: 20px;
     border-bottom: 1px solid var(--paper-border);
@@ -844,9 +2141,9 @@ textarea {
 .article-paragraph {
     font-family: 'Noto Serif TC', serif;
     font-size: 0.94rem;
-    line-height: 1.95; /* Generous breathing room to soften serif corners */
+    line-height: 1.95;
     letter-spacing: 0.02em;
-    color: #2c2c2c; /* Muted ink charcoal to prevent harshness on screen */
+    color: #2c2c2c;
     text-align: justify;
     text-justify: inter-character;
     margin-bottom: 14px;
@@ -887,7 +2184,7 @@ textarea {
     font-size: 0.98rem;
     font-style: italic;
     color: var(--paper-accent);
-    background-color: rgba(166, 38, 27, 0.02); /* Soft warm stamp red tint background */
+    background-color: rgba(166, 38, 27, 0.02);
     border-left: 3px solid var(--paper-accent);
     padding: 14px 20px;
     margin: 20px 0;
@@ -961,8 +2258,9 @@ textarea {
     margin-top: 4px;
 }
 
+
 /* ==========================================================================
-   LAYOUT SCHEMES (版面配置模式)
+   16. LAYOUT SCHEMES (版面配置模式 — preserved for gazette-card export)
    ========================================================================== */
 
 /* --- 1. Classic Split (經典非對稱雙欄) --- */
@@ -994,7 +2292,7 @@ textarea {
 }
 .layout-feature-image .artifact-frame .gazette-image-div,
 .layout-feature-image .image-error-placeholder {
-    height: 380px; /* Big poster image height */
+    height: 380px;
 }
 .layout-feature-image .body-col-sidebar {
     width: 100%;
@@ -1047,18 +2345,531 @@ textarea {
     gap: 28px;
 }
 .layout-minimalist-text .section-artifact {
-    display: none; /* Hide cover image */
+    display: none;
 }
 .layout-minimalist-text .spark-title {
     font-size: 1.8rem;
     line-height: 1.25;
 }
 
+
 /* ==========================================================================
-   PHASE 4: PREVIEW CONTROL BAR & READER MODE STYLING
+   17. VINTAGE INK FILTER (preserved)
    ========================================================================== */
 
-/* Preview Control Bar at the top of preview area */
+.ink-filter img,
+.ink-filter .cloned-bg-image {
+    filter: grayscale(1) contrast(1.15) sepia(0.2) brightness(0.95) !important;
+    transition: filter 0.3s ease;
+}
+
+
+/* ==========================================================================
+   18. SHARE MODAL & SHARE CARD STYLING (preserved exactly)
+   ========================================================================== */
+
+.share-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(5, 5, 10, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.share-modal {
+    background-color: var(--ui-sidebar-bg);
+    border: 1px solid var(--ui-border);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 820px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    animation: modal-slide-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modal-slide-in {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--ui-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header-title h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.modal-subtitle {
+    font-size: 0.65rem;
+    color: var(--ui-text-muted);
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 0.05em;
+    display: block;
+    margin-top: 2px;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    color: var(--ui-text-muted);
+    font-size: 1.75rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    line-height: 1;
+}
+
+.modal-close-btn:hover {
+    color: #fff;
+}
+
+.modal-body {
+    padding: 24px;
+    display: flex;
+    gap: 24px;
+    overflow-y: auto;
+}
+
+.modal-col-left {
+    flex: 1.2;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-col-right {
+    flex: 0.8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal-label {
+    font-size: 0.78rem;
+    color: var(--ui-text-muted);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+#shareTeaserText {
+    background-color: var(--ui-input-bg);
+    border: 1px solid var(--ui-border);
+    border-radius: 6px;
+    color: #e2e2ec;
+    font-family: inherit;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    padding: 12px;
+    resize: none;
+    flex: 1;
+    min-height: 250px;
+}
+
+/* Share Card Container & Preview */
+.share-card-container {
+    background: #0d0d12;
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 4px;
+}
+
+.share-card {
+    width: 288px;
+    height: 512px;
+    background: 
+        linear-gradient(rgba(253, 252, 249, 0.88), rgba(253, 252, 249, 0.88)),
+        url('data/images/paper_texture.png') no-repeat center;
+    background-size: cover;
+    color: var(--paper-text);
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid var(--paper-border-light);
+    box-shadow: 0 12px 36px rgba(0,0,0,0.4);
+    box-sizing: border-box;
+}
+
+.share-card-border-wrap {
+    border: 3px double #1c1c1c;
+    padding: 10px 10px 8px 10px;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 0.5px rgba(28, 28, 28, 0.15);
+}
+
+.share-card-paper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.share-card-header {
+    border-bottom: 2px double #1c1c1c;
+    padding-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 0.5px 0 rgba(28, 28, 28, 0.1);
+}
+
+.share-card-era {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.58rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    text-shadow: 0.2px 0.2px 0.3px rgba(8, 8, 8, 0.15);
+}
+
+.share-card-vol {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.54rem;
+    font-weight: 900;
+    color: var(--paper-accent);
+    letter-spacing: 0.05em;
+    text-shadow: 0.2px 0.2px 0.3px rgba(166, 38, 27, 0.25);
+}
+
+.share-card-date {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.58rem;
+    font-weight: 700;
+    text-shadow: 0.2px 0.2px 0.3px rgba(8, 8, 8, 0.15);
+}
+
+.share-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 2px 0;
+    flex: 1;
+    justify-content: flex-start;
+}
+
+.share-card-img-frame {
+    border: 1.2px solid #2a2a2a;
+    padding: 2px;
+    background-color: var(--paper-bg);
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06), 0 1.5px 3px rgba(0, 0, 0, 0.03);
+}
+
+.share-card-image-div {
+    width: 100%;
+    height: 130px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: block;
+}
+
+.share-content-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    margin-top: 2px;
+    width: 100%;
+}
+
+.share-spark-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.45rem;
+    font-weight: 700;
+    color: var(--paper-text-light);
+    letter-spacing: 0.05em;
+}
+
+.share-card-title {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-top: 0;
+    color: #1a1a1a;
+    text-align: center;
+    text-wrap: balance;
+}
+
+.share-divider-line {
+    width: 30%;
+    height: 0;
+    border-top: 1px dashed rgba(28, 28, 28, 0.25);
+    margin: 2px 0;
+    background-color: transparent;
+}
+
+.share-card-intro {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    font-size: 0.58rem;
+    line-height: 1.4;
+    color: #333333;
+    text-align: justify;
+    text-justify: inter-character;
+    text-align-last: center;
+    margin-top: 0;
+    display: block;
+}
+
+.share-card-footer {
+    border-top: 1px solid #1c1c1c;
+    padding-top: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.share-card-news {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.share-news-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+}
+
+.share-news-tag-wrapper {
+    width: 58px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.share-news-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.5rem;
+    font-weight: 700;
+    color: var(--paper-accent);
+    border: 1.2px solid var(--paper-accent);
+    background-color: var(--paper-accent-alpha-04);
+    padding: 2.5px 4px 0.5px 4px;
+    border-radius: 1px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    display: inline-block;
+    transform: scale(0.9, 1.35) rotate(-1deg);
+    filter: drop-shadow(0.3px 0.3px 0.3px var(--paper-accent-alpha-45));
+    opacity: 0.96;
+}
+
+.share-news-item:nth-child(2) .share-news-tag {
+    transform: scale(0.9, 1.35) rotate(0.8deg);
+}
+
+.share-news-title {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    line-height: 1.4;
+    text-align: left;
+    width: 182px;
+    flex: 0 0 182px;
+    display: block;
+}
+
+.share-footer-bottom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-top: 1px dashed rgba(28, 28, 28, 0.25);
+    padding-top: 6px;
+    margin-top: 2px;
+}
+
+.qr-code-placeholder {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #2a2a2a;
+    background-color: #fcfbfa;
+    padding: 2px;
+    flex-shrink: 0;
+    box-shadow: inset 0 0.5px 1px rgba(0,0,0,0.05);
+}
+
+.simulated-qr {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 1px;
+    background-color: #fff;
+}
+
+.simulated-qr span {
+    background-color: #222;
+}
+
+.simulated-qr span:nth-child(2),
+.simulated-qr span:nth-child(3),
+.simulated-qr span:nth-child(5),
+.simulated-qr span:nth-child(8),
+.simulated-qr span:nth-child(9),
+.simulated-qr span:nth-child(12),
+.simulated-qr span:nth-child(14),
+.simulated-qr span:nth-child(15) {
+    background-color: transparent;
+}
+
+.share-card-footer-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 208px;
+    flex: 0 0 208px;
+}
+
+.scan-to-read {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 0.44rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    line-height: 1.2;
+    text-shadow: 0.15px 0.15px 0.3px rgba(26, 26, 26, 0.15);
+}
+
+.secure-trans {
+    font-size: 0.36rem;
+    font-weight: 700;
+    font-family: 'Share Tech Mono', monospace;
+    color: #444;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    text-shadow: 0.1px 0.1px 0.2px rgba(68, 68, 68, 0.15);
+}
+
+
+/* ==========================================================================
+   19. FEEDBACK BANNER (preserved exactly)
+   ========================================================================== */
+
+#feedback-banner {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    width: 320px;
+    background: rgba(20, 20, 28, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(166, 38, 27, 0.4);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(166, 38, 27, 0.15);
+    z-index: 10000;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+    font-family: 'Noto Sans TC', sans-serif;
+    color: var(--ui-text);
+}
+
+.feedback-banner-hidden {
+    transform: translateY(-50px) scale(0.95);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.feedback-banner-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 8px;
+}
+
+.feedback-banner-icon {
+    font-size: 1.1rem;
+    color: var(--paper-accent);
+}
+
+.feedback-banner-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.feedback-banner-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: var(--ui-text-muted);
+    font-size: 1.25rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s ease;
+}
+
+.feedback-banner-close:hover {
+    color: #fff;
+}
+
+.feedback-banner-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+#feedback-text {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: #f0f0f5;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.feedback-banner-time {
+    font-size: 0.72rem;
+    color: var(--ui-text-muted);
+    align-self: flex-end;
+}
+
+
+/* ==========================================================================
+   20. LEGACY STYLES — Preview control bar & modes (from old editor)
+   ========================================================================== */
+
+.preview-area {
+    display: none;
+}
+
+.preview-wrapper {
+    width: 100%;
+    max-width: 820px;
+    margin: 0 auto;
+    perspective: 1000px;
+}
+
 .preview-control-bar {
     width: 100%;
     max-width: 800px;
@@ -1139,82 +2950,124 @@ textarea {
     border-color: var(--ui-accent);
 }
 
-/* Reader Mode State */
-.mode-reader .control-panel {
-    display: none !important;
-}
-
-.mode-reader .preview-area {
-    padding: 40px 20px;
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-}
-
 
 /* ==========================================================================
-   PHASE 4: MOBILE RESPONSIVE WEB DESIGN (RWD)
+   21. RWD / MOBILE RESPONSIVE
    ========================================================================== */
 
 @media (max-width: 768px) {
-    /* Main Layout */
-    .app-container {
+
+    /* --- Sidebar: hide on mobile (can toggle via JS hamburger) --- */
+    .sidebar {
+        transform: translateX(-100%);
+        width: var(--sidebar-expanded) !important;
+        transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    /* Magazine layout */
+    .magazine {
+        margin-left: 0 !important;
+    }
+
+    /* Hero */
+    .hero {
+        height: 50vh;
+        min-height: 350px;
+    }
+
+    .hero-content {
+        padding: 0 24px 32px;
+    }
+
+    .hero-masthead {
+        font-size: 2.4rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.9rem;
+        letter-spacing: 0.3em;
+    }
+
+    .hero-date-line {
         flex-direction: column;
-        overflow-y: auto;
-        height: auto;
+        gap: 4px;
+        align-items: flex-start;
     }
 
-    .control-panel {
-        width: 100%;
-        height: auto;
-        border-right: none;
-        border-bottom: 1px solid var(--ui-border);
-    }
-    
-    .panel-scroll-area {
-        max-height: 400px; /* Limit height of editor on mobile so user can scroll to preview */
+    /* Cover TOC */
+    .cover-toc {
+        padding: 32px 20px;
     }
 
-    .preview-area {
-        padding: 16px 12px;
-        overflow-y: visible;
-        height: auto;
-        align-items: center;
-        width: 100% !important;
+    .toc-container {
+        grid-template-columns: 1fr;
+        gap: 32px;
     }
 
-    .preview-wrapper {
-        width: 100%;
+    .toc-title {
+        font-size: 1.4rem;
+    }
+
+    /* Deep Reading */
+    .deep-reading {
+        padding: 32px 16px 60px;
+    }
+
+    .reading-container {
         max-width: 100%;
-        perspective: none; /* Disable 3D tilt on mobile for better scrolling */
     }
 
-    .preview-control-bar {
+    .reading-title {
+        font-size: 1.5rem;
+    }
+
+    .reading-body > .article-paragraph:first-of-type::first-letter {
+        font-size: 3.2em;
+    }
+
+    /* News Grid */
+    .news-grid {
+        padding: 40px 16px 60px;
+    }
+
+    .news-cards {
+        grid-template-columns: 1fr;
+    }
+
+    /* Quote Banner */
+    .quote-banner {
+        padding: 48px 20px;
+    }
+
+    .quote-banner-text {
+        font-size: 1.1rem;
+    }
+
+    .quote-banner-mark {
+        font-size: 3.5rem;
+    }
+
+    /* Magazine Footer */
+    .magazine-footer {
+        padding: 32px 20px;
+    }
+
+    /* Editor Drawer full-width on mobile */
+    .editor-drawer {
         width: 100%;
-        flex-direction: column;
-        padding: 12px;
-        gap: 12px;
-        align-items: stretch;
-    }
-    
-    .mode-toggles, .bar-actions {
-        display: flex;
-    }
-    
-    .mode-toggles .bar-btn, .bar-actions .bar-btn {
-        flex: 1;
-        justify-content: center;
-    }
-    
-    .archive-selector-wrapper {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 6px;
+        right: -100%;
     }
 
-    /* Gazette Card Mobile Fluidity */
+    /* Share Modal */
+    .modal-body {
+        flex-direction: column;
+    }
+
+    /* --- Gazette Card Mobile Fluidity (preserved for export) --- */
     .gazette-card {
         width: 100% !important;
         max-width: 100% !important;
@@ -1225,13 +3078,12 @@ textarea {
         border-right: none !important;
         transform: none !important;
     }
-    
+
     .gazette-card:hover {
         transform: none !important;
         box-shadow: none !important;
     }
 
-    /* Gazette Header Mobile Scaling */
     .eng-title {
         font-size: 2.2rem !important;
     }
@@ -1248,7 +3100,6 @@ textarea {
         text-align: center;
     }
 
-    /* Grid/Flex Columns to Single Column Stacking */
     .gazette-body {
         flex-direction: column !important;
         gap: 28px !important;
@@ -1265,11 +3116,10 @@ textarea {
         padding-top: 28px !important;
     }
 
-    /* Spark Title and Content sizing for mobile comfort */
     .spark-title {
         font-size: 1.35rem !important;
     }
-    
+
     .spark-content {
         font-size: 0.96rem !important;
         line-height: 1.8 !important;
@@ -1309,7 +3159,6 @@ textarea {
         max-width: 100% !important;
     }
 
-
     .article-paragraph {
         font-size: 0.96rem !important;
         line-height: 1.85 !important;
@@ -1318,509 +3167,61 @@ textarea {
     .article-image-block img {
         max-height: 200px !important;
     }
-}
 
-/* ==========================================================================
-   PHASE 4: SHARE MODAL & SHARE CARD STYLING
-   ========================================================================== */
-
-.share-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(5, 5, 10, 0.85);
-    backdrop-filter: blur(8px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.share-modal {
-    background-color: var(--ui-sidebar-bg);
-    border: 1px solid var(--ui-border);
-    border-radius: 12px;
-    width: 90%;
-    max-width: 820px;
-    max-height: 90vh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    animation: modal-slide-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes modal-slide-in {
-    from { transform: translateY(30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-.modal-header {
-    padding: 20px 24px;
-    border-bottom: 1px solid var(--ui-border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.modal-header-title h3 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #fff;
-}
-
-.modal-subtitle {
-    font-size: 0.65rem;
-    color: var(--ui-text-muted);
-    font-family: 'Share Tech Mono', monospace;
-    letter-spacing: 0.05em;
-    display: block;
-    margin-top: 2px;
-}
-
-.modal-close-btn {
-    background: none;
-    border: none;
-    color: var(--ui-text-muted);
-    font-size: 1.75rem;
-    cursor: pointer;
-    transition: color 0.2s ease;
-    line-height: 1;
-}
-
-.modal-close-btn:hover {
-    color: #fff;
-}
-
-.modal-body {
-    padding: 24px;
-    display: flex;
-    gap: 24px;
-    overflow-y: auto;
-}
-
-@media (max-width: 768px) {
-    .modal-body {
+    /* Preview control bar mobile */
+    .preview-control-bar {
+        width: 100%;
         flex-direction: column;
+        padding: 12px;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    .mode-toggles, .bar-actions {
+        display: flex;
+    }
+
+    .mode-toggles .bar-btn, .bar-actions .bar-btn {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .archive-selector-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
     }
 }
 
-.modal-col-left {
-    flex: 1.2;
-    display: flex;
-    flex-direction: column;
+/* Small phone breakpoint */
+@media (max-width: 480px) {
+    .hero {
+        height: 40vh;
+        min-height: 280px;
+    }
+
+    .hero-masthead {
+        font-size: 1.8rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.75rem;
+        letter-spacing: 0.2em;
+    }
+
+    .toc-title {
+        font-size: 1.2rem;
+    }
+
+    .reading-title {
+        font-size: 1.3rem;
+    }
+
+    .quote-banner-text {
+        font-size: 1rem;
+    }
+
+    .news-card-image {
+        height: 160px;
+    }
 }
-
-.modal-col-right {
-    flex: 0.8;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.modal-label {
-    font-size: 0.78rem;
-    color: var(--ui-text-muted);
-    margin-bottom: 8px;
-    font-weight: 600;
-}
-
-#shareTeaserText {
-    background-color: var(--ui-input-bg);
-    border: 1px solid var(--ui-border);
-    border-radius: 6px;
-    color: #e2e2ec;
-    font-family: inherit;
-    font-size: 0.85rem;
-    line-height: 1.6;
-    padding: 12px;
-    resize: none;
-    flex: 1;
-    min-height: 250px;
-}
-
-/* Share Card Container & Preview */
-.share-card-container {
-    background: #0d0d12;
-    border: 1px solid var(--ui-border);
-    border-radius: 8px;
-    padding: 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 4px;
-}
-
-.share-card {
-    width: 288px;
-    height: 512px;
-    /* Warm ivory background blended with a very soft paper texture to avoid dirty speckles */
-    background: 
-        linear-gradient(rgba(253, 252, 249, 0.88), rgba(253, 252, 249, 0.88)),
-        url('data/images/paper_texture.png') no-repeat center;
-    background-size: cover;
-    color: var(--paper-text);
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid var(--paper-border-light);
-    box-shadow: 0 12px 36px rgba(0,0,0,0.4);
-    box-sizing: border-box;
-}
-
-.share-card-border-wrap {
-    border: 3px double #1c1c1c; /* Soft ink charcoal instead of harsh black */
-    padding: 14px 12px;
-    height: 100%;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 0 0.5px rgba(28, 28, 28, 0.15); /* Soft bleed outline */
-}
-
-.share-card-paper {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 12px;
-}
-
-.share-card-header {
-    border-bottom: 2px double #1c1c1c; /* Softened black */
-    padding-bottom: 6px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 0.5px 0 rgba(28, 28, 28, 0.1);
-}
-
-.share-card-era {
-    font-family: 'Playfair Display', serif;
-    font-size: 0.58rem;
-    font-weight: 900;
-    letter-spacing: 0.05em;
-    text-shadow: 0.2px 0.2px 0.3px rgba(8, 8, 8, 0.15);
-}
-
-.share-card-vol {
-    font-family: 'Playfair Display', serif;
-    font-size: 0.54rem;
-    font-weight: 900;
-    color: var(--paper-accent);
-    letter-spacing: 0.05em;
-    text-shadow: 0.2px 0.2px 0.3px rgba(166, 38, 27, 0.25);
-}
-
-.share-card-date {
-    font-family: 'Playfair Display', serif;
-    font-size: 0.58rem;
-    font-weight: 700;
-    text-shadow: 0.2px 0.2px 0.3px rgba(8, 8, 8, 0.15);
-}
-
-.share-card-content {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin: 4px 0;
-    flex: 1;
-    justify-content: flex-start;
-}
-
-.share-card-img-frame {
-    border: 1.2px solid #2a2a2a; /* Softened border */
-    padding: 2px;
-    background-color: var(--paper-bg);
-    width: 100%;
-    box-sizing: border-box;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06), 0 1.5px 3px rgba(0, 0, 0, 0.03); /* Subtle indentation/print depth */
-}
-
-.share-card-image-div {
-    width: 100%;
-    height: 160px;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    display: block;
-}
-
-.share-content-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    margin-top: 4px;
-    width: 100%;
-}
-
-.share-spark-badge {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.45rem;
-    font-weight: 700;
-    color: var(--paper-text-light);
-    letter-spacing: 0.05em;
-}
-
-.share-card-title {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 0.8rem; /* Reduced to guarantee 17-18 character titles fit on a single line */
-    font-weight: 700;
-    line-height: 1.35;
-    margin-top: 2px;
-    color: #1a1a1a;
-    text-align: center;
-    text-shadow: 0.2px 0.2px 0.5px rgba(26, 26, 26, 0.25); /* Micro ink-bleed */
-    text-wrap: balance; /* Balance lines to prevent single-character orphans */
-}
-
-.share-divider-line {
-    width: 30%;
-    height: 0;
-    border-top: 1px dashed rgba(28, 28, 28, 0.25); /* Dashed paper impression */
-    margin: 4px 0;
-    background-color: transparent;
-}
-
-.share-card-intro {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 0.68rem;
-    line-height: 1.5;
-    color: #333333; /* Soft charcoal */
-    text-align: justify;
-    text-justify: inter-character;
-    text-align-last: center;
-    margin-top: 2px;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-shadow: 0.15px 0.15px 0.3px rgba(51, 51, 51, 0.15); /* Micro ink-bleed */
-}
-
-.share-card-footer {
-    border-top: 1px solid #1c1c1c; /* Softened black */
-    padding-top: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.share-card-news {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    width: 100%;
-}
-
-.share-news-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    width: 100%;
-}
-
-.share-news-tag-wrapper {
-    width: 58px;
-    flex-shrink: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.share-news-tag {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.5rem;
-    font-weight: 700;
-    color: var(--paper-accent);
-    border: 1.2px solid var(--paper-accent);
-    background-color: var(--paper-accent-alpha-04);
-    padding: 2.5px 4px 0.5px 4px;
-    border-radius: 1px;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    line-height: 1;
-    display: inline-block;
-    transform: scale(0.9, 1.35) rotate(-1deg);
-    /* Soften edges to simulate stamped ink bleed */
-    filter: drop-shadow(0.3px 0.3px 0.3px var(--paper-accent-alpha-45));
-    opacity: 0.96;
-}
-
-.share-news-item:nth-child(2) .share-news-tag {
-    transform: scale(0.9, 1.35) rotate(0.8deg);
-}
-
-.share-news-title {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: #1a1a1a;
-    line-height: 1.4;
-    text-align: left;
-    flex: 1;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-shadow: 0.15px 0.15px 0.3px rgba(26, 26, 26, 0.18); /* Subtle bleed */
-}
-
-.share-footer-bottom {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    border-top: 1px dashed rgba(28, 28, 28, 0.25);
-    padding-top: 8px;
-    margin-top: 4px;
-}
-
-.qr-code-placeholder {
-    width: 32px;
-    height: 32px;
-    border: 1px solid #2a2a2a; /* Softened border */
-    background-color: #fcfbfa; /* Slightly off-white to fit card */
-    padding: 2px;
-    flex-shrink: 0;
-    box-shadow: inset 0 0.5px 1px rgba(0,0,0,0.05);
-}
-
-.simulated-qr {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-    gap: 1px;
-    background-color: #fff;
-}
-
-.simulated-qr span {
-    background-color: #222; /* Soft printed ink */
-}
-
-.simulated-qr span:nth-child(2),
-.simulated-qr span:nth-child(3),
-.simulated-qr span:nth-child(5),
-.simulated-qr span:nth-child(8),
-.simulated-qr span:nth-child(9),
-.simulated-qr span:nth-child(12),
-.simulated-qr span:nth-child(14),
-.simulated-qr span:nth-child(15) {
-    background-color: transparent;
-}
-
-.share-card-footer-text {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    flex: 1;
-}
-
-.scan-to-read {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 0.44rem;
-    font-weight: 700;
-    color: #1a1a1a;
-    line-height: 1.2;
-    text-shadow: 0.15px 0.15px 0.3px rgba(26, 26, 26, 0.15);
-}
-
-.secure-trans {
-    font-size: 0.36rem;
-    font-weight: 700;
-    font-family: 'Share Tech Mono', monospace;
-    color: #444; /* Slightly softer */
-    letter-spacing: 0.02em;
-    line-height: 1.2;
-    text-shadow: 0.1px 0.1px 0.2px rgba(68, 68, 68, 0.15);
-}
-
-/* Floating Feedback Banner Box */
-#feedback-banner {
-    position: fixed;
-    top: 24px;
-    right: 24px;
-    width: 320px;
-    background: rgba(20, 20, 28, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(166, 38, 27, 0.4); /* JUJUBE RED border opacity */
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(166, 38, 27, 0.15);
-    z-index: 10000;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
-    font-family: 'Inter', 'Noto Sans TC', sans-serif;
-    color: var(--ui-text);
-}
-
-.feedback-banner-hidden {
-    transform: translateY(-50px) scale(0.95);
-    opacity: 0;
-    pointer-events: none;
-}
-
-.feedback-banner-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 8px;
-}
-
-.feedback-banner-icon {
-    font-size: 1.1rem;
-    color: var(--paper-accent);
-}
-
-.feedback-banner-title {
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    color: #fff;
-    text-transform: uppercase;
-}
-
-.feedback-banner-close {
-    margin-left: auto;
-    background: none;
-    border: none;
-    color: var(--ui-text-muted);
-    font-size: 1.25rem;
-    cursor: pointer;
-    line-height: 1;
-    transition: color 0.2s ease;
-}
-
-.feedback-banner-close:hover {
-    color: #fff;
-}
-
-.feedback-banner-body {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-#feedback-text {
-    font-size: 0.88rem;
-    line-height: 1.5;
-    color: #f0f0f5;
-    white-space: pre-wrap;
-    word-break: break-all;
-}
-
-.feedback-banner-time {
-    font-size: 0.72rem;
-    color: var(--ui-text-muted);
-    align-self: flex-end;
-}
-
-
