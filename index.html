@@ -87,7 +87,7 @@
                 </a>
             </li>
             <li class="sidebar-nav-item">
-                <a href="#" class="sidebar-link" data-tooltip="典藏">
+                <a href="#" class="sidebar-link" data-tooltip="典藏" id="btnSidebarArchive">
                     <span class="sidebar-link-icon">📚</span>
                     <span class="sidebar-link-label">典藏</span>
                 </a>
@@ -651,6 +651,23 @@
                     </div>
                     <button class="btn btn-primary" id="btnDownloadShareCard" style="margin-top: 12px; width: 100%;">🖼️ 下載直向分享卡 (PNG)</button>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- News Detail Modal -->
+    <div class="share-modal-overlay" id="newsDetailModal" style="display: none;">
+        <div class="share-modal" style="max-width: 700px; width: 90%;">
+            <header class="modal-header">
+                <div class="modal-header-title">
+                    <span class="news-card-badge" id="newsModalBadge" style="position: static; display: inline-block; margin-bottom: 8px;">GAME</span>
+                    <h2 id="newsModalTitle" style="font-family: 'Noto Serif TC', serif; font-size: 1.35rem; color: var(--mag-text); line-height: 1.4; margin: 0;"></h2>
+                </div>
+                <button class="modal-close-btn" id="btnCloseNewsModal">&times;</button>
+            </header>
+            <div class="modal-body" style="display: block; padding: 24px; max-height: 65vh; overflow-y: auto;">
+                <div id="newsModalImage" style="width: 100%; height: 300px; background-size: cover; background-position: center; border-radius: 8px; margin-bottom: 20px; display: none;"></div>
+                <div id="newsModalExcerpt" style="font-family: 'Noto Serif TC', serif; font-size: 0.95rem; line-height: 1.8; color: var(--mag-text-body); text-align: justify; white-space: pre-wrap;"></div>
             </div>
         </div>
     </div>

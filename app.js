@@ -93,6 +93,27 @@ function initializeApp() {
             });
         }
 
+        const btnSidebarArchive = document.getElementById('btnSidebarArchive');
+        if (btnSidebarArchive && sidebar && magazine) {
+            btnSidebarArchive.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (window.innerWidth <= 768) {
+                    if (!sidebar.classList.contains('mobile-open')) {
+                        sidebar.classList.add('mobile-open');
+                    }
+                } else {
+                    if (!sidebar.classList.contains('expanded')) {
+                        sidebar.classList.add('expanded');
+                        magazine.classList.add('sidebar-expanded');
+                    }
+                }
+                if (selectArchive) {
+                    setTimeout(() => selectArchive.focus(), 100);
+                }
+            });
+        }
+
         // Close sidebar on mobile when a link is clicked or clicking outside
         if (sidebar) {
             const sidebarLinks = sidebar.querySelectorAll('.sidebar-link');
@@ -1302,6 +1323,19 @@ function initializeApp() {
             });
         }
 
+        const btnCloseNewsModal = document.getElementById('btnCloseNewsModal');
+        const newsDetailModal = document.getElementById('newsDetailModal');
+        if (btnCloseNewsModal && newsDetailModal) {
+            btnCloseNewsModal.addEventListener('click', () => {
+                newsDetailModal.style.display = 'none';
+            });
+            newsDetailModal.addEventListener('click', (e) => {
+                if (e.target === newsDetailModal) {
+                    newsDetailModal.style.display = 'none';
+                }
+            });
+        }
+
         if (btnCopyTeaserText) {
             btnCopyTeaserText.addEventListener('click', () => {
                 if (shareTeaserText) {
@@ -1648,6 +1682,31 @@ function initializeApp() {
                         card.className = 'news-card reveal-on-scroll';
                     }
                     card.id = `newsCard${i}`;
+
+                    // Click to show news detail modal
+                    card.style.cursor = 'pointer';
+                    card.addEventListener('click', () => {
+                        const modal = document.getElementById('newsDetailModal');
+                        const modalBadge = document.getElementById('newsModalBadge');
+                        const modalTitle = document.getElementById('newsModalTitle');
+                        const modalImage = document.getElementById('newsModalImage');
+                        const modalExcerpt = document.getElementById('newsModalExcerpt');
+                        
+                        if (modal && modalTitle && modalExcerpt) {
+                            modalBadge.textContent = cat || 'NEWS';
+                            modalTitle.textContent = headline;
+                            modalExcerpt.innerHTML = parseArticleMarkdown(summary);
+                            
+                            if (imgUrl) {
+                                modalImage.style.backgroundImage = `url('${imgUrl}')`;
+                                modalImage.style.display = 'block';
+                            } else {
+                                modalImage.style.display = 'none';
+                            }
+                            
+                            modal.style.display = 'flex';
+                        }
+                    });
 
                     let imageHtml = '';
                     if (imgUrl) {
