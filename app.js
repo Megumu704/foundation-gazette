@@ -1942,8 +1942,8 @@ function initializeApp() {
                 });
             }
             
-            // Close sidebar when clicking on a sidebar link in mobile view
-            document.querySelectorAll('.sidebar-link').forEach(link => {
+            // Close sidebar when clicking on any link or tool button in mobile view
+            document.querySelectorAll('.sidebar-link, .sidebar-tool-btn').forEach(link => {
                 link.addEventListener('click', () => {
                     if (sidebarEl) sidebarEl.classList.remove('mobile-open');
                     if (btnMobileMenu) btnMobileMenu.classList.remove('open-active');

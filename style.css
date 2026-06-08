@@ -3502,4 +3502,19 @@ a {
     .magazine {
         padding-left: 0 !important; /* full width */
     }
+
+    /* 提升編輯器在行動端的層級，覆蓋側邊欄與懸浮漢堡按鈕 */
+    .editor-overlay {
+        z-index: 995 !important;
+    }
+    .editor-drawer {
+        width: 100%;
+        right: -100%;
+        z-index: 996 !important;
+    }
+}
+
+/* 確保全站彈窗在最頂層 */
+.share-modal-overlay {
+    z-index: 1010 !important;
 }
