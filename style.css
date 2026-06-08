@@ -10,15 +10,15 @@
 
 :root {
     /* Magazine Light Theme (default) */
-    --mag-bg: #fdfcf9;
+    --mag-bg: var(--paper-bg, #fdfcf9);
     --mag-bg-alt: #f5f3ee;
     --mag-text: #080808;
     --mag-text-body: #2c2c2c;
     --mag-text-muted: #3a3a3a;
     --mag-text-light: #6b6b6b;
-    --mag-accent: #a6261b;
-    --mag-accent-light: rgba(166, 38, 27, 0.08);
-    --mag-border: #e0ddd6;
+    --mag-accent: var(--paper-accent, #a6261b);
+    --mag-accent-light: var(--paper-accent-alpha-04, rgba(166, 38, 27, 0.08));
+    --mag-border: var(--paper-border-light, #e0ddd6);
     --mag-border-dark: #080808;
     --mag-shadow: rgba(0, 0, 0, 0.08);
 
@@ -1507,6 +1507,10 @@ a {
 }
 
 .flex-2 { flex: 2 !important; }
+.flex-3 { flex: 3 !important; }
+.flex-4 { flex: 4 !important; }
+.flex-6 { flex: 6 !important; }
+.flex-7 { flex: 7 !important; }
 .flex-8 { flex: 8 !important; }
 
 .editor-drawer label,

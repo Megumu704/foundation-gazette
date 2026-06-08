@@ -164,6 +164,15 @@ function initializeApp() {
                 imgElement.style.display = 'block';
                 errorPlaceholderElement.style.display = 'none';
             };
+
+            // 防禦性檢查：若圖片已快取加載完成，主動觸發 onload/onerror 狀態同步
+            if (imgElement.complete) {
+                if (imgElement.naturalWidth === 0) {
+                    imgElement.onerror();
+                } else {
+                    imgElement.onload();
+                }
+            }
         }
 
         function handleImageFileSelect(fileInputEl, textUrlInputEl) {
@@ -1383,9 +1392,7 @@ function initializeApp() {
                             });
                         }
 
-                        // Remove Google Fonts stylesheet links to prevent the iframe from loading them again asynchronously
-                        const links = clonedDoc.querySelectorAll('link[href*="fonts.googleapis.com"], link[href*="fonts.gstatic.com"]');
-                        links.forEach(link => link.remove());
+                        // 保留 Google Fonts Stylesheets 連結，以利 html2canvas 在 iframe 中解析並套用正確的襯線與宋體字型
 
                         // html2canvas text scale bug workaround:
                         // html2canvas fails to correctly scale the text inside stamps when transform: scale(...) is combined with high options.scale.
@@ -1821,6 +1828,10 @@ function initializeApp() {
                         transform: none !important;
                         transition: none !important;
                         transition-delay: 0s !important;
+                    }
+                    /* 自動化截圖下停用側邊欄與編輯面板的過渡動畫，直接呈現最終開啟狀態 */
+                    .sidebar, .magazine, .editor-drawer {
+                        transition: none !important;
                     }
                 `;
                 document.head.appendChild(style);
