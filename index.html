@@ -35,6 +35,11 @@
 </head>
 <body>
 
+    <!-- Mobile Hamburger Button -->
+    <button class="mobile-menu-btn" id="btnMobileMenu" aria-label="選單">
+        <span></span><span></span><span></span>
+    </button>
+
     <!-- ═══════════════════════════════════════════════════════════════
          READING PROGRESS BAR
          ═══════════════════════════════════════════════════════════════ -->
@@ -219,6 +224,12 @@
                     </blockquote>
                 </div>
             </div>
+            <div class="scroll-indicator" id="scrollIndicator">
+                <a href="#articleSection">
+                    <span class="scroll-arrow">↓</span>
+                    <span class="scroll-text">SCROLL TO READ // 向下滾動閱讀</span>
+                </a>
+            </div>
         </section>
 
         <!-- ───────────────────────────────────────────────────────────
@@ -334,104 +345,124 @@
                 <input type="file" id="fileInput" accept=".json" style="display: none;">
             </div>
 
-            <!-- Section: Metadata -->
-            <section class="panel-section">
-                <h3>一、 表頭資訊 / Metadata</h3>
-                <div class="input-row">
-                    <div class="input-group">
-                        <label for="inputGalaxyEra">銀河紀元 / GALAXY ERA</label>
-                        <input type="text" id="inputGalaxyEra" value="FOUNDATION ERA 01">
-                    </div>
-                    <div class="input-group">
-                        <label for="inputDate">日期 / DATE</label>
-                        <input type="text" id="inputDate" value="2026.05.20">
+            <div class="editor-accordion">
+                <!-- 分組 1：期刊基礎資訊 -->
+                <div class="accordion-item open">
+                    <div class="accordion-header">📰 期數與基本設定</div>
+                    <div class="accordion-content">
+                        <!-- Section: Metadata -->
+                        <section class="panel-section" style="margin: 0; padding: 0; border: none; box-shadow: none; background: transparent;">
+                            <h3>一、 表頭資訊 / Metadata</h3>
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <label for="inputGalaxyEra">銀河紀元 / GALAXY ERA</label>
+                                    <input type="text" id="inputGalaxyEra" value="FOUNDATION ERA 01">
+                                </div>
+                                <div class="input-group">
+                                    <label for="inputDate">日期 / DATE</label>
+                                    <input type="text" id="inputDate" value="2026.05.20">
+                                </div>
+                            </div>
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <label for="inputCoordinates">星區座標 / SPACE COORDINATES</label>
+                                    <input type="text" id="inputCoordinates" value="SECTOR 2824 / TERMINUS">
+                                </div>
+                                <div class="input-group">
+                                    <label>版面配置 / LAYOUT TEMPLATE</label>
+                                    <div class="readonly-badge" id="labelLayoutScheme">經典分欄 (Classic Split)</div>
+                                </div>
+                            </div>
+                            <div class="input-row" style="margin-top: 6px;">
+                                <div class="input-group" style="flex-direction: row; align-items: center; gap: 8px;">
+                                    <input type="checkbox" id="toggleInkFilter" style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--ui-accent); margin: 0;">
+                                    <label for="toggleInkFilter" style="cursor: pointer; user-select: none; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ui-text-muted);">啟用復古油墨濾鏡 / Vintage Ink Filter</label>
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 </div>
-                <div class="input-row">
-                    <div class="input-group">
-                        <label for="inputCoordinates">星區座標 / SPACE COORDINATES</label>
-                        <input type="text" id="inputCoordinates" value="SECTOR 2824 / TERMINUS">
-                    </div>
-                    <div class="input-group">
-                        <label>版面配置 / LAYOUT TEMPLATE</label>
-                        <div class="readonly-badge" id="labelLayoutScheme">經典分欄 (Classic Split)</div>
-                    </div>
-                </div>
-                <div class="input-row" style="margin-top: 6px;">
-                    <div class="input-group" style="flex-direction: row; align-items: center; gap: 8px;">
-                        <input type="checkbox" id="toggleInkFilter" style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--ui-accent); margin: 0;">
-                        <label for="toggleInkFilter" style="cursor: pointer; user-select: none; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ui-text-muted);">啟用復古油墨濾鏡 / Vintage Ink Filter</label>
-                    </div>
-                </div>
-            </section>
 
-            <!-- Section: Aesthetic Spark -->
-            <section class="panel-section">
-                <h3>二、 美學星火 / Aesthetic Spark</h3>
-                <div class="input-group">
-                    <label for="inputSparkTitle">主標題 / Article Title</label>
-                    <input type="text" id="inputSparkTitle" value="新造型主義與美學主張">
-                </div>
-                <div class="input-group">
-                    <label for="inputSparkFullTitle">專題深讀標題 / Full Article Title (留空則與主標題相同)</label>
-                    <input type="text" id="inputSparkFullTitle" value="">
-                </div>
-                <div class="input-group">
-                    <label for="inputSparkIntro">封面簡介 / Cover Intro (顯示於第一頁)</label>
-                    <textarea id="inputSparkIntro" rows="3">在廢墟與重建的交界，我們看見秩序的誕生。通過極簡的幾何構成，藝術不再傾訴，而是重建宇宙法則的起點...</textarea>
-                </div>
-                <div class="input-group">
-                    <label for="inputShareCardText">分享卡專用內文 / Share Card Intro (亞歷斯專用，直向卡專用不破壞排版)</label>
-                    <textarea id="inputShareCardText" rows="2" placeholder="由亞歷斯精心撰寫的分享卡專用文字，建議 45 字以內..."></textarea>
-                </div>
-                <div class="input-group">
-                    <label for="inputSparkContent">專文內容 / Full Article (使用 #### 標記小標，> 標記金句)</label>
-                    <textarea id="inputSparkContent" rows="8">新造型主義（Neo-Plasticism）的精髓在於尋求本質與純粹的平衡。在混亂的銀河洪流中，我們藉由水平與垂直的交錯，繪製出安頓心靈的座標。
+                <!-- 分組 2：美學星火專題 -->
+                <div class="accordion-item">
+                    <div class="accordion-header">✨ 美學星火專題</div>
+                    <div class="accordion-content">
+                        <!-- Section: Aesthetic Spark -->
+                        <section class="panel-section" style="margin: 0 0 16px 0; padding: 0; border: none; box-shadow: none; background: transparent;">
+                            <h3>二、 美學星火 / Aesthetic Spark</h3>
+                            <div class="input-group">
+                                <label for="inputSparkTitle">主標題 / Article Title</label>
+                                <input type="text" id="inputSparkTitle" value="新造型主義與美學主張">
+                            </div>
+                            <div class="input-group">
+                                <label for="inputSparkFullTitle">專題深讀標題 / Full Article Title (留空則與主標題相同)</label>
+                                <input type="text" id="inputSparkFullTitle" value="">
+                            </div>
+                            <div class="input-group">
+                                <label for="inputSparkIntro">封面簡介 / Cover Intro (顯示於第一頁)</label>
+                                <textarea id="inputSparkIntro" rows="3">在廢墟與重建的交界，我們看見秩序的誕生。通過極簡的幾何構成，藝術不再傾訴，而是重建宇宙法則的起點...</textarea>
+                            </div>
+                            <div class="input-group">
+                                <label for="inputShareCardText">分享卡專用內文 / Share Card Intro (亞歷斯專用，直向卡專用不破壞排版)</label>
+                                <textarea id="inputShareCardText" rows="2" placeholder="由亞歷斯精心撰寫的分享卡專用文字，建議 45 字以內..."></textarea>
+                            </div>
+                            <div class="input-group">
+                                <label for="inputSparkContent">專文內容 / Full Article (使用 #### 標記小標，> 標記金句)</label>
+                                <textarea id="inputSparkContent" rows="8">新造型主義（Neo-Plasticism）的精髓在於尋求本質與純粹的平衡。在混亂的銀河洪流中，我們藉由水平與垂直的交錯，繪製出安頓心靈的座標。
 
 #### 秩序的重建與回歸
 我們拋棄了具象的描繪，回歸到原色與直角。因為在這個動盪的宇宙裡，只有最純粹的數學秩序才能帶來恆久的平靜。
 
 > 藝術不是描繪可見之物，而是把不可見之物創造為可見。</textarea>
-                </div>
-            </section>
+                            </div>
+                        </section>
 
-            <!-- Section: Quote -->
-            <section class="panel-section">
-                <h3>三、 守護者格言 / Guardian's Quote</h3>
-                <div class="input-group">
-                    <label for="inputQuoteText">格言內容 / Quote</label>
-                    <textarea id="inputQuoteText" rows="3">藝術不是描繪可見之物，而是把不可見之物創造為可見。</textarea>
-                </div>
-                <div class="input-group">
-                    <label for="inputQuoteAuthor">發表者 / Author</label>
-                    <input type="text" id="inputQuoteAuthor" value="保羅·克利 (Paul Klee)">
-                </div>
-            </section>
+                        <!-- Section: Quote -->
+                        <section class="panel-section" style="margin: 0 0 16px 0; padding: 0; border: none; box-shadow: none; background: transparent;">
+                            <h3>三、 守護者格言 / Guardian's Quote</h3>
+                            <div class="input-group">
+                                <label for="inputQuoteText">格言內容 / Quote</label>
+                                <textarea id="inputQuoteText" rows="3">藝術不是描繪可見之物，而是把不可見之物創造為可見。</textarea>
+                            </div>
+                            <div class="input-group">
+                                <label for="inputQuoteAuthor">發表者 / Author</label>
+                                <input type="text" id="inputQuoteAuthor" value="保羅·克利 (Paul Klee)">
+                            </div>
+                        </section>
 
-            <!-- Section: News -->
-            <section class="panel-section">
-                <h3>四、 時事新聞 / Dynamic News</h3>
-                <div id="newsInputsContainer">
-                    <!-- Dynamic inputs will be rendered here by JS -->
-                </div>
-            </section>
-
-            <!-- Section: Visual Artifact -->
-            <section class="panel-section">
-                <h3>五、 視覺造物 / Visual Artifact</h3>
-                <div class="input-group">
-                    <label for="inputImageUrl">影像網址 / Image URL</label>
-                    <div style="display: flex; gap: 8px;">
-                        <input type="text" id="inputImageUrl" value="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800&auto=format&fit=crop" style="flex: 1;">
-                        <input type="file" id="inputImageFile" accept="image/*" style="display: none;">
-                        <button type="button" class="btn btn-secondary" id="btnUploadImageFile" style="padding: 0 12px; font-size: 0.8rem; white-space: nowrap; margin-top: 0; min-height: 38px; flex: none;">上傳</button>
+                        <!-- Section: Visual Artifact -->
+                        <section class="panel-section" style="margin: 0; padding: 0; border: none; box-shadow: none; background: transparent;">
+                            <h3>五、 視覺造物 / Visual Artifact</h3>
+                            <div class="input-group">
+                                <label for="inputImageUrl">影像網址 / Image URL</label>
+                                <div style="display: flex; gap: 8px;">
+                                    <input type="text" id="inputImageUrl" value="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800&auto=format&fit=crop" style="flex: 1;">
+                                    <input type="file" id="inputImageFile" accept="image/*" style="display: none;">
+                                    <button type="button" class="btn btn-secondary" id="btnUploadImageFile" style="padding: 0 12px; font-size: 0.8rem; white-space: nowrap; margin-top: 0; min-height: 38px; flex: none;">上傳</button>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label for="inputImageCaption">圖說 / Caption</label>
+                                <input type="text" id="inputImageCaption" value="色彩與線條的抽象交織">
+                            </div>
+                        </section>
                     </div>
                 </div>
-                <div class="input-group">
-                    <label for="inputImageCaption">圖說 / Caption</label>
-                    <input type="text" id="inputImageCaption" value="色彩與線條的抽象交織">
+
+                <!-- 分組 3：時事動態 -->
+                <div class="accordion-item">
+                    <div class="accordion-header">🔥 時事新聞編輯</div>
+                    <div class="accordion-content">
+                        <!-- Section: News -->
+                        <section class="panel-section" style="margin: 0; padding: 0; border: none; box-shadow: none; background: transparent;">
+                            <h3>四、 時事新聞 / Dynamic News</h3>
+                            <div id="newsInputsContainer">
+                                <!-- Dynamic inputs will be rendered here by JS -->
+                            </div>
+                        </section>
+                    </div>
                 </div>
-            </section>
+            </div>
         </div>
 
         <!-- Editor Bottom Buttons -->
@@ -667,10 +698,30 @@
             </header>
             <div class="modal-body" style="display: block; padding: 24px; max-height: 65vh; overflow-y: auto;">
                 <div id="newsModalImage" style="width: 100%; height: 300px; background-size: cover; background-position: center; border-radius: 8px; margin-bottom: 20px; display: none;"></div>
+                <!-- 新增：新聞圖片說明區 -->
+                <div id="newsModalImageCaption" style="font-family: 'Noto Serif TC', serif; font-size: 0.78rem; color: var(--mag-text-light); margin-top: -12px; margin-bottom: 20px; text-align: center; font-style: italic; display: none;"></div>
                 <div id="newsModalExcerpt" style="font-family: 'Noto Serif TC', serif; font-size: 0.95rem; line-height: 1.8; color: var(--mag-text-body); text-align: justify; white-space: pre-wrap;"></div>
             </div>
         </div>
     </div>
+
+    <!-- Immersive Analog Ink Filter Definition -->
+    <svg style="position: absolute; width: 0; height: 0;" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="ink-bleed">
+          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.2" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+          <feGaussianBlur in="displaced" stdDeviation="0.35" result="blurred" />
+          <feMerge>
+            <feMergeNode in="blurred" />
+            <feMergeNode in="SourceGraphic" opacity="0.3" />
+          </feMerge>
+        </filter>
+      </defs>
+    </svg>
+
+    <!-- 自動存檔提示浮動小標籤 -->
+    <div id="editorAutosaveToast" class="autosave-toast">💾 草稿已自動存檔</div>
 
     <!-- html2canvas Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>

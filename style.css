@@ -3250,3 +3250,256 @@ a {
         height: 160px;
     }
 }
+
+/* ==========================================================================
+   EXTRA PREMIUM OPTIMIZATIONS — VISUALS, ANIMATIONS & RESPONSIVE UX
+   ========================================================================== */
+
+/* 1. News Detail Modal Contrast & Theme Adaptation (Task 1.3) */
+#newsDetailModal .share-modal {
+    background-color: var(--mag-bg) !important;
+    border: 1px solid var(--mag-border) !important;
+    box-shadow: 0 20px 50px var(--mag-shadow, rgba(0, 0, 0, 0.15)) !important;
+}
+#newsDetailModal .modal-header {
+    border-bottom: 1px solid var(--mag-border) !important;
+}
+#newsDetailModal .modal-close-btn {
+    color: var(--mag-text-light) !important;
+    outline: none !important;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s, color 0.2s;
+}
+#newsDetailModal .modal-close-btn:hover {
+    background-color: var(--mag-accent-light) !important;
+    color: var(--mag-accent) !important;
+}
+#newsDetailModal .article-paragraph {
+    color: var(--mag-text-body) !important;
+}
+#newsDetailModal .article-subtitle {
+    color: var(--mag-text) !important;
+    border-left: 3px solid var(--mag-accent) !important;
+}
+#newsDetailModal .article-slogan {
+    color: var(--mag-accent) !important;
+    border-left: 3px solid var(--mag-accent) !important;
+    background-color: var(--mag-accent-light) !important;
+}
+@media (max-width: 768px) {
+    #newsDetailModal #newsModalImage {
+        height: 200px !important;
+        margin-bottom: 14px !important;
+    }
+}
+
+/* 2. Analog Ink & Paper Fiber Filter (Task 2.3) */
+/* Full site Serif Ink Bleed effect */
+.ink-filter h1,
+.ink-filter h2,
+.ink-filter h3,
+.ink-filter h4,
+.ink-filter blockquote,
+.ink-filter .article-paragraph,
+.ink-filter .article-subtitle,
+.ink-filter .article-slogan,
+.ink-filter .reading-title,
+.ink-filter .quote-banner-text,
+.ink-filter .toc-title,
+.ink-filter .toc-intro {
+    filter: url(#ink-bleed) !important;
+}
+
+/* Vintage Grayscale for images */
+.ink-filter .news-card-image,
+.ink-filter .reading-body img,
+.ink-filter #heroImage,
+.ink-filter #newsModalImage {
+    filter: grayscale(1) contrast(1.15) sepia(0.25) brightness(0.95) !important;
+}
+
+/* 3. Smooth Theme Transitions (Task 3.1) */
+.magazine,
+.magazine *,
+.sidebar,
+.sidebar * {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* 4. Scroll Indicator & Sidebar Active State (Task 4.2) */
+.scroll-indicator {
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 10;
+}
+.scroll-indicator a {
+    text-decoration: none;
+    color: var(--mag-text-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    transition: color 0.3s;
+}
+.scroll-indicator a:hover {
+    color: var(--mag-accent);
+}
+.scroll-arrow {
+    font-size: 1.1rem;
+    animation: indicator-bounce 1.6s infinite ease-in-out;
+}
+@keyframes indicator-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+}
+
+/* Sidebar Active Link Style */
+.sidebar-link.active-section {
+    background-color: var(--mag-accent-light) !important;
+    color: var(--mag-accent) !important;
+    font-weight: 700;
+}
+.sidebar-link.active-section .sidebar-link-icon {
+    transform: scale(1.15);
+}
+
+/* 5. Accordion Fold & Autosave Toast (Task 5.2) */
+.editor-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.accordion-item {
+    border: 1px solid var(--ui-border);
+    border-radius: 6px;
+    background: var(--ui-input-bg);
+    overflow: hidden;
+}
+.accordion-header {
+    padding: 12px 16px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--ui-text);
+    background: #15151e;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    transition: background 0.2s;
+}
+.accordion-header:hover {
+    background: #1e1e28;
+}
+.accordion-header::after {
+    content: '▼';
+    font-size: 0.6rem;
+    transition: transform 0.2s;
+}
+.accordion-item.open .accordion-header::after {
+    transform: rotate(180deg);
+}
+.accordion-content {
+    padding: 16px;
+    display: none;
+    border-top: 1px solid var(--ui-border);
+}
+.accordion-item.open .accordion-content {
+    display: block;
+}
+
+/* Autosave Toast */
+.autosave-toast {
+    position: fixed;
+    bottom: 20px;
+    right: 300px; /* offset sidebar and editor drawer */
+    background: rgba(8, 8, 12, 0.9);
+    border: 1px solid var(--ui-accent);
+    color: var(--ui-accent);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    padding: 8px 16px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 1010;
+}
+.autosave-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 6. Mobile Responsive & Hamburger button (Task 6.2) */
+.mobile-menu-btn {
+    display: none;
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--ui-sidebar-bg);
+    border: 1px solid var(--ui-border);
+    cursor: pointer;
+    z-index: 990;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+}
+.mobile-menu-btn span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: var(--ui-text);
+    transition: transform 0.3s, opacity 0.3s;
+}
+/* Hamburger rotation animation when open */
+.mobile-menu-btn.open-active span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+}
+.mobile-menu-btn.open-active span:nth-child(2) {
+    opacity: 0;
+}
+.mobile-menu-btn.open-active span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+}
+
+@media (max-width: 768px) {
+    .mobile-menu-btn {
+        display: flex;
+    }
+    /* Mobile slide out sidebar overlay */
+    .sidebar {
+        position: fixed !important;
+        left: -260px !important;
+        top: 0;
+        height: 100vh;
+        width: 260px !important;
+        z-index: 980;
+        backdrop-filter: blur(12px) !important;
+        background: rgba(17, 17, 22, 0.92) !important;
+        box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+        transition: left 0.35s ease-out !important; /* Smooth slide transition */
+    }
+    .sidebar.mobile-open {
+        left: 0 !important;
+    }
+    .magazine {
+        padding-left: 0 !important; /* full width */
+    }
+}

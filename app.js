@@ -824,9 +824,13 @@ function initializeApp() {
                 if (data.inkFilterActive !== undefined) {
                     toggleInkFilter.checked = data.inkFilterActive;
                     gazetteCard.classList.toggle('ink-filter', data.inkFilterActive);
+                    const magazineMain = document.getElementById('magazineMain');
+                    if (magazineMain) magazineMain.classList.toggle('ink-filter', data.inkFilterActive);
                 } else {
                     toggleInkFilter.checked = false;
                     gazetteCard.classList.toggle('ink-filter', false);
+                    const magazineMain = document.getElementById('magazineMain');
+                    if (magazineMain) magazineMain.classList.toggle('ink-filter', false);
                 }
 
                 if (data.aestheticSpark) {
@@ -1032,6 +1036,10 @@ function initializeApp() {
                 if (isRestoring) return;
                 const active = toggleInkFilter.checked;
                 gazetteCard.classList.toggle('ink-filter', active);
+                const magazineMain = document.getElementById('magazineMain');
+                if (magazineMain) {
+                    magazineMain.classList.toggle('ink-filter', active);
+                }
                 autoSaveDraft();
             });
         }
@@ -1051,6 +1059,17 @@ function initializeApp() {
         // =====================================================================
         // LOCAL AUTO-SAVE SYSTEM
         // =====================================================================
+        function showAutosaveToast() {
+            const toast = document.getElementById('editorAutosaveToast');
+            if (toast) {
+                toast.classList.add('show');
+                clearTimeout(window._autosaveToastTimeout);
+                window._autosaveToastTimeout = setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 1500);
+            }
+        }
+
         function autoSaveDraft() {
             const newsItems = [];
             newsInputsContainer.querySelectorAll('.news-item-input').forEach(row => {
@@ -1089,6 +1108,7 @@ function initializeApp() {
 
             localStorage.setItem('foundation_gazette_auto_draft', JSON.stringify(currentData));
             console.log('Draft auto-saved to localStorage');
+            showAutosaveToast();
         }
 
         // Global listener for auto-save on input
@@ -1704,11 +1724,21 @@ function initializeApp() {
                             modalTitle.textContent = headline;
                             modalExcerpt.innerHTML = parseArticleMarkdown(summary);
                             
+                            const modalImageCaption = document.getElementById('newsModalImageCaption');
                             if (imgUrl) {
                                 modalImage.style.backgroundImage = `url('${imgUrl}')`;
                                 modalImage.style.display = 'block';
+                                if (modalImageCaption) {
+                                    if (imgCap) {
+                                        modalImageCaption.textContent = imgCap;
+                                        modalImageCaption.style.display = 'block';
+                                    } else {
+                                        modalImageCaption.style.display = 'none';
+                                    }
+                                }
                             } else {
                                 modalImage.style.display = 'none';
+                                if (modalImageCaption) modalImageCaption.style.display = 'none';
                             }
                             
                             modal.style.display = 'flex';
@@ -1891,12 +1921,80 @@ function initializeApp() {
         }
 
         // =====================================================================
+        // ACCORDION, MOBILE MENU & SCROLLSPY MODULES
+        // =====================================================================
+        function initAccordion() {
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const item = header.parentElement;
+                    item.classList.toggle('open');
+                });
+            });
+        }
+
+        function initMobileMenu() {
+            const btnMobileMenu = document.getElementById('btnMobileMenu');
+            const sidebarEl = document.getElementById('sidebar');
+            if (btnMobileMenu && sidebarEl) {
+                btnMobileMenu.addEventListener('click', () => {
+                    sidebarEl.classList.toggle('mobile-open');
+                    btnMobileMenu.classList.toggle('open-active');
+                });
+            }
+            
+            // Close sidebar when clicking on a sidebar link in mobile view
+            document.querySelectorAll('.sidebar-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (sidebarEl) sidebarEl.classList.remove('mobile-open');
+                    if (btnMobileMenu) btnMobileMenu.classList.remove('open-active');
+                });
+            });
+        }
+
+        function initScrollspy() {
+            const sections = document.querySelectorAll('section[id], header[id]');
+            const navLinks = document.querySelectorAll('.sidebar-link');
+            if (sections.length === 0 || navLinks.length === 0) return;
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '-20% 0px -60% 0px',
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        navLinks.forEach(link => {
+                            const href = link.getAttribute('href');
+                            if (href === `#${id}`) {
+                                link.classList.add('active-section');
+                            } else {
+                                if ((id === 'articleSection' || id === 'newsSection') && href === '#heroSection') {
+                                    link.classList.add('active-section');
+                                } else {
+                                    link.classList.remove('active-section');
+                                }
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => observer.observe(section));
+        }
+
+        // =====================================================================
         // INITIALIZATION — NEW MODULES
         // =====================================================================
         initThemeToggle();
         initScrollReveal();
         initReadingProgress();
         syncMagazineView();
+        initAccordion();
+        initMobileMenu();
+        initScrollspy();
 
     } catch (e) {
         alert("⚠️ 捕獲到 app.js 執行期錯誤：\n\n錯誤描述: " + e.message + "\n\n詳細堆疊資訊:\n" + e.stack);
