@@ -1995,7 +1995,6 @@ function initializeApp() {
         initScrollspy();
 
         // 解析 URL 參數來自動開啟新聞彈窗 (輔助截圖與自動化驗證)
-        const urlParams = new URLSearchParams(window.location.search);
         const openNewsIndex = urlParams.get('openNews');
         if (openNewsIndex !== null) {
             const card = document.getElementById(`newsCard${openNewsIndex}`);
