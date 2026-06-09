@@ -11,7 +11,12 @@ test_output_share_card.png
 .env
 
 # Edge temp profiles
-edge_profile_temp/
+edge_profile_temp*/
+edge_profile_temp_*
+edge_err.log
+edge_out.log
+test.html
+test_direct_screenshot.png
 # Agent scratch files
 scratch/
 # Local backups from image pruning

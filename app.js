@@ -103,10 +103,8 @@ function initializeApp() {
                         sidebar.classList.add('mobile-open');
                     }
                 } else {
-                    if (!sidebar.classList.contains('expanded')) {
-                        sidebar.classList.add('expanded');
-                        magazine.classList.add('sidebar-expanded');
-                    }
+                    sidebar.classList.toggle('expanded');
+                    magazine.classList.toggle('sidebar-expanded');
                 }
                 if (selectArchive) {
                     setTimeout(() => selectArchive.focus(), 100);
@@ -1996,8 +1994,22 @@ function initializeApp() {
         initMobileMenu();
         initScrollspy();
 
+        // 解析 URL 參數來自動開啟新聞彈窗 (輔助截圖與自動化驗證)
+        const urlParams = new URLSearchParams(window.location.search);
+        const openNewsIndex = urlParams.get('openNews');
+        if (openNewsIndex !== null) {
+            const card = document.getElementById(`newsCard${openNewsIndex}`);
+            if (card) {
+                card.click();
+            }
+        }
+
     } catch (e) {
-        alert("⚠️ 捕獲到 app.js 執行期錯誤：\n\n錯誤描述: " + e.message + "\n\n詳細堆疊資訊:\n" + e.stack);
+        if (!window.location.search.includes('screenshot=true')) {
+            alert("⚠️ 捕獲到 app.js 執行期錯誤：\n\n錯誤描述: " + e.message + "\n\n詳細堆疊資訊:\n" + e.stack);
+        } else {
+            console.error("⚠️ 捕獲到 app.js 執行期錯誤: " + e.message + "\n" + e.stack);
+        }
     }
 }
 
