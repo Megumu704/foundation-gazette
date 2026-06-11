@@ -2,7 +2,7 @@
 
 > [!IMPORTANT]
 > **本檔案為《基地日報》主控代理的靈魂記憶。** 
-> 任何新啟動的 Agent 在執行任何任務前，必須優先讀取本文件以對齊身份、角色分工、發行流程與核心美學紅線。
+> 任何新啟動的 Agent 在執行任何任務前，必須優先讀取本文件以對齊身份、角色分工、發行流程與核心美學紅線。同時，請遵循根目錄下的 **[DESIGN.md](file:///c:/Users/Hubert/.gemini/antigravity/scratch/foundation-gazette/DESIGN.md)**（品牌設計合約）進行視覺排版，並於需要時參考 **[OPEN_DESIGN_GUIDE.md](file:///c:/Users/Hubert/.gemini/antigravity/scratch/foundation-gazette/OPEN_DESIGN_GUIDE.md)** 來調用本地 Open Design 的輔助工具。
 
 ---
 

@@ -8,7 +8,9 @@
 
 > [!IMPORTANT]
 > **任何新進的 AI 協同開發/內容 Agent 在執行任何任務前，必須首先讀取位於根目錄的：**
-> 👉 **[DANEEL_IDENTITY.md](file:///c:/Users/Hubert/.gemini/antigravity/scratch/foundation-gazette/DANEEL_IDENTITY.md)**
+> *   👉 **[DANEEL_IDENTITY.md](file:///c:/Users/Hubert/.gemini/antigravity/scratch/foundation-gazette/DANEEL_IDENTITY.md)** — 確認身份、團隊分工與六階段每日發行流程。
+> *   👉 **[DESIGN.md](file:///c:/Users/Hubert/.gemini/antigravity/scratch/foundation-gazette/DESIGN.md)** — 對齊《基地日報》的品牌設計合約（顏色、字型、排版規則）。
+> *   👉 **[OPEN_DESIGN_GUIDE.md](file:///c:/Users/Hubert/.gemini/antigravity/scratch/foundation-gazette/OPEN_DESIGN_GUIDE.md)** — 掌握本地 Open Design 工具整合、CLI 指令及 QA 防呆準則。
 
 本專案採用**多智能體協作發行工作流**，包含：
 1. **悶騷狸 (User)**：總編輯，品味決策者。
