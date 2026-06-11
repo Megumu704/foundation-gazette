@@ -187,27 +187,27 @@ if (-not (Test-Path $draftPath)) {
     return
 }
 
-# Start local HTTP server if not already running on port 8080
+# Start local HTTP server if not already running on port 8000
 $serverStartedByUs = $false
 $portInUse = $null
 try {
-    $portInUse = Get-NetTCPConnection -LocalPort 8080 -State Listen -ErrorAction SilentlyContinue
+    $portInUse = Get-NetTCPConnection -LocalPort 8000 -State Listen -ErrorAction SilentlyContinue
 } catch {}
 
 if (-not $portInUse) {
-    Write-Host "Starting local HTTP server on port 8080..."
+    Write-Host "Starting local HTTP server on port 8000..."
     $serverLog = "C:\Users\Hubert\.gemini\antigravity\scratch\server.log"
     $serverErr = "C:\Users\Hubert\.gemini\antigravity\scratch\server_err.log"
     $serverProcess = Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File C:\Users\Hubert\.gemini\antigravity\scratch\foundation-gazette\scripts\start_server.ps1" -PassThru -WindowStyle Hidden -RedirectStandardOutput $serverLog -RedirectStandardError $serverErr
     $serverStartedByUs = $true
     
-    # Poll until server is listening on port 8080 (up to 5 seconds)
+    # Poll until server is listening on port 8000 (up to 5 seconds)
     $serverTimeout = 5
     $serverElapsed = 0
     while ($serverElapsed -lt $serverTimeout) {
         $connection = $null
         try {
-            $connection = Get-NetTCPConnection -LocalPort 8080 -State Listen -ErrorAction SilentlyContinue
+            $connection = Get-NetTCPConnection -LocalPort 8000 -State Listen -ErrorAction SilentlyContinue
         } catch {}
         if ($connection) {
             break
@@ -234,7 +234,7 @@ if (-not (Test-Path $edgePath)) {
 }
 
 $profilePath = "C:\Users\Hubert\.gemini\antigravity\scratch\edge_profile"
-$captureUrl = "http://127.0.0.1:8080/?openShare=true&downloadShare=true"
+$captureUrl = "http://127.0.0.1:8000/?openShare=true&downloadShare=true"
 
 Write-Host "Launching Headless Edge to generate share card..."
 $edgeProcess = Start-Process -FilePath $edgePath -ArgumentList "--headless", "--disable-gpu", "--no-sandbox", "--user-data-dir=$profilePath", $captureUrl -PassThru
@@ -317,7 +317,7 @@ $teaserText += (Get-DecodedString "8J+UpSDmmYLkuovoiIfpgYrmiLLli5XmhYvvvJo=") + 
 $teaserText += (Get-DecodedString "8J+TjSA=") + "$news1`n"
 $teaserText += (Get-DecodedString "8J+TjSA=") + "$news2`n`n"
 $teaserText += (Get-DecodedString "8J+RiSDpu57mk4rpgKPntZDplrHoroDmjpLniYjnvo7nvo7nmoTmlbjkvY3loLHntJnvvJo=") + "`n"
-$teaserText += (Get-DecodedString "8J+UlyA=") + "http://localhost:8080/?mode=read&issue=$dateStr`n"
+$teaserText += (Get-DecodedString "8J+UlyA=") + "http://localhost:8000/?mode=read&issue=$dateStr`n"
 
 # Step 4: Publish to Discord and Telegram
 function Send-Photo-Multipart ($url, $payloadName, $filePath, $caption) {
