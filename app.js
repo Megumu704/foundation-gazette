@@ -1154,7 +1154,10 @@ function initializeApp() {
         function loadArchiveEdition(editionValue) {
             if (editionValue === 'draft') {
                 try {
-                    const savedDraft = localStorage.getItem('foundation_gazette_auto_draft');
+                    const isScreenshotMode = window.navigator.webdriver || 
+                                             window.location.search.includes('screenshot=true') || 
+                                             window.location.search.includes('headless=true');
+                    const savedDraft = isScreenshotMode ? null : localStorage.getItem('foundation_gazette_auto_draft');
                     if (savedDraft) {
                         const parsed = JSON.parse(savedDraft);
                         loadData(parsed);
@@ -1524,7 +1527,10 @@ function initializeApp() {
             restoredFromLocal = true;
         } else {
             try {
-                const savedDraft = localStorage.getItem('foundation_gazette_auto_draft');
+                const isScreenshotMode = window.navigator.webdriver || 
+                                         window.location.search.includes('screenshot=true') || 
+                                         window.location.search.includes('headless=true');
+                const savedDraft = isScreenshotMode ? null : localStorage.getItem('foundation_gazette_auto_draft');
                 if (savedDraft) {
                     const parsed = JSON.parse(savedDraft);
                     loadData(parsed);
