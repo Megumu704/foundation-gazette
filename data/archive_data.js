@@ -33,7 +33,7 @@
   ],
   "visualArtifact": {
     "imageUrl": "data/images/william_kentridge.jpg",
-    "caption": "南非傳奇藝術家威廉·肯特里奇（William Kentridge）。他以脆弱卻具備韌性的木炭與橡皮擦在單一棉紙上進行「畫圖-擦拭-重畫」的動態素描創作，藉由消逝與留痕的物質性，將時間流逝與歷史記憶物理性地積壓在同一個二維平面上。"
+    "caption": "威廉·肯特里奇（William Kentridge）於 2025 年在德國埃森福克旺博物館（Museum Folkwang）舉辦的《傾聽回聲》（Listen to the Echo）個展現場。展場牆面上呈現了他標誌性的木炭碳影定格動畫與大幅素描，展示了其將消逝、擦拭留痕與歷史考古物理性積壓於空間中的震撼美學。"
   }
 },
   "2026.06.10": {
@@ -70,7 +70,7 @@
   ],
   "visualArtifact": {
     "imageUrl": "data/images/william_kentridge.jpg",
-    "caption": "南非傳奇藝術家威廉·肯特里奇（William Kentridge）。他以脆弱卻具備韌性的木炭與橡皮擦在單一棉紙上進行「畫圖-擦拭-重畫」的動態素描創作，藉由消逝與留痕的物質性，將時間流逝與歷史記憶物理性地積壓在同一個二維平面上。"
+    "caption": "威廉·肯特里奇（William Kentridge）於 2025 年在德國埃森福克旺博物館（Museum Folkwang）舉辦的《傾聽回聲》（Listen to the Echo）個展現場。展場牆面上呈現了他標誌性的木炭碳影定格動畫與大幅素描，展示了其將消逝、擦拭留痕與歷史考古物理性積壓於空間中的震撼美學。"
   }
 }
 ,
