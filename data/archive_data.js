@@ -18,9 +18,9 @@
     "dynamicNews":  [
                         {
                             "category":  "GAME",
-                            "headline":  "戰爭機器事變日定檔十月",
-                            "summary":  "微軟在 Xbox Games Showcase 上正式公佈《戰爭機器：事變日》（Gears of War: E-Day）的實機遊玩畫面，並宣佈遊戲將於 2026 年 10 月 6 日發售，為 Xbox 平台永久主機獨佔作品。本作採用 Unreal Engine 5 引擎開發，主打長達 14 小時的單人戰役故事，帶領玩家見證主角馬可斯（Marcus）與多姆（Dom）在事變日的並肩作戰。此外，官方確認將於 8 月 6 日至 10 日展開多人的公開測試（Open Beta），並首度實裝全新合作 PvE 模式「持久戰圍攻」（Horde Siege），為玩家帶來更具策略與規模的防守挑戰。",
-                            "imageUrl":  "data/images/gears_e_day.png"
+                            "headline":  "時鐘革命公開全新時空預告",
+                            "summary":  "在微軟的 Xbox Games Showcase 發表會中，開發商 inXile Entertainment 釋出了旗下蒸汽龐克動作 RPG《時鐘革命》（Clockwork Revolution）的全新宣傳預告片「The Heist」（劫案）。本作將於 2027 年正式發行，並確認為 Xbox Series X|S 與 PC 平台的獨佔作品，首發即加入 Game Pass。預告片中展示了宏大的蒸汽都市「阿瓦隆」（Avalon）之底層生態，玩家將操作時間彎曲裝置進行戰鬥與空間跨越。官方強調，本作的時間操縱系統並非單純的視覺特效，而是與主線劇情及解謎機制深度綁定，玩家在過去所做出的每一次微小干預，都將劇烈重塑 Avalon 都市的未來面貌。",
+                            "imageUrl":  "data/images/clockwork_revolution.png"
                         },
                         {
                             "category":  "ANIMATION",
@@ -53,9 +53,9 @@
     "dynamicNews":  [
                         {
                             "category":  "GAME",
-                            "headline":  "戰爭機器事變日定檔十月",
-                            "summary":  "微軟在 Xbox Games Showcase 上正式公佈《戰爭機器：事變日》（Gears of War: E-Day）的實機遊玩畫面，並宣佈遊戲將於 2026 年 10 月 6 日發售，為 Xbox 平台永久主機獨佔作品。本作採用 Unreal Engine 5 引擎開發，主打長達 14 小時的單人戰役故事，帶領玩家見證主角馬可斯（Marcus）與多姆（Dom）在事變日的並肩作戰。此外，官方確認將於 8 月 6 日至 10 日展開多人的公開測試（Open Beta），並首度實裝全新合作 PvE 模式「持久戰圍攻」（Horde Siege），為玩家帶來更具策略與規模的防守挑戰。",
-                            "imageUrl":  "data/images/gears_e_day.png"
+                            "headline":  "時鐘革命公開全新時空預告",
+                            "summary":  "在微軟的 Xbox Games Showcase 發表會中，開發商 inXile Entertainment 釋出了旗下蒸汽龐克動作 RPG《時鐘革命》（Clockwork Revolution）的全新宣傳預告片「The Heist」（劫案）。本作將於 2027 年正式發行，並確認為 Xbox Series X|S 與 PC 平台的獨佔作品，首發即加入 Game Pass。預告片中展示了宏大的蒸汽都市「阿瓦隆」（Avalon）之底層生態，玩家將操作時間彎曲裝置進行戰鬥與空間跨越。官方強調，本作的時間操縱系統並非單純的視覺特效，而是與主線劇情及解謎機制深度綁定，玩家在過去所做出的每一次微小干預，都將劇烈重塑 Avalon 都市的未來面貌。",
+                            "imageUrl":  "data/images/clockwork_revolution.png"
                         },
                         {
                             "category":  "ANIMATION",
