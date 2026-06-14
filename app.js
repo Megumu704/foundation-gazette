@@ -879,6 +879,9 @@ function initializeApp() {
 
                 // Sync magazine view after all data is loaded
                 syncMagazineView();
+
+                // 載入完成後滾動到頁面頂端
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             } finally {
                 isRestoring = false;
             }
@@ -1796,10 +1799,15 @@ function initializeApp() {
         }
 
         function syncMagazineView() {
-            // Hero image — get from gazette card image
+            // Hero image — prioritize inputImageUrl directly, fallback to cardImage
             const heroImage = document.getElementById('heroImage');
-            if (heroImage && cardImage) {
-                heroImage.style.backgroundImage = cardImage.style.backgroundImage;
+            if (heroImage) {
+                const imgUrl = document.getElementById('inputImageUrl')?.value?.trim();
+                if (imgUrl) {
+                    heroImage.style.backgroundImage = `url('${imgUrl}')`;
+                } else if (cardImage) {
+                    heroImage.style.backgroundImage = cardImage.style.backgroundImage;
+                }
             }
 
             // Hero metadata
