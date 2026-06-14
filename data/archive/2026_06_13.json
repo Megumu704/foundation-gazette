@@ -1,4 +1,4 @@
-﻿{
+{
     "galaxyEra":  "FOUNDATION ERA 07",
     "dateString":  "2026.06.13",
     "coordinates":  "SECTOR 2824 / TERMINUS",
@@ -19,17 +19,17 @@
                             "category":  "GAME",
                             "headline":  "薩爾達傳說時之笛重製確認",
                             "summary":  "在 6 月 9 日的 Nintendo Direct 發表會中，任天堂正式確認將為下一代主機（暫稱 Nintendo Switch 2）開發經典動作冒險遊戲《薩爾達傳說：時之笛》（The Legend of Zelda: Ocarina of Time）的完全重製版，並定檔於 2026 年發售。本次發佈會公開了首支前導宣傳片，以高解析度、現代光影技術重現了海拉魯王國與時間之殿的宏偉面貌。官方透露，本作將完美保留原作的時空旅行與迷宮設計，同時利用新一代主機的硬體效能，帶來無縫的開放世界探索與重新編排的經典配樂，讓這部被譽為『史上最偉大遊戲』的傑作在現代重獲新生。",
-                            "imageUrl":  "data/images/zelda_oot.png"
+                            "imageUrl":  "data/images/zelda_oot.jpg"
                         },
                         {
                             "category":  "ANIMATION",
                             "headline":  "入間同學第四季釋出前導預告",
                             "summary":  "動漫官方於 2026 年 6 月 13 日正式公開了人氣奇幻校園作品《入間同學入魔了！》（Welcome to Demon School! Iruma-kun）第四季的全新主視覺圖與前導預告片，並宣佈將於明年初正式開播。第四季將圍繞原作中備受期待的「魔界偶像大賽」（Dem-dol Games）篇章展開，並同步揭露了三名關鍵新角色的配音陣容：內田雄馬（飾演 萊維亞斯·雷吉）、松岡禎丞（飾演 貝利亞爾·貝利·拉茲貝利）與松岡美里（飾演 賈里）。官方表示，本季的製作將由 Bandai Namco Pictures 繼續承接，為粉絲呈獻更加華麗精緻的魔界歌舞與歡樂校園日常。",
-                            "imageUrl":  "data/images/iruma_s4.png"
+                            "imageUrl":  "data/images/iruma_s4.jpg"
                         }
                     ],
     "visualArtifact":  {
-                           "imageUrl":  "data/images/aubrey_beardsley.png",
+                           "imageUrl":  "data/images/aubrey_beardsley.jpg",
                            "caption":  "奧布里·比亞茲萊經典黑白插畫風格示意圖，展現極具張力的平面線條、強烈黑白對比與怪誕優雅的有機花卉圖樣，完美呼應本期專欄探討的世紀末頹廢美學。"
                        }
 }
