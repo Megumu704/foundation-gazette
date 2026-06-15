@@ -1155,6 +1155,9 @@ function initializeApp() {
 
         // Handle Issue Loading
         function loadArchiveEdition(editionValue) {
+            if (window.updateSidebarActiveIssue) {
+                window.updateSidebarActiveIssue(editionValue);
+            }
             if (editionValue === 'draft') {
                 try {
                     const isScreenshotMode = window.navigator.webdriver || 
@@ -1509,6 +1512,58 @@ function initializeApp() {
                 opt.textContent = `NO. ${noNum} - ${key}`;
                 selectArchive.appendChild(opt);
             });
+
+            // --- 新增：初始化側邊欄視覺期數列表 ---
+            const sidebarIssueList = document.getElementById('sidebarIssueList');
+            if (sidebarIssueList) {
+                sidebarIssueList.innerHTML = '';
+
+                // 1. 草稿按鈕
+                const btnDraft = document.createElement('button');
+                btnDraft.className = 'sidebar-issue-item';
+                btnDraft.dataset.value = 'draft';
+                btnDraft.innerHTML = `<span class="issue-dot"></span><span class="issue-number">DRAFT</span><span class="issue-date">當前草稿</span>`;
+                sidebarIssueList.appendChild(btnDraft);
+
+                // 2. 歷史期數按鈕
+                archiveKeys.forEach((key, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'sidebar-issue-item';
+                    btn.dataset.value = key;
+                    const noNum = String(archiveKeys.length - index).padStart(3, '0');
+                    btn.innerHTML = `<span class="issue-dot"></span><span class="issue-number">NO. ${noNum}</span><span class="issue-date">${key}</span>`;
+                    sidebarIssueList.appendChild(btn);
+                });
+
+                // 3. 點擊事件連動
+                sidebarIssueList.addEventListener('click', (e) => {
+                    const btn = e.target.closest('.sidebar-issue-item');
+                    if (btn) {
+                        const value = btn.dataset.value;
+                        selectArchive.value = value;
+                        selectArchive.dispatchEvent(new Event('change'));
+                        updateSidebarActiveIssue(value);
+                    }
+                });
+
+                // 4. 定義同步啟動高亮函數
+                window.updateSidebarActiveIssue = function(value) {
+                    sidebarIssueList.querySelectorAll('.sidebar-issue-item').forEach(btn => {
+                        if (btn.dataset.value === value) {
+                            btn.classList.add('active');
+                        } else {
+                            btn.classList.remove('active');
+                        }
+                    });
+                };
+
+                // 原生 select 變動時也同步視覺列表
+                selectArchive.addEventListener('change', (e) => {
+                    if (window.updateSidebarActiveIssue) {
+                        window.updateSidebarActiveIssue(e.target.value);
+                    }
+                });
+            }
         }
 
         // =====================================================================
@@ -1572,6 +1627,10 @@ function initializeApp() {
                         }
                     });
             }
+        }
+
+        if (window.updateSidebarActiveIssue && selectArchive) {
+            window.updateSidebarActiveIssue(selectArchive.value);
         }
 
         if (paramMode === 'edit') {
@@ -1717,38 +1776,33 @@ function initializeApp() {
                     }
                     card.id = `newsCard${i}`;
 
-                    // Click to show news detail modal
+                    // Click to toggle inline news card accordion
                     card.style.cursor = 'pointer';
-                    card.addEventListener('click', () => {
-                        const modal = document.getElementById('newsDetailModal');
-                        const modalBadge = document.getElementById('newsModalBadge');
-                        const modalTitle = document.getElementById('newsModalTitle');
-                        const modalImage = document.getElementById('newsModalImage');
-                        const modalExcerpt = document.getElementById('newsModalExcerpt');
+                    card.addEventListener('click', (e) => {
+                        const collapseBtn = e.target.closest('.news-card-collapse-btn');
+                        const isExpanded = card.classList.contains('news-card-expanded');
                         
-                        if (modal && modalTitle && modalExcerpt) {
-                            modalBadge.textContent = cat || 'NEWS';
-                            modalTitle.textContent = headline;
-                            modalExcerpt.innerHTML = parseArticleMarkdown(summary);
-                            
-                            const modalImageCaption = document.getElementById('newsModalImageCaption');
-                            if (imgUrl) {
-                                modalImage.style.backgroundImage = `url('${imgUrl}')`;
-                                modalImage.style.display = 'block';
-                                if (modalImageCaption) {
-                                    if (imgCap) {
-                                        modalImageCaption.textContent = imgCap;
-                                        modalImageCaption.style.display = 'block';
-                                    } else {
-                                        modalImageCaption.style.display = 'none';
-                                    }
+                        if (collapseBtn || (isExpanded && !e.target.closest('.news-card-content'))) {
+                            card.classList.remove('news-card-expanded');
+                            setTimeout(() => {
+                                card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }, 100);
+                            e.stopPropagation();
+                            return;
+                        }
+                        
+                        if (!isExpanded) {
+                            // Close other news cards
+                            document.querySelectorAll('.news-card').forEach(otherCard => {
+                                if (otherCard !== card) {
+                                    otherCard.classList.remove('news-card-expanded');
                                 }
-                            } else {
-                                modalImage.style.display = 'none';
-                                if (modalImageCaption) modalImageCaption.style.display = 'none';
-                            }
+                            });
                             
-                            modal.style.display = 'flex';
+                            card.classList.add('news-card-expanded');
+                            setTimeout(() => {
+                                card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }, 200);
                         }
                     });
 
@@ -1765,6 +1819,17 @@ function initializeApp() {
                         <div class="news-card-body">
                             <h3 class="news-card-title">${wrapForeignNames(escapeHtml(panguSpace(headline)))}</h3>
                             <div class="news-card-excerpt">${parseArticleMarkdown(summary)}</div>
+                            <span class="news-card-read-more">READ MORE</span>
+                        </div>
+                        <div class="news-card-content">
+                            ${parseArticleMarkdown(summary)}
+                            ${imgCap ? `<div class="news-card-content-caption">${escapeHtml(imgCap)}</div>` : ''}
+                            <button class="news-card-collapse-btn">
+                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
+                                    <polyline points="18 15 12 9 6 15"></polyline>
+                                </svg>
+                                COLLAPSE
+                            </button>
                         </div>
                     `;
                     newsCards.appendChild(card);
@@ -1916,18 +1981,47 @@ function initializeApp() {
         // =====================================================================
         function initThemeToggle() {
             const btn = document.getElementById('btnToggleTheme');
-            const saved = localStorage.getItem('fg-theme');
-            if (saved) document.documentElement.dataset.theme = saved;
+            const saved = localStorage.getItem('fg-theme') || 'light';
+            document.documentElement.dataset.theme = saved;
+
+            const sunSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/>
+                <line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/>
+                <line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>`;
+            const moonSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>`;
+
+            function updateThemeUI(theme) {
+                const icon = btn ? btn.querySelector('.sidebar-link-icon') : null;
+                const label = btn ? btn.querySelector('.sidebar-link-label') : null;
+                if (icon) {
+                    icon.innerHTML = theme === 'dark' ? sunSvg : moonSvg;
+                }
+                if (label) {
+                    label.textContent = theme === 'dark' ? '淺色模式' : '深色模式';
+                }
+                if (btn) {
+                    btn.dataset.tooltip = theme === 'dark' ? '淺色模式' : '深色模式';
+                }
+            }
+
+            updateThemeUI(saved);
 
             if (btn) {
                 btn.addEventListener('click', () => {
-                    const current = document.documentElement.dataset.theme;
+                    const current = document.documentElement.dataset.theme || 'light';
                     const next = current === 'dark' ? 'light' : 'dark';
                     document.documentElement.dataset.theme = next;
                     localStorage.setItem('fg-theme', next);
-                    // Update button icon
-                    const icon = btn.querySelector('.sidebar-link-icon');
-                    if (icon) icon.textContent = next === 'dark' ? '☀️' : '🌙';
+                    updateThemeUI(next);
                 });
             }
         }

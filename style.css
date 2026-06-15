@@ -154,10 +154,18 @@ a {
     top: 0;
     width: var(--sidebar-width);
     height: 100vh;
-    background: rgba(17, 17, 22, 0.95);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-right: 1px solid var(--ui-border);
+    background: linear-gradient(
+        180deg,
+        rgba(17, 17, 22, 0.98) 0%,
+        rgba(12, 12, 16, 0.99) 50%,
+        rgba(17, 17, 22, 0.98) 100%
+    );
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-right: none;
+    box-shadow: 
+        1px 0 0 rgba(255, 255, 255, 0.04),
+        inset -1px 0 0 rgba(255, 255, 255, 0.02);
     display: flex;
     flex-direction: column;
     z-index: 500;
@@ -302,10 +310,18 @@ a {
     font-size: 1.1rem;
     font-weight: 900;
     color: var(--mag-accent);
-    background: rgba(166, 38, 27, 0.1);
-    border-radius: 8px;
+    background: radial-gradient(circle, rgba(166, 38, 27, 0.15) 0%, transparent 70%);
+    border: 1px solid rgba(166, 38, 27, 0.25);
+    border-radius: 10px;
     flex-shrink: 0;
     letter-spacing: -0.02em;
+    animation: monogramPulse 4s ease-in-out infinite;
+    box-shadow: 0 0 12px rgba(166, 38, 27, 0.1);
+}
+
+@keyframes monogramPulse {
+    0%, 100% { box-shadow: 0 0 12px rgba(166, 38, 27, 0.1); }
+    50% { box-shadow: 0 0 20px rgba(166, 38, 27, 0.25); }
 }
 
 .sidebar-brand-text {
@@ -376,13 +392,13 @@ a {
 }
 
 .sidebar-link:hover {
-    background: rgba(255, 255, 255, 0.06);
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0%, transparent 100%);
     color: var(--ui-text);
 }
 
 .sidebar-link.active {
     color: #fff;
-    background: rgba(166, 38, 27, 0.12);
+    background: linear-gradient(90deg, rgba(166, 38, 27, 0.15) 0%, transparent 100%);
 }
 
 .sidebar-link.active::before {
@@ -392,8 +408,8 @@ a {
     top: 50%;
     transform: translateY(-50%);
     width: 3px;
-    height: 20px;
-    background: var(--mag-accent);
+    height: 24px;
+    background: linear-gradient(180deg, transparent, var(--mag-accent), transparent);
     border-radius: 0 2px 2px 0;
 }
 
@@ -404,7 +420,6 @@ a {
 }
 
 .sidebar-link-icon {
-    font-size: 18px;
     width: 40px;
     height: 40px;
     display: flex;
@@ -412,6 +427,17 @@ a {
     justify-content: center;
     flex-shrink: 0;
     line-height: 1;
+}
+
+.sidebar-link-icon svg {
+    width: 20px;
+    height: 20px;
+    color: inherit;
+    transition: color 0.2s ease, filter 0.2s ease;
+}
+
+.sidebar-link.active .sidebar-link-icon svg {
+    filter: drop-shadow(0 0 4px rgba(212, 72, 59, 0.4));
 }
 
 .sidebar-link-label {
@@ -481,7 +507,7 @@ a {
 }
 
 .sidebar-tool-btn:hover {
-    background: rgba(255, 255, 255, 0.06);
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0%, transparent 100%);
     color: var(--ui-text);
 }
 
@@ -545,11 +571,127 @@ a {
     overflow: hidden;
 }
 
+.sidebar-pulse-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.sidebar-pulse-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--mag-accent);
+    animation: pulseDot 3s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+    0%, 100% { opacity: 0.3; box-shadow: 0 0 0 rgba(166,38,27,0); }
+    50% { opacity: 1; box-shadow: 0 0 6px rgba(166,38,27,0.4); }
+}
+
 /* Archive Select inside sidebar */
 .sidebar-archive-wrapper {
     padding: 8px 8px;
     border-top: 1px solid var(--ui-border);
     flex-shrink: 0;
+}
+
+.sidebar-archive-label {
+    display: block;
+    font-size: 0.55rem;
+    font-weight: 700;
+    color: var(--ui-text-muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    transition: opacity 0.2s ease 0.1s, max-width 0.3s ease;
+}
+
+.sidebar.expanded .sidebar-archive-label {
+    opacity: 0.7;
+    max-width: 160px;
+}
+
+/* 迷你期數列表 */
+.sidebar-issue-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    max-height: 180px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 4px 0;
+    /* 自訂 scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.08) transparent;
+}
+
+.sidebar-issue-list::-webkit-scrollbar {
+    width: 3px;
+}
+.sidebar-issue-list::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+}
+
+.sidebar-issue-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border: none;
+    background: none;
+    color: var(--ui-text-muted);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.15s ease, color 0.15s ease;
+    width: 100%;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.sidebar-issue-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--ui-text);
+}
+
+.sidebar-issue-item.active {
+    color: #fff;
+    background: rgba(166, 38, 27, 0.12);
+}
+
+.issue-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--mag-accent);
+    flex-shrink: 0;
+    opacity: 0;
+}
+
+.sidebar-issue-item.active .issue-dot {
+    opacity: 1;
+}
+
+.issue-number {
+    color: var(--ui-text-muted);
+    min-width: 28px;
+}
+
+.issue-date {
+    opacity: 0.6;
+}
+
+/* 側邊欄收合時隱藏列表 */
+.sidebar:not(.expanded) .sidebar-issue-list {
+    display: none;
 }
 
 .sidebar-archive-select {
@@ -1076,15 +1218,58 @@ a {
 .news-card {
     background: var(--mag-bg);
     border: 1px solid var(--mag-border);
-    border-radius: 4px;
+    border-radius: 6px;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: 
+        transform 0.3s ease, 
+        box-shadow 0.3s ease,
+        border-color 0.3s ease,
+        grid-column 0s;
     cursor: default;
 }
 
 .news-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 32px var(--mag-shadow);
+}
+
+/* --- 展開狀態 --- */
+.news-card-expanded {
+    grid-column: 1 / -1;  /* 佔滿整行 */
+    transform: translateY(0) !important;
+    border-color: var(--mag-accent);
+    border-left: 3px solid var(--mag-accent);
+    box-shadow: 0 8px 32px var(--mag-shadow);
+}
+
+.news-card-expanded:hover {
+    transform: translateY(0);
+}
+
+/* --- 摘要在展開後隱藏 --- */
+.news-card-expanded .news-card-excerpt {
+    display: none;
+}
+
+/* --- Read More 提示 --- */
+.news-card-read-more {
+    display: inline-block;
+    margin-top: 12px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    color: var(--mag-accent);
+    text-transform: uppercase;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.news-card-body:hover .news-card-read-more {
+    opacity: 1;
+}
+
+.news-card-expanded .news-card-read-more {
+    display: none;
 }
 
 .news-card-image {
@@ -1144,12 +1329,59 @@ a {
 
 /* Expandable content inside news card */
 .news-card-content {
-    display: none;
-    padding: 0 24px 24px;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    padding: 0 24px;
+    transition: 
+        max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.4s ease 0.1s,
+        padding 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .news-card-expanded .news-card-content {
-    display: block;
+    max-height: 2000px;
+    opacity: 1;
+    padding: 0 24px 28px;
+}
+
+/* --- 展開內容的圖片說明 --- */
+.news-card-content-caption {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 0.75rem;
+    font-style: italic;
+    color: var(--mag-text-light);
+    text-align: center;
+    margin-bottom: 20px;
+    padding-top: 4px;
+}
+
+/* --- 收合按鈕 --- */
+.news-card-collapse-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 24px;
+    padding: 8px 16px;
+    border: 1px solid var(--mag-border);
+    border-radius: 4px;
+    background: var(--mag-bg-alt);
+    color: var(--mag-text-muted);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.news-card-collapse-btn:hover {
+    color: var(--mag-text);
+    border-color: var(--mag-text-muted);
+}
+
+.news-card-collapse-btn svg {
+    color: inherit;
 }
 
 .news-card-content .article-paragraph {

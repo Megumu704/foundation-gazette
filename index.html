@@ -85,28 +85,45 @@
         <ul class="sidebar-nav">
             <li class="sidebar-nav-item">
                 <a href="#heroSection" class="sidebar-link active" data-tooltip="日報">
-                    <span class="sidebar-link-icon">📰</span>
+                    <span class="sidebar-link-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h12v16H4z"/>
+                            <path d="M16 8h4v12H8"/>
+                            <path d="M7 8h6M7 11h6M7 14h4"/>
+                        </svg>
+                    </span>
                     <span class="sidebar-link-label">日報</span>
                 </a>
             </li>
             <li class="sidebar-nav-item">
                 <a href="#" class="sidebar-link disabled" data-tooltip="特報（即將推出）" aria-disabled="true" tabindex="-1">
-                    <span class="sidebar-link-icon">📋</span>
+                    <span class="sidebar-link-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
+                    </span>
                     <span class="sidebar-link-label">特報 <small class="sidebar-badge">SOON</small></span>
                 </a>
             </li>
             <li class="sidebar-nav-item">
                 <a href="#" class="sidebar-link" data-tooltip="典藏" id="btnSidebarArchive">
-                    <span class="sidebar-link-icon">📚</span>
+                    <span class="sidebar-link-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                            <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z"/>
+                            <path d="M8 7h6M8 11h4"/>
+                        </svg>
+                    </span>
                     <span class="sidebar-link-label">典藏</span>
                 </a>
             </li>
         </ul>
 
-        <!-- Issue Selector -->
+        <!-- Issue Selector — 新版迷你列表 -->
         <div class="sidebar-archive-wrapper">
-            <label for="selectArchive" class="sidebar-archive-label">選擇期數 / ARCHIVES</label>
-            <select id="selectArchive" class="sidebar-archive-select">
+            <label class="sidebar-archive-label">ARCHIVES</label>
+            <!-- 隱藏的原生 select（保留 JS 相容） -->
+            <select id="selectArchive" class="sidebar-archive-select" style="display:none;">
                 <option value="draft">草稿箱 (Latest)</option>
                 <option value="2026.06.15">NO. 027 - 2026.06.15</option>
                 <option value="2026.06.14">NO. 026 - 2026.06.14</option>
@@ -136,27 +153,52 @@
                 <option value="2026.05.21">NO. 002 - 2026.05.21</option>
                 <option value="2026.05.20">NO. 001 - 2026.05.20</option>
             </select>
+            <!-- 新的視覺列表 -->
+            <div class="sidebar-issue-list" id="sidebarIssueList"></div>
         </div>
 
         <!-- Tool Buttons -->
         <div class="sidebar-tools">
             <button id="btnToggleTheme" class="sidebar-tool-btn" data-tooltip="深色模式" title="切換深色/淺色模式">
-                <span class="sidebar-link-icon">🌙</span>
+                <span class="sidebar-link-icon" id="themeIcon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                </span>
                 <span class="sidebar-link-label">深色模式</span>
             </button>
             <button id="btnToggleEditor" class="sidebar-tool-btn" data-tooltip="編輯器" title="開啟編輯器">
-                <span class="sidebar-link-icon">⚙️</span>
+                <span class="sidebar-link-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3v6M12 15v6"/>
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M5 6v4M5 14v4"/>
+                        <circle cx="5" cy="12" r="2"/>
+                        <path d="M19 4v6M19 14v6"/>
+                        <circle cx="19" cy="12" r="2"/>
+                    </svg>
+                </span>
                 <span class="sidebar-link-label">編輯器</span>
             </button>
             <button id="btnOpenShareModal" class="sidebar-tool-btn" data-tooltip="分享卡" title="生成分享卡">
-                <span class="sidebar-link-icon">🔗</span>
+                <span class="sidebar-link-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="18" cy="5" r="3"/>
+                        <circle cx="6" cy="12" r="3"/>
+                        <circle cx="18" cy="19" r="3"/>
+                        <path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/>
+                    </svg>
+                </span>
                 <span class="sidebar-link-label">分享卡</span>
             </button>
         </div>
 
         <!-- Sidebar Footer -->
         <div class="sidebar-footer">
-            <span class="sidebar-footer-text">v2.0</span>
+            <div class="sidebar-pulse-row">
+                <span class="sidebar-pulse-dot"></span>
+                <span class="sidebar-footer-text">FOUNDATION GAZETTE v2.0</span>
+            </div>
         </div>
     </nav>
 
